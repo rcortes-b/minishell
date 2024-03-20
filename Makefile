@@ -1,14 +1,14 @@
 NAME = minishell
 
 CC = gcc
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -g
 RM = rm -rf
 
-SRCS = srcs/main.c
+SRCS = srcs/parse/split.c srcs/parse/count_words.c srcs/parse/split_utils.c
 
 OBJS = $(SRCS:.c=.o)
 
-HEAD = includes/minishell.h
+HEAD = includes/minishell.h includes/parse.h
 
 LIBFT = libft/libft.a
 READLINE = -L$(HOME)/.brew/Cellar/readline/8.2.10/lib -lreadline -lhistory
