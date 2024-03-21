@@ -3,9 +3,11 @@ NAME = minishell
 CC = gcc
 FLAGS = -Wall -Wextra -Werror -g
 RM = rm -rf
+SRCS_ALL = ${addprefix "srcs", $(SRCS)}
 
 SRCS = srcs/parse/split.c srcs/parse/count_words.c srcs/parse/split_utils.c  \
 srcs/parse/flags.c srcs/parse/parse_utils.c \
+srcs/parse/categorization.c srcs/parse/word_utils.c \
 srcs/main.c
 
 OBJS = $(SRCS:.c=.o)
