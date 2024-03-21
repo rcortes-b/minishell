@@ -28,6 +28,8 @@ static void	parse_main(t_word *words, char *line)
 		printf("flags:\n");
 		while (words->flags[++i])
 			printf("  - %s\n", words->flags[i]);
+		words = words->next;
+		printf("\n");
 	}
 }
 

@@ -22,11 +22,11 @@ void	categorize(char **words, t_word **lst, t_operators	*data)
 	end = 0;
 	while (1)
 	{
-		while (words[end + 1][0] && !is_symbol(data, words[end + 1][0]))
+		while (words[end + 1] && !is_symbol(data, words[end + 1][0]))
 			end++;
 		n_word = new_word(words, start, end);
 		wordadd_back(lst, n_word);
-		if (is_symbol(data, words[end + 1][0]))
+		if (words[end + 1])
 		{
 			start = end + 1;
 			end = start;
