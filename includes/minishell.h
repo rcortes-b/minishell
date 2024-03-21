@@ -39,7 +39,7 @@ typedef struct s_listi
 	char	*cmd;
 	char	**args;
 	int		token;
-	struct s_list *next;
+	struct s_listi *next;
 }	t_listi;
 
 #endif

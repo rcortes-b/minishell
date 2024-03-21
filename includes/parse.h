@@ -19,5 +19,9 @@ void	init_data(t_operators *data);
 int		is_operator(char *line, int index, t_operators *data);
 void	get_word_quote(char **word, char *line, int *index, char c);
 int		count_words(char *line, const char *set, t_operators *data);
+char	**ft_split(char *line, const char *set, t_operators *data);
+
+int		is_symbol(t_operators *data, char c);
+void	order_split(char **split, t_operators *data);
 
 #endif

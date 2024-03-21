@@ -114,14 +114,12 @@ static char	**get_split(char **split, const char *set,
 	return (split);
 }
 
-char	**ft_split(char *line, const char *set)
+char	**ft_split(char *line, const char *set, t_operators *data)
 {
 	char		**split;
-	t_operators	data;
 	int			counter;
 
-	init_data(&data);
-	counter = count_words(line, set, &data);
+	counter = count_words(line, set, data);
 	printf("Count Words: %d\n\n", counter);
 	split = (char **)malloc(sizeof(char *) * (counter + 1));
 	if (!split)
@@ -132,10 +130,3 @@ char	**ft_split(char *line, const char *set)
 	printf("\n");
 	return (split);
 }
-
-/*int main(void)
-{
-	char **split = ft_split(" \'\'c\"at\"\"dsa\"||ls \'>\'|> 0\"out\" ", " \t");
-	for (int i = 0; split[i]; i++)
-		printf("%s\n", split[i]);
-}*/

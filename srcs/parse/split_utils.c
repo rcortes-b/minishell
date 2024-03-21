@@ -12,15 +12,6 @@
 
 #include "../../includes/parse.h"
 
-void	init_data(t_operators *data)
-{
-	data->pipe = '|';
-	data->squote = '\'';
-	data->dquote = '"';
-	data->reinput = '<';
-	data->reoutput = '>';
-}
-
 int	check_if_operator(t_operators *data, char c)
 {
 	if (c == data->pipe || c == data->squote
