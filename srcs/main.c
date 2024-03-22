@@ -25,9 +25,10 @@ static void	parse_main(t_word *words, char *line)
 	{
 		int	i = -1;
 		printf("com: %s\n", words->com);
+		if (words->flags) {
 		printf("flags:\n");
 		while (words->flags[++i])
-			printf("  - %s\n", words->flags[i]);
+			printf("  - %s\n", words->flags[i]); }
 		words = words->next;
 		printf("\n");
 	}

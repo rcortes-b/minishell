@@ -35,7 +35,7 @@ void	order_split(char **split, t_operators *data);
 
 //ESTO ES CATEGORIZE
 void	categorize(char **words, t_word **lst, t_operators *data);
-t_word	*new_word(char **words, int start, int end);
+t_word	*new_word(char **words, int start, int end, t_operators *data);
 void	wordadd_back(t_word **words, t_word *new_word);
 
 #endif

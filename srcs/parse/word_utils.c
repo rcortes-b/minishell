@@ -12,7 +12,9 @@
 
 #include "../../includes/parse.h"
 
-t_word	*new_word(char **words, int start, int end)
+//malloc de las flags con end - start + 1 (ambos inclusive) + 1 (NULL terminating)
+
+t_word	*new_word(char **words, int start, int end, t_operators *data)
 {
 	t_word	*new;
 	int		i;
@@ -20,20 +22,24 @@ t_word	*new_word(char **words, int start, int end)
 	new = (t_word *)malloc(sizeof (t_word));
 	if (!new)
 		return (NULL); //free_all & exit(status)
-	new->com = ft_strdup(words[start]);
-	if (!new->com)
-		return (NULL); //free_all & exit(status)
-	//malloc de las flags con end - start + 1 (ambos inclusive) + 1 (NULL terminating)
-	new->flags = (char **)malloc(sizeof (char *) * (end - start + 1 + 1));
-	if (!new->flags)
-		return (NULL); //free_all & exit(status)
-	i = 0;
-	while (start + i <= end)
+	if (!is_symbol(data, words[start][0]))
 	{
-		new->flags[i] = words[start + i];
-		i++;
+		new->com = ft_strdup(words[start]);
+		if (!new->com)
+			return (NULL); //free_all & exit(status)
+		new->flags = (char **)malloc(sizeof (char *) * (end - start + 1 + 1));
+		if (!new->flags)
+			return (NULL); //free_all & exit(status)
+		i = -1;
+		while ((start + (++i)) <= end)
+			new->flags[i] = words[start + i];
+		new->flags[i] = NULL;
 	}
-	new->flags[i] = NULL;
+	else
+	{
+		new->com = words[start];
+		new->flags = NULL;
+	}
 	new->next = NULL;
 	return (new);
 }

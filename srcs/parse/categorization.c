@@ -12,30 +12,30 @@
 
 #include "../../includes/parse.h"
 
-void	categorize(char **words, t_word **lst, t_operators	*data)
+void	categorize(char **words, t_word **lst, t_operators *data)
 {
+	t_word	*n_word;
 	int		start;
 	int		end;
-	t_word	*n_word;
 
 	start = 0;
 	end = 0;
-	while (1)
+	while (words[end])
 	{
-		while (words[end + 1] && !is_symbol(data, words[end + 1][0]))
-			end++;
-		n_word = new_word(words, start, end);
-		wordadd_back(lst, n_word);
-		if (words[end + 1])
+		if (is_symbol(data, words[end][0]))
 		{
-			start = end + 1;
-			end = start;
-			n_word = new_word(words, start, end);
+			start = end;
+			n_word = new_word(words, start, end, data);
 			wordadd_back(lst, n_word);
-			start++;
 			end++;
 		}
 		else
-			break ;
+		{
+			start = end;
+			while (words[end] && !is_symbol(data, words[end][0]))
+				end++;
+			n_word = new_word(words, start, end - 1, data);
+			wordadd_back(lst, n_word);
+		}
 	}
 }

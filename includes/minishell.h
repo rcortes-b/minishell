@@ -23,8 +23,9 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 
-enum operators
+enum tokenization
 {
+	COMMAND,
 	PIPE,  // | 
 	SQUOTE, // '  '
 	DQUOTE, // " "
