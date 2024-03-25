@@ -63,7 +63,7 @@ void	ft_putstr_fd(char const *s, int fd);
 //BONUS//
 typedef struct s_list
 {
-	void			*content;
+	char			*content;
 	struct s_list	*next;
 }				t_list;
 

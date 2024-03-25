@@ -23,5 +23,6 @@ void	wordadd_back(t_word **words, t_word *new_word);
 void	tokenization(t_word **lst, t_operators *data);
 
 void	parse_environment(t_list **lst, char **envp);
+char	*get_env(t_list **lst, char *key);
 
 #endif

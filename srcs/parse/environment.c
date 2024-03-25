@@ -3,13 +3,19 @@
 char	*get_env(t_list **lst, char *key)
 {
 	t_list	*aux;
+	int		i;
 
 	aux = *lst;
-	while (aux && ft_strncmp(aux, key, ft_strlen(key) != 0))
+	while (aux)
+	{
+		i = 0;
+		while (key[i] && aux->content[i] && aux->content[i] == key[i])
+			i++;
+		if (!key[i] && aux->content[i] == '=')
+			return (aux->content);
 		aux = aux->next;
-	if (!aux)
-		return (NULL);
-	return (aux->content);
+	}
+	return (NULL);
 }
 
 void	parse_environment(t_list **lst, char **envp)

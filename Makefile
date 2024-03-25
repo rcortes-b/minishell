@@ -9,6 +9,7 @@ SRCS = srcs/parse/split.c srcs/parse/count_words.c srcs/parse/split_utils.c srcs
 srcs/parse/flags.c srcs/parse/parse_utils.c \
 srcs/parse/categorization.c srcs/parse/word_utils.c srcs/parse/tokenization.c \
 srcs/checker/checker.c \
+srcs/expander/expander.c \
 srcs/main.c
 
 OBJS = $(SRCS:.c=.o)
