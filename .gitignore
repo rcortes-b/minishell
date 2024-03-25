@@ -1,0 +1,6 @@
+.DS_Store
+srcs/builtins/*.o
+srcs/parse/*.o
+srcs/checker/*.o
+libft/*.o
+minishell

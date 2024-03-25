@@ -66,6 +66,11 @@ void	order_split(char **split, t_operators *data)
 
 	i = -1;
 	checkpoint = 0;
+	if (split[checkpoint][0] == data->reinput)
+	{
+		checkpoint++;
+		i++;
+	}
 	while (split[++i])
 	{
 		if (data->pipe == split[i][0])

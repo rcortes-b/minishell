@@ -5,14 +5,15 @@ FLAGS = -Wall -Wextra -Werror -g
 RM = rm -rf
 SRCS_ALL = ${addprefix "srcs", $(SRCS)}
 
-SRCS = srcs/parse/split.c srcs/parse/count_words.c srcs/parse/split_utils.c  \
+SRCS = srcs/parse/split.c srcs/parse/count_words.c srcs/parse/split_utils.c srcs/parse/environment.c \
 srcs/parse/flags.c srcs/parse/parse_utils.c \
-srcs/parse/categorization.c srcs/parse/word_utils.c \
+srcs/parse/categorization.c srcs/parse/word_utils.c srcs/parse/tokenization.c \
+srcs/checker/checker.c \
 srcs/main.c
 
 OBJS = $(SRCS:.c=.o)
 
-HEAD = includes/minishell.h includes/parse.h
+HEAD = includes/minishell.h includes/parse.h includes/builtins.h includes/checker.h
 
 LIBFT = libft/libft.a
 READLINE = -L$(HOME)/.brew/Cellar/readline/8.2.10/lib -lreadline -lhistory
@@ -23,7 +24,7 @@ all : $(NAME)
 	$(CC) $(FLAGS) -c $< -o $@
 
 libs:
-	make -C libft
+	make bonus -C libft
 
 linux:
 	make LINUX=1 all

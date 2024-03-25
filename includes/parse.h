@@ -3,23 +3,6 @@
 
 # include "minishell.h"
 
-typedef struct s_operator
-{
-	char 	pipe;
-	char	squote;
-	char	dquote;
-	char 	reinput;
-	char 	reoutput;
-}	t_operators;
-
-typedef struct s_word
-{
-	char			*com;
-	char			**flags;
-	int				token;
-	struct s_word	*next;
-}	t_word;
-
 //ESTO ES SPLIT
 int		check_if_operator(t_operators *data, char c);
 void	free_mem(char **split);
@@ -37,5 +20,8 @@ void	order_split(char **split, t_operators *data);
 void	categorize(char **words, t_word **lst, t_operators *data);
 t_word	*new_word(char **words, int start, int end, t_operators *data);
 void	wordadd_back(t_word **words, t_word *new_word);
+void	tokenization(t_word **lst, t_operators *data);
+
+void	parse_environment(t_list **lst, char **envp);
 
 #endif

@@ -25,14 +25,30 @@
 
 enum tokenization
 {
-	COMMAND,
-	PIPE,  // | 
-	SQUOTE, // '  '
-	DQUOTE, // " "
-	REINPUT, // <
-	REOUTPUT, // >
-	HEREDOC, // <<
-	APPEND_OPT // >>
+	COMMAND, // word  0
+	PIPE,  // |  	  1
+	REINPUT, // <     2
+	REOUTPUT, // >	  3
+	HEREDOC, // << 	  4
+	APPEND_OPT // >>  5
 };
+
+typedef struct s_operator
+{
+	char 	pipe;
+	char	squote;
+	char	dquote;
+	char 	reinput;
+	char 	reoutput;
+}	t_operators;
+
+typedef struct s_word
+{
+	char			*com;
+	char			**flags;
+	int				token;
+	struct s_word	*next;
+}	t_word;
+
 
 #endif

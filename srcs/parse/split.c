@@ -101,7 +101,6 @@ static char	**get_split(char **split, const char *set,
 	while (++counter < word_counter)
 	{
 		size = get_word_size(line, set, i, &data);
-		printf("Size: %d\n", size);
 		split[counter] = malloc(sizeof(char) * size + 1);
 		if (!split[counter])
 		{
@@ -120,7 +119,6 @@ char	**ft_split(char *line, const char *set, t_operators *data)
 	int			counter;
 
 	counter = count_words(line, set, data);
-	printf("Count Words: %d\n\n", counter);
 	split = (char **)malloc(sizeof(char *) * (counter + 1));
 	if (!split)
 		return (NULL);
