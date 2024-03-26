@@ -12,6 +12,34 @@
 
 #include "../../includes/parse.h"
 
+static int	count_words(char *line, const char *set, t_operators *data)
+{
+	int	i;
+	int	counter;
+
+	counter = 0;
+	i = 0;
+	while (line[i])
+	{
+		if (is_symbol(data, line[i]))
+			counter += do_operator(line, &i, data, 0);
+		else if (!ft_strchr(set, line[i]))
+		{
+			counter++;
+			while (line[i] && !ft_strchr(set, line[i])
+				&& !is_symbol(data, line[i]))
+			{
+				if (line[i] == data->dquote || line[i] == data->squote)
+					iterate_quote(line, &i, line[i], 0);
+				i++;
+			}
+		}
+		else
+			i++;
+	}
+	return (counter);
+}
+
 static int	get_word_size(char *line, const char *set,
 	int index, t_operators *data)
 {
@@ -20,44 +48,26 @@ static int	get_word_size(char *line, const char *set,
 	size = 0;
 	while (line[index])
 	{
-		if (check_if_operator(data, line[index]))
+		if (is_symbol(data, line[index]))
 		{
-			size = is_operator(line, index, data);
+			do_operator(line, &index, data, &size);
 			return (size);
 		}
 		else if (!ft_strchr(set, line[index]))
 		{
 			while (!ft_strchr(set, line[index])
-				&& !check_if_operator(data, line[index]))
+				&& !is_symbol(data, line[index]))
 			{
+				if (line[index] == data->dquote || line[index] == data->squote)
+					iterate_quote(line, &index, line[index], &size);
 				index++;
 				size++;
 			}
 			return (size);
 		}
-		else
-			index++;
+		index++;
 	}
 	return (0);
-}
-
-static void	split_word_aux(char **word, char *line,
-	int *index, t_operators *data)
-{
-	int	i;
-
-	i = 0;
-	if (data->squote == line[*index] || data->dquote == line[*index])
-		get_word_quote(word, line, index, line[*index]);
-	else
-	{
-		word[0][i++] = line[(*index)++];
-		if ((data->reinput == line[*index] && data->reinput == line[*index - 1])
-			|| (data->reoutput == line[*index]
-				&& data->reoutput == line[*index - 1]))
-			word[0][i++] = line[(*index)++];
-		word[0][i] = '\0';
-	}
 }
 
 static void	split_word(char *word, const char *set, char *line, int *index)
@@ -69,16 +79,17 @@ static void	split_word(char *word, const char *set, char *line, int *index)
 	i = 0;
 	while (line[*index])
 	{
-		if (check_if_operator(&data, line[*index]))
-		{
-			split_word_aux(&word, line, index, &data);
+		if (!split_word_symbol(&word, line, index, &data))
 			break ;
-		}
 		else if (!ft_strchr(set, line[*index]))
 		{
 			while (!ft_strchr(set, line[*index])
-				&& !check_if_operator(&data, line[*index]))
+				&& !is_symbol(&data, line[*index]))
+			{
+				if (line[*index] == data.dquote || line[*index] == data.squote)
+					copy_quotes(word, line, &i, index);
 				word[i++] = line[(*index)++];
+			}
 			word[i] = '\0';
 			break ;
 		}

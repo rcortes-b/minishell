@@ -15,7 +15,7 @@
 /* Esta funcion termina de hacer el sorting, 
 teniendo en cuenta el checkpoint (comando) y el indice (primer redirection) */
 
-static void	temp_split(char **split, int checkpoint, int i, t_operators *data)
+static void	order_flags(char **split, int checkpoint, int i, t_operators *data)
 {
 	char	*temp;
 	int		aux;
@@ -45,12 +45,8 @@ static int	check_flag(char **split, int index, t_operators *data)
 	int	i;
 
 	i = 0;
-	if (split[index + 1] && check_if_operator(data, split[index + 1][0]))
-	{
-		if (split[index + 1][0] != data->dquote
-			&& split[index + 1][0] != data->squote)
-			return (1);
-	}
+	if (split[index + 1] && is_symbol(data, split[index + 1][0]))
+		return (1);
 	if (!split[index + 2] || split[index + 2][0] == data->pipe)
 		return (1);
 	return (0);
@@ -78,7 +74,7 @@ void	order_split(char **split, t_operators *data)
 		if (data->reinput == split[i][0] || data->reoutput == split[i][0])
 		{
 			if (!check_flag(split, i, data))
-				temp_split(split, checkpoint, i, data);
+				order_flags(split, checkpoint, i, data);
 		}
 	}
 }

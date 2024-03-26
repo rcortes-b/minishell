@@ -1,29 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   checker.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/26 17:23:24 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/03/26 17:23:25 by rcortes-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/checker.h"
-
-/*void	check_tokens(t_word **lst, t_operators *data)
-{
-	t_word	*aux;
-	int		op_counter;
-
-	if (is_symbol(data, (*lst)->com[0])) {
-		printf("First is operator"); exit(EXIT_FAILURE);}//ret NULL, handle errpr
-	aux = *lst;
-	op_counter = 0;
-	while (aux)
-	{
-		if (is_symbol(data, aux->com[0]))
-		{
-			if (op_counter == 1) {
-				printf("double operator, cuidaoo\n"); exit(EXIT_FAILURE);}//handle error
-			op_counter = 1;
-		}
-		else
-			op_counter = 0;
-		if (!aux->next && is_symbol(data, aux->com[0])) {
-			printf("Last is operator, lel\n"); exit(EXIT_FAILURE);}//handle error
-		aux = aux->next;
-	}
-}*/
 
 void	check_tokens(char **words, t_operators *data)
 {

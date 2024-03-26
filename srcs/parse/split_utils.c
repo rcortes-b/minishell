@@ -12,14 +12,6 @@
 
 #include "../../includes/parse.h"
 
-int	check_if_operator(t_operators *data, char c)
-{
-	if (c == data->pipe || c == data->squote
-		|| c == data->dquote || c == data->reinput || c == data->reoutput)
-		return (1);
-	return (0);
-}
-
 void	free_mem(char **split)
 {
 	int	i;
@@ -30,44 +22,83 @@ void	free_mem(char **split)
 	free(split);
 }
 
-int	is_operator(char *line, int index, t_operators *data)
+void	iterate_quote(char *line, int *index, char c, int *size)
 {
-	int		i;
-	char	c;
-
-	i = 1;
-	c = line[index];
-	if (data->pipe == line[index])
-		return (i);
-	else if (data->squote == line[index] || data->dquote == line[index])
+	(*index)++;
+	if (size)
+		(*size)++;
+	while (line[*index] && line[*index] != c)
 	{
-		index++;
-		while (line[index++] != c)
-			i++;
-		i++;
+		(*index)++;
+		if (size)
+			(*size)++;
 	}
-	else if (data->reinput == line[index])
+	if (!line[*index])
 	{
-		if (line[index + 1] == data->reinput)
-			i++;
+		fprintf(stderr, "MAL CLOSE QUOTING\n");
+		exit(EXIT_FAILURE);
 	}
-	else if (data->reoutput == line[index])
-	{
-		if (line[index + 1] == data->reoutput)
-			i++;
-	}
-	return (i);
 }
 
-void	get_word_quote(char **word, char *line, int *index, char c)
+void	copy_quotes(char *word, char *line, int *i, int *index)
+{
+	char	c;
+
+	c = line[*index];
+	word[(*i)++] = line[(*index)++];
+	while (line[*index] && line[*index] != c)
+		word[(*i)++] = line[(*index)++];
+	if (!line[*index])
+	{
+		fprintf(stderr, "MAL CLOSE QUOTING\n");
+		exit(EXIT_FAILURE);
+	}
+}
+
+int	do_operator(char *line, int *index, t_operators *data, int *size)
+{
+	if (size)
+		(*size)++;
+	if (line[*index] == data->pipe)
+		(*index)++;
+	else if (line[*index] == data->reinput)
+	{
+		(*index)++;
+		if (line[*index] == data->reinput)
+		{
+			if (size)
+				(*size)++;
+			(*index)++;
+		}
+	}
+	else if (line[*index] == data->reoutput)
+	{
+		(*index)++;
+		if (line[*index] == data->reoutput)
+		{
+			if (size)
+				(*size)++;
+			(*index)++;
+		}
+	}
+	return (1);
+}
+
+int	split_word_symbol(char **word, char *line,
+	int *index, t_operators *data)
 {
 	int	i;
 
 	i = 0;
-	word[0][i++] = c;
-	(*index)++;
-	while (line[*index] != c)
+	if (is_symbol(data, line[*index]))
+	{
 		word[0][i++] = line[(*index)++];
-	word[0][i++] = line[(*index)++];
-	word[0][i] = '\0';
+		if ((data->reinput == line[*index] && data->reinput == line[*index - 1])
+			|| (data->reoutput == line[*index]
+				&& data->reoutput == line[*index - 1]))
+			word[0][i++] = line[(*index)++];
+		word[0][i] = '\0';
+		return (0);
+	}
+	return (1);
 }

@@ -7,4 +7,4 @@ Estructura actual del proyecto:
 								-Se tokenizan las estructuras para saber que tipo de simbolo o si es comando
 
 
-			EL INFILE PUEDE PILLAR DESPUES DE UNA PIPE EN CUALQUIERE MOEMNTO
+			EL INFILE PUEDE PILLAR DESPUES DE UNA PIPE EN CUALQUIERE MOMENTO

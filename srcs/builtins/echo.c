@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/26 17:26:54 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/03/26 17:26:55 by rcortes-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/builtins.h"
 
 /* La idea general: recibe fd (se le pasa 1 si va a terminal o se le pasa el fd[1] de la pipe para escribir ahi */

@@ -15,11 +15,13 @@ static void	parse_main(t_word *words, char *line, char **envp)
 	printf("Line: %s\n", line);
 	printf("\n");
 	split = ft_split(line, " \t", &data);
+	for (int i = 0; split[i]; i++)
+		printf("Split %d: %s\n", i + 1, split[i]);
 	check_tokens(split, &data);
 	order_split(split, &data); //MODIFY THIS *** EL PRIMER COMANDO PUEDE SER INFILE
 	parse_environment(&env, envp);
-	char *pepe = get_env(&env, "PATHI");
-	printf("Env got: %s\n", pepe);
+	//char *pepe = get_env(&env, "PATHI");
+	//printf("Env got: %s\n", pepe);
 	categorize(split, &words, &data);
 	tokenization(&words, &data);
 	expand_cli(&words, &env);
