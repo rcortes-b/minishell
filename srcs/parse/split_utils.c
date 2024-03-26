@@ -12,16 +12,6 @@
 
 #include "../../includes/parse.h"
 
-void	free_mem(char **split)
-{
-	int	i;
-
-	i = -1;
-	while (split[++i])
-		free(split[i]);
-	free(split);
-}
-
 void	iterate_quote(char *line, int *index, char c, int *size)
 {
 	(*index)++;

@@ -16,7 +16,6 @@
 # include "minishell.h"
 
 //ESTO ES SPLIT
-void	free_mem(char **split);
 void	copy_quotes(char *word, char *line, int *i, int *index);
 void	iterate_quote(char *line, int *index, char c, int *size);
 int		do_operator(char *line, int *index, t_operators *data, int *size);

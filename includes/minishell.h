@@ -14,6 +14,11 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
+//# include "builtins.h"
+//# include "checker.h"
+//# include "error.h"
+//# include "expander.h"
+//# include "parse.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdio.h>
@@ -22,6 +27,7 @@
 # include <signal.h>
 # include <fcntl.h>
 # include <sys/wait.h>
+# include <errno.h>
 
 enum e_tokenization
 {

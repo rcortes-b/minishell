@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/parse.h"
+#include "../../includes/error.h"
 
 static int	count_words(char *line, const char *set, t_operators *data)
 {
@@ -114,10 +115,7 @@ static char	**get_split(char **split, const char *set,
 		size = get_word_size(line, set, i, &data);
 		split[counter] = malloc(sizeof(char) * size + 1);
 		if (!split[counter])
-		{
-			free_mem(split);
-			return (NULL);
-		}
+			handle_split_error(split);
 		split_word(split[counter], set, line, &i);
 	}
 	split[counter] = NULL;
@@ -132,7 +130,7 @@ char	**ft_split(char *line, const char *set, t_operators *data)
 	counter = count_words(line, set, data);
 	split = (char **)malloc(sizeof(char *) * (counter + 1));
 	if (!split)
-		return (NULL);
+		handle_error();
 	split = get_split(split, set, line, counter);
 	if (!split)
 		free(split);

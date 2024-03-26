@@ -11,6 +11,7 @@ srcs/parse/categorization.c  srcs/parse/tokenization.c \
 srcs/checker/checker.c \
 srcs/expander/expander.c srcs/expander/expander_utils.c \
 srcs/builtins/echo.c srcs/builtins/change_dir.c \
+srcs/error_handler/parse_errors.c \
 srcs/main.c
 
 OBJS = $(SRCS:.c=.o)

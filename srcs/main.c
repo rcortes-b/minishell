@@ -2,6 +2,7 @@
 #include "../includes/minishell.h"
 #include "../includes/checker.h"
 #include "../includes/expander.h"
+#include "../includes/error.h"
 //char **spl = ft_split("ls -a > cat -b > mid -c > out -d", " \t");
 
 static void	parse_main(t_word *words, char *line, char **envp)
@@ -20,6 +21,7 @@ static void	parse_main(t_word *words, char *line, char **envp)
 	check_tokens(split, &data);
 	order_split(split, &data); //MODIFY THIS *** EL PRIMER COMANDO PUEDE SER INFILE
 	parse_environment(&env, envp);
+	/* HASTA AQUI ESTA DE PUTA MADRE QUE LOCURA */
 	//char *pepe = get_env(&env, "PATHI");
 	//printf("Env got: %s\n", pepe);
 	categorize(split, &words, &data);
