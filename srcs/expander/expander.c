@@ -6,7 +6,7 @@
 /*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 17:23:16 by rcortes-          #+#    #+#             */
-/*   Updated: 2024/03/26 17:23:18 by rcortes-         ###   ########.fr       */
+/*   Updated: 2024/04/02 18:07:39 by mvallhon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 //printf("malloc calc: %lu\n", ft_strlen(str) - j - 1 + ft_strlen(env) - j + 1);
 
-static char	*do_expand(t_list **lst_env, char *str, int index)
+static char	*do_expand(t_env **lst_env, char *str, int index)
 {
 	char	*env_name;
 	char	*env;
@@ -44,7 +44,7 @@ static char	*do_expand(t_list **lst_env, char *str, int index)
 	return (NULL);
 }
 
-void	check_if_expand(t_list **lst_env, char **str)
+void	check_if_expand(t_env **lst_env, char **str)
 {
 	int		i;
 	char	lead;
@@ -103,7 +103,7 @@ static char	*remove_quotes(char *str)
 	return (del_quotes(str, new_comm));
 }
 
-static void	handle_expander(t_word **word, t_list **lst_env)
+static void	handle_expander(t_word **word, t_env **lst_env)
 {
 	int	i;
 
@@ -118,7 +118,7 @@ static void	handle_expander(t_word **word, t_list **lst_env)
 	}
 }
 
-void	expand_cli(t_word **word, t_list **lst_env)
+void	expand_cli(t_word **word, t_env **lst_env)
 {
 	t_word	*aux;
 

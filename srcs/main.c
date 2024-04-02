@@ -7,11 +7,12 @@
 
 static void	parse_main(t_word *words, char *line, char **envp)
 {
-	t_list		*env;
+	//ENV ANTIGUO t_list		*env;
+	t_env	*env;
 	t_operators	data;
 	char		**split;
 
-	env = NULL;
+	//ENV ANTIGUO env = NULL;
 	init_data(&data);
 	printf("Line: %s\n", line);
 	printf("\n");
