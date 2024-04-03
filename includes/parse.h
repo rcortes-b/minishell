@@ -14,6 +14,13 @@
 # define PARSE_H
 
 # include "minishell.h"
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	int				only_exp;
+	struct s_env	*next;
+}					t_env;
 
 //ESTO ES SPLIT
 void	copy_quotes(char *word, char *line, int *i, int *index);
@@ -33,19 +40,12 @@ void	categorize(char **words, t_word **lst, t_operators *data);
 void	tokenization(t_word **lst, t_operators *data);
 
 //ESTO ES ENVIRONMENT
-typedef struct s_env
-{
-	char			*key;
-	char			*value;
-	int				only_exp;
-	struct s_env	*next;
-}					t_env;
 
-t_env	*ft_newenv(char *env);
+t_env	*ft_newenv(void);
 void	ft_envadd_back(t_env **env_lst, t_env *new_env);
-void	parse_enviroment(t_env **env_lst, char **envp);
+void	parse_environment(t_env **env_lst, char **envp);
 int		ft_strcmp(char *s1, char *s2);
-char	*get_env(t_env **env_lst, char *get_key);
+t_env	*get_env(t_env **env_lst, char *get_key);
 //ENVIROMENT ANTIGUO PELIGRO!!
 //void	parse_environment(t_list **lst, char **envp);
 //char	*get_env(t_list **lst, char *key);

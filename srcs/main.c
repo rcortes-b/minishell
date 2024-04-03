@@ -7,27 +7,32 @@
 
 static void	parse_main(t_word *words, char *line, char **envp)
 {
-	//ENV ANTIGUO t_list		*env;
-	t_env	*env;
+	t_env		*env;
 	t_operators	data;
 	char		**split;
 
-	//ENV ANTIGUO env = NULL;
 	init_data(&data);
+	parse_environment(&env, envp);
 	printf("Line: %s\n", line);
 	printf("\n");
 	split = ft_split(line, " \t", &data);
 	for (int i = 0; split[i]; i++)
 		printf("Split %d: %s\n", i + 1, split[i]);
 	check_tokens(split, &data);
+	expand_cli(split, &env);
+	printf("\n");
+	for (int i = 0; split[i]; i++)
+		printf("Expanded Split %d: %s\n", i + 1, split[i]);
 	order_split(split, &data); //MODIFY THIS *** EL PRIMER COMANDO PUEDE SER INFILE
-	parse_environment(&env, envp);
+	printf("\n");
+	for (int i = 0; split[i]; i++)
+		printf("Expanded && Sorted Split %d: %s\n", i + 1, split[i]);
 	/* HASTA AQUI ESTA DE PUTA MADRE QUE LOCURA */
 	//char *pepe = get_env(&env, "PATHI");
 	//printf("Env got: %s\n", pepe);
 	categorize(split, &words, &data);
 	tokenization(&words, &data);
-	expand_cli(&words, &env);
+	printf("\n");
 	while (words)
 	{
 		int	i = -1;

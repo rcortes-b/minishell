@@ -27,4 +27,4 @@ void	change_directory(t_word *word)
 	int	i;
 
 	i = 1;
-}*/
+}*/ 

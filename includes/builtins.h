@@ -15,6 +15,17 @@
 
 # include "minishell.h"
 
+/*
+echo && echo -n
+cd (relative && abs path)
+pwd
+export
+unset
+env    ***DONE***
+exit
+*/
+
 void	echo_builtin(t_word *word, int fd);
+void	print_env(char **envp);
 
 #endif

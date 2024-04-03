@@ -12,40 +12,7 @@
 
 #include "../../includes/parse.h"
 
-//ENVIROMENT ANTIGUO !NO TOCAR!
-/*char	*get_env(t_list **lst, char *key)
-{
-	t_list	*aux;
-	int		i;
-
-	aux = *lst;
-	while (aux)
-	{
-		i = 0;
-		while (key[i] && aux->content[i] && aux->content[i] == key[i])
-			i++;
-		if (!key[i] && aux->content[i] == '=')
-			return (aux->content);
-		aux = aux->next;
-	}
-	return (NULL);
-}
-
-void	parse_environment(t_list **lst, char **envp)
-{
-	t_list	*aux;
-	int		i;
-
-	*lst = NULL;
-	i = -1;
-	while (envp[++i])
-	{
-		aux = ft_lstnew(envp[i]);
-		ft_lstadd_back(lst, aux);
-	}
-}*/
-
-char	*get_env(t_env **env_lst, char *get_key)
+t_env	*get_env(t_env **env_lst, char *get_key)
 {
 	t_env	*aux;
 	
@@ -53,13 +20,13 @@ char	*get_env(t_env **env_lst, char *get_key)
 	while (aux)
 	{
 		if (ft_strcmp(get_key, aux->key) == 0)
-			return (aux->value);
+			return (aux);
 		aux = aux->next;
 	}
 	return (NULL);
 }
 
-void	parse_enviroment(t_env **env_lst, char **envp)
+void	parse_environment(t_env **env_lst, char **envp)
 {
 	t_env	*aux;
 	int		i;
@@ -70,7 +37,7 @@ void	parse_enviroment(t_env **env_lst, char **envp)
 	while (envp[++i])
 	{
 		j = 0;
-		aux = ft_newenv(envp[i]);
+		aux = ft_newenv();
 		while (envp[i][j] != '=')
 			j++;
 		aux->key = ft_substr(envp[i], 0, j);

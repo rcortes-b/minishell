@@ -12,11 +12,11 @@
 
 #include "../../includes/parse.h"
 
-t_env	*ft_newenv(char *env)
+t_env	*ft_newenv(void)
 {
 	t_env	*new;
 
-	new = (t_env *)malloc(sizeof(new));
+	new = (t_env *)malloc(sizeof(t_env));
 	if (!new)
 		return (NULL);
 	new->next = NULL;

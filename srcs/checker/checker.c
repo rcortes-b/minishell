@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../includes/parse.h"
 #include "../../includes/checker.h"
 #include "../../includes/error.h"
 
