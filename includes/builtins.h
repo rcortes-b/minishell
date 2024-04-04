@@ -14,6 +14,7 @@
 # define BUILTINS_H
 
 # include "minishell.h"
+# include "parse.h"
 
 /*
 echo && echo -n
@@ -27,5 +28,8 @@ exit
 
 void	echo_builtin(t_word *word, int fd);
 void	print_env(char **envp);
+
+//Export
+void	empty_export(t_env **lst_env);
 
 #endif
