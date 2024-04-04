@@ -12,14 +12,15 @@ static void	parse_main(t_word *words, char *line, char **envp)
 	char		**split;
 
 	init_data(&data);
-	parse_environment(&env, envp);
 	printf("Line: %s\n", line);
 	printf("\n");
-	split = ft_split(line, " \t", &data);
+	split = ft_split(line, " \t", &data); //Error Handled *** Not Tested
 	for (int i = 0; split[i]; i++)
 		printf("Split %d: %s\n", i + 1, split[i]);
-	check_tokens(split, &data);
-	expand_cli(split, &env);
+	free(line);
+	parse_environment(&env, envp, split); //Error Handled *** Not Tested
+	check_tokens(split, &data, &env); //Error Handled *** Not Tested
+	expand_cli(split, &env); //Error Handled *** Not Tested
 	printf("\n");
 	for (int i = 0; split[i]; i++)
 		printf("Expanded Split %d: %s\n", i + 1, split[i]);
@@ -27,24 +28,25 @@ static void	parse_main(t_word *words, char *line, char **envp)
 	printf("\n");
 	for (int i = 0; split[i]; i++)
 		printf("Expanded && Sorted Split %d: %s\n", i + 1, split[i]);
-	/* HASTA AQUI ESTA DE PUTA MADRE QUE LOCURA */
-	//char *pepe = get_env(&env, "PATHI");
-	//printf("Env got: %s\n", pepe);
-	categorize(split, &words, &data);
-	tokenization(&words, &data);
+	categorize(split, &words, &data, &env); //Error Handled *** Not Tested
+	tokenization(&words, &data); //Error Handled *** Not Tested
 	printf("\n");
-	while (words)
+	t_word *aux = words;
+	while (aux)
 	{
 		int	i = -1;
-		printf("com: %s\n", words->com);
-		if (words->flags) {
+		printf("com: %s\n", aux->com);
+		if (aux->flags) {
 		printf("flags:\n");
-		while (words->flags[++i])
-			printf("  - %s\n", words->flags[i]); }
-		printf("Token: %d\n", words->token);
-		words = words->next;
+		while (aux->flags[++i])
+			printf("  - %s\n", aux->flags[i]); }
+		printf("Token: %d\n", aux->token);
+		aux = aux->next;
 		printf("\n");
 	}
+	free_env_mem(&env);
+	free_struct_nodes(&words);
+	free(split); /* Solo se libera el array general del split, ya que las otras direcciones estan en words */
 }
 
 int main(int argc, char **argv, char **envp)

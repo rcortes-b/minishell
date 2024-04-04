@@ -14,7 +14,8 @@
 #include "../../includes/checker.h"
 #include "../../includes/error.h"
 
-static void	custom_error_checker(char **words, char *c2, t_operators *data)
+static void	custom_error_checker(char **words, char *c2,
+	t_operators *data, t_env **lst_env)
 {
 	ft_putstr_fd("syntax error near unexpected token ", 2);
 	if (!c2)
@@ -27,29 +28,30 @@ static void	custom_error_checker(char **words, char *c2, t_operators *data)
 		write(2, "'>'", 3);
 	write(2, "\n", 1);
 	free_mem(words);
+	free_env_mem(lst_env);
 	exit(EXIT_FAILURE);
 }
 
-void	check_tokens(char **words, t_operators *data)
+void	check_tokens(char **words, t_operators *data, t_env **lst_env)
 {
 	int	op_counter;
 	int	i;
 
 	if (words[0][0] == data->pipe || words[0][0] == data->reoutput)
-		custom_error_checker(words, words[0], data);
+		custom_error_checker(words, words[0], data, lst_env);
 	op_counter = 0;
 	i = -1;
 	while (words[++i])
 	{
 		if (is_symbol(data, words[i][0]))
 		{
-			if (op_counter == 1) 
-				custom_error_checker(words, words[i], data);
+			if (op_counter == 1)
+				custom_error_checker(words, words[i], data, lst_env);
 			op_counter = 1;
 		}
 		else
 			op_counter = 0;
 		if (!words[i + 1] && is_symbol(data, words[i][0]))
-			custom_error_checker(words, words[i + 1], data);
+			custom_error_checker(words, words[i + 1], data, lst_env);
 	}
 }

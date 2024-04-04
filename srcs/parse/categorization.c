@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/parse.h"
+#include "../../includes/error.h"
 
 static void	put_command(t_word **new, char **word)
 {
@@ -25,15 +26,15 @@ static t_word	*new_word(char **words, int start, int end, t_operators *data)
 
 	new = (t_word *)malloc(sizeof (t_word));
 	if (!new)
-		return (NULL); //free_all & exit(status)
+		return (NULL);
 	if (!is_symbol(data, words[start][0]))
 	{
 		new->com = ft_strdup(words[start]);
 		if (!new->com)
-			return (NULL); //free_all & exit(status)
+			return (free(new), NULL);
 		new->flags = (char **)malloc(sizeof (char *) * (end - start + 2));
 		if (!new->flags)
-			return (NULL); //free_all & exit(status)
+			return (free(new), free(new->com), NULL);
 		i = -1;
 		while ((start + (++i)) <= end)
 			new->flags[i] = words[start + i];
@@ -63,7 +64,53 @@ static void	wordadd_back(t_word **words, t_word *new_word)
 	}
 }
 
-void	categorize(char **words, t_word **lst, t_operators *data)
+static t_word	*aux_categorize(char **words, int *start,
+	int *end, t_operators *data)
+{
+	t_word	*n_word;
+
+	if (is_symbol(data, words[*end][0]))
+	{
+		*start = *end;
+		n_word = new_word(words, *start, *end, data);
+		if (!n_word)
+			return (NULL);
+		(*end)++;
+	}
+	else
+	{
+		*start = *end;
+		while (words[*end] && !is_symbol(data, words[*end][0]))
+			(*end)++;
+		n_word = new_word(words, *start, ((*end) - 1), data);
+		if (!n_word)
+			return (NULL);
+	}
+	return (n_word);
+}
+
+void	categorize(char **words, t_word **lst,
+	t_operators *data, t_env **lst_env)
+{
+	t_word	*n_word;
+	int		start;
+	int		end;
+
+	start = 0;
+	end = 0;
+	while (words[end])
+	{
+		n_word = aux_categorize(words, &start, &end, data);
+		if (!n_word)
+		{
+			free_struct_nodes(lst);
+			handle_env_error(lst_env, words);
+		}
+		wordadd_back(lst, n_word);
+	}
+}
+
+/*void	categorize(char **words, t_word **lst, t_operators *data)
 {
 	t_word	*n_word;
 	int		start;
@@ -89,4 +136,4 @@ void	categorize(char **words, t_word **lst, t_operators *data)
 			wordadd_back(lst, n_word);
 		}
 	}
-}
+}*/

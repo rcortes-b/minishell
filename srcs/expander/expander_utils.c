@@ -1,33 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.h                                            :+:      :+:    :+:   */
+/*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/04 11:56:39 by rcortes-          #+#    #+#             */
-/*   Updated: 2024/04/04 11:56:40 by rcortes-         ###   ########.fr       */
+/*   Created: 2024/04/04 09:51:08 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/04 09:51:09 by rcortes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ERROR_H
-# define ERROR_H
+#include "../../includes/expander.h"
+#include "../../includes/parse.h"
 
-# include "minishell.h"
-# include "parse.h"
+void	set_expand_values(char *lead, int *quote, char c, int value)
+{
+	*lead = c;
+	*quote = value;
+}
 
-//Environment
-void	free_env_mem(t_env **lst_env);
-void	handle_env_error(t_env **lst_env, char **split);
-
-//Split
-void	free_mem(char **split);
-void	handle_split_error(char **split);
-
-//Main Struct
-void	free_struct_nodes(t_word **words);
-
-//Throw Error
-void	handle_error(void);
-
-#endif
+void	free_node(t_env **node)
+{
+	free((*node)->key);
+	free((*node)->value);
+	free(*node);
+}

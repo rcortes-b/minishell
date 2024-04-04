@@ -1,33 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.h                                            :+:      :+:    :+:   */
+/*   parse_errors2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/04 11:56:39 by rcortes-          #+#    #+#             */
-/*   Updated: 2024/04/04 11:56:40 by rcortes-         ###   ########.fr       */
+/*   Created: 2024/04/04 11:59:34 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/04 11:59:35 by rcortes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ERROR_H
-# define ERROR_H
+#include "../../includes/error.h"
 
-# include "minishell.h"
-# include "parse.h"
+void	free_struct_nodes(t_word **words)
+{
+	t_word	*aux;
+	t_word	*tmp;
+	int		i;
 
-//Environment
-void	free_env_mem(t_env **lst_env);
-void	handle_env_error(t_env **lst_env, char **split);
-
-//Split
-void	free_mem(char **split);
-void	handle_split_error(char **split);
-
-//Main Struct
-void	free_struct_nodes(t_word **words);
-
-//Throw Error
-void	handle_error(void);
-
-#endif
+	if (!*words)
+		return ;
+	aux = *words;
+	while (aux)
+	{
+		if (aux->com)
+			free(aux->com);
+		i = -1;
+		if (aux->flags)
+		{
+			while (aux->flags[++i])
+				free(aux->flags[i]);
+			free(aux->flags);
+		}
+		tmp = aux->next;
+		free(aux);
+		aux = tmp;
+	}
+}

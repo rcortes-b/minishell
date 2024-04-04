@@ -12,6 +12,7 @@
 
 #include "../../includes/expander.h"
 #include "../../includes/parse.h"
+#include "../../includes/error.h"
 
 static char	*get_expanded(char *new_str, t_env *env, char *str, int index)
 {
@@ -52,48 +53,45 @@ static char	*do_expand(t_env **lst_env, char *str, int index)
 			j++;
 		env_name = ft_substr(str, i, j);
 		if (!env_name)
-			return (NULL);
+			return (NULL); //malloc error
 		env = get_env(lst_env, env_name);
-		if (!env)
-			return (NULL);
+		if (!env) //Si no encuentra el path env
+			return (free(env_name), str);
 		new_str = malloc(ft_strlen(str) + ft_strlen(env->value) - ft_strlen(env->key) - 1);
+		if (!new_str)
+			return (free(env_name), free_node(&env), NULL);
 		new_str = get_expanded(new_str, env, str, index);
-		free(str);
-		return (new_str);
+		return (free(str), free(env_name), new_str);
 	}
 	return (NULL);
 }
 
-static void	check_if_expand(t_env **lst_env, char **str)
+static char	*check_if_expand(t_env **lst_env, char **str)
 {
 	int		i;
 	char	lead;
 	int		second;
 
-	second = 0;
-	lead = 'x';
+	set_expand_values(&lead, &second, 'x', 0);
 	i = -1;
 	while (str[0][++i])
 	{
 		if (!second && (str[0][i] == '"' || str[0][i] == '\''))
-		{
-			lead = str[0][i];
-			second = 1;
-		}
+			set_expand_values(&lead, &second, str[0][i], 1);
 		else if (second && str[0][i] == lead)
-		{
-			lead = 'x';
-			second = 0;
-		}
+			set_expand_values(&lead, &second, 'x', 0);
 		if (str[0][i] == '$' && lead != '\'' )
 		{
 			*str = do_expand(lst_env, *str, i);
-			
+			if (!*str)
+				return (NULL);
+			if (str[0][i] == '$')
+				return (*str);
 			second = 0;
 			i = -1;
-			//eprintf("Str: %s\n", *str);
 		}
 	}
+	return (*str);
 }
 
 void	expand_cli(char **words, t_env **lst_env)
@@ -102,7 +100,10 @@ void	expand_cli(char **words, t_env **lst_env)
 
 	i = -1;
 	while (words[++i])
-		check_if_expand(lst_env, &words[i]);
+	{
+		if (!check_if_expand(lst_env, &words[i]))
+			handle_env_error(lst_env, words);
+	}
 }
 
 /*static char	*remove_quotes(char *str)
