@@ -26,9 +26,11 @@ static void	ft_swap_env(t_env **aux, t_env **tmp)
 	str_aux = (*aux)->key;
 	(*aux)->key = (*tmp)->key;
 	(*tmp)->key = str_aux;
+
 	str_aux = (*aux)->value;
 	(*aux)->value = (*tmp)->value;
 	(*tmp)->value = str_aux;
+
 	temp = (*aux)->only_exp;
 	(*aux)->only_exp = (*tmp)->only_exp;
 	(*tmp)->only_exp = temp;
@@ -87,6 +89,6 @@ void	empty_export(t_env **lst_env)
 		new->only_exp = 1;
 		ft_envadd_back(&exp, new);
 	}
-	sort_list(&exp);
+	sort_list(&exp); /* Se puede crear una lista nueva para que no haga sorting del env y solo del export :) */
 	print_export(&exp);
 }

@@ -14,6 +14,12 @@
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
 
+static void	set_expand_values(char *lead, int *quote, char c, int value)
+{
+	*lead = c;
+	*quote = value;
+}
+
 static char	*get_expanded(char *new_str, t_env *env, char *str, int index)
 {
 	int	i;
@@ -66,7 +72,7 @@ static char	*do_expand(t_env **lst_env, char *str, int index)
 	return (NULL);
 }
 
-static char	*check_if_expand(t_env **lst_env, char **str)
+static char	*check_if_expand(t_env **lst_env, char **str, char ***split)
 {
 	int		i;
 	char	lead;
@@ -85,6 +91,8 @@ static char	*check_if_expand(t_env **lst_env, char **str)
 			*str = do_expand(lst_env, *str, i);
 			if (!*str)
 				return (NULL);
+			if (lead == 'x')
+				*split = resplit(str, split);
 			if (str[0][i] == '$')
 				return (*str);
 			second = 0;
@@ -94,16 +102,17 @@ static char	*check_if_expand(t_env **lst_env, char **str)
 	return (*str);
 }
 
-void	expand_cli(char **words, t_env **lst_env)
+char	**expand_cli(char **words, t_env **lst_env)
 {
 	int	i;
 
 	i = -1;
 	while (words[++i])
 	{
-		if (!check_if_expand(lst_env, &words[i]))
+		if (!check_if_expand(lst_env, &words[i], &words))
 			handle_env_error(lst_env, words);
 	}
+	return (words);
 }
 
 /*static char	*remove_quotes(char *str)

@@ -20,9 +20,9 @@ static void	parse_main(t_word *words, char *line, char **envp)
 		printf("Split %d: %s\n", i + 1, split[i]);
 	free(line);
 	parse_environment(&env, envp, split); //Error Handled *** Not Tested
-	empty_export(&env);
+	//empty_export(&env);
 	check_tokens(split, &data, &env); //Error Handled *** Not Tested
-	expand_cli(split, &env); //Error Handled *** Not Tested
+	split = expand_cli(split, &env); //Error Handled *** Not Tested
 	printf("\n");
 	for (int i = 0; split[i]; i++)
 		printf("Expanded Split %d: %s\n", i + 1, split[i]);

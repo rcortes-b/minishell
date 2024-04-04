@@ -18,7 +18,7 @@
 
 //char	*del_quotes(char *str, char *new_str);
 void	free_node(t_env **node);
-void	set_expand_values(char *lead, int *quote, char c, int value);
-void	expand_cli(char **words, t_env **lst_env);
+char	**expand_cli(char **words, t_env **lst_env);
+char	**resplit(char **str, char ***split);
 
 #endif
