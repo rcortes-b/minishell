@@ -20,5 +20,8 @@
 void	free_node(t_env **node);
 char	**expand_cli(char **words, t_env **lst_env);
 char	**resplit(char **str, char ***split);
+int		aux_lead(char lead, char ***split, char **str);
+void	iterate_expand(char *str, int *j, int i);
+char	*invalid_env(char **str, char **env_name);
 
 #endif

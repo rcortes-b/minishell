@@ -9,7 +9,7 @@ SRCS = srcs/parse/split.c srcs/parse/split_utils.c srcs/parse/environment.c  src
 srcs/parse/flags.c srcs/parse/parse_utils.c \
 srcs/parse/categorization.c  srcs/parse/tokenization.c \
 srcs/checker/checker.c \
-srcs/expander/expander.c srcs/expander/expander_utils.c \
+srcs/expander/expander.c srcs/expander/expander_utils.c srcs/expander/expander_utils2.c \
 srcs/builtins/echo.c srcs/builtins/change_dir.c  srcs/builtins/env.c srcs/builtins/export.c \
 srcs/error_handler/parse_errors.c srcs/error_handler/parse_errors2.c \
 srcs/main.c

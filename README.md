@@ -9,6 +9,9 @@ Estructura actual del proyecto:
 
 			EL INFILE PUEDE PILLAR DESPUES DE UNA PIPE EN CUALQUIERE MOMENTO
 
-			***	IMPORT HEADER TO MINISHELL.H
-			*** TINDRE EN COMPTE ELS ESPAIS EN L'EXPANSIO = DE LES COMETES DOBLES
-			*** GESTIONAR ERRORS DESPRES DEL MISSATGE DEL PARSE_MAIN :)
+Apunts:
+		- En la ejecucion hay que tender en cuenta si el outfile es flow $teste si existe o no y si tiene comas dobles, simples o nada.
+		-  Que hacemos cuando la expansión pero o existe la variable $loquesea como lo gestionamos.
+		-
+		-
+		-

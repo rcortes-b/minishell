@@ -14,11 +14,25 @@
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
 
-static void	set_expand_values(char *lead, int *quote, char c, int value)
+static void	set_expand_values(char *lead, int *quote, char c, int *index)
+{
+	if (c == 'x')
+		*quote = 0;
+	else
+		*quote = 1;
+	*lead = c;
+	if (index)
+		*index = -1;
+}
+
+/*static void	set_expand_values(char *lead, int *quote,
+		char c, int value, int *index)
 {
 	*lead = c;
 	*quote = value;
-}
+	if (index)
+		*index = -1;
+}*/
 
 static char	*get_expanded(char *new_str, t_env *env, char *str, int index)
 {
@@ -54,18 +68,17 @@ static char	*do_expand(t_env **lst_env, char *str, int index)
 	j = 0;
 	while (str[i])
 	{
-		while (str[i + j] && str[i + j] != '$'
-			&& str[i + j] != '"' && str[i + j] != '\'' && str[i + j] != ' ')
-			j++;
+		iterate_expand(str, &j, i);
 		env_name = ft_substr(str, i, j);
 		if (!env_name)
-			return (NULL); //malloc error
+			return (NULL);
 		env = get_env(lst_env, env_name);
-		if (!env) //Si no encuentra el path env
-			return (free(env_name), str);
-		new_str = malloc(ft_strlen(str) + ft_strlen(env->value) - ft_strlen(env->key) - 1);
+		if (!env)
+			return (invalid_env(&str, &env_name));
+		new_str = malloc(ft_strlen(str) + ft_strlen(env->value)
+				- ft_strlen(env->key) - 1);
 		if (!new_str)
-			return (free(env_name), free_node(&env), NULL);
+			return (free(env_name), NULL);
 		new_str = get_expanded(new_str, env, str, index);
 		return (free(str), free(env_name), new_str);
 	}
@@ -78,23 +91,22 @@ static char	*check_if_expand(t_env **lst_env, char **str, char ***split)
 	char	lead;
 	int		second;
 
-	set_expand_values(&lead, &second, 'x', 0);
-	i = -1;
+	set_expand_values(&lead, &second, 'x', &i);
 	while (str[0][++i])
 	{
 		if (!second && (str[0][i] == '"' || str[0][i] == '\''))
-			set_expand_values(&lead, &second, str[0][i], 1);
+			set_expand_values(&lead, &second, str[0][i], NULL);
 		else if (second && str[0][i] == lead)
-			set_expand_values(&lead, &second, 'x', 0);
+			set_expand_values(&lead, &second, 'x', NULL);
 		if (str[0][i] == '$' && lead != '\'' )
 		{
 			*str = do_expand(lst_env, *str, i);
 			if (!*str)
 				return (NULL);
-			if (lead == 'x')
-				*split = resplit(str, split);
-			if (str[0][i] == '$')
+			else if (!*(*str))
 				return (*str);
+			else if (!aux_lead(lead, split, str))
+				return (NULL);
 			second = 0;
 			i = -1;
 		}
