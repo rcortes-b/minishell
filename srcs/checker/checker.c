@@ -32,12 +32,13 @@ static void	custom_error_checker(char **words, char *c2,
 	exit(EXIT_FAILURE);
 }
 
-void	check_tokens(char **words, t_operators *data, t_env **lst_env)
+/*void	check_tokens(char **words, t_operators *data, t_env **lst_env)
 {
 	int	op_counter;
+	int	is_pipe;
 	int	i;
 
-	if (words[0][0] == data->pipe || words[0][0] == data->reoutput)
+	if (words[0][0] == data->pipe)
 		custom_error_checker(words, words[0], data, lst_env);
 	op_counter = 0;
 	i = -1;
@@ -46,12 +47,45 @@ void	check_tokens(char **words, t_operators *data, t_env **lst_env)
 		if (is_symbol(data, words[i][0]))
 		{
 			if (op_counter == 1)
-				custom_error_checker(words, words[i], data, lst_env);
+			{
+				if (is_pipe && words[i][0] == data->pipe)
+					custom_error_checker(words, words[i], data, lst_env);
+			}
 			op_counter = 1;
+			if (words[i][0] == data->pipe)
+				is_pipe = 1;
+			else
+				is_pipe = 0;
 		}
 		else
+		{
 			op_counter = 0;
+			is_pipe = 0;
+		}
 		if (!words[i + 1] && is_symbol(data, words[i][0]))
 			custom_error_checker(words, words[i + 1], data, lst_env);
+	}
+}*/
+
+void	check_tokens(char **words, t_operators *data, t_env **lst_env)
+{
+	int	i;
+
+	if (words[0][0] == data->pipe)
+		custom_error_checker(words, words[0], data, lst_env);
+	i = -1;
+	while (words[++i])
+	{
+		if (!words[i + 1] && is_symbol(data, words[i][0]))
+			custom_error_checker(words, words[i + 1], data, lst_env);
+		if (words[i + 1])
+		{
+			if (*words[i] == data->pipe && *words[i + 1] == data->pipe)
+				custom_error_checker(words, words[i + 1], data, lst_env);
+			if (((*words[i] == data->reinput && *words[i + 1] == data->reoutput) || (*words[i] == data->reinput && *words[i + 1] == data->pipe)))
+				custom_error_checker(words, words[i + 1], data, lst_env);
+			if ((*words[i] == data->reoutput && *words[i + 1] == data->reinput) || (*words[i] == data->reoutput && *words[i + 1] == data->pipe))
+				custom_error_checker(words, words[i + 1], data, lst_env);
+		}
 	}
 }
