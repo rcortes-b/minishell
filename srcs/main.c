@@ -4,6 +4,7 @@
 #include "../includes/expander.h"
 #include "../includes/error.h"
 #include "../includes/builtins.h"
+#include "../includes/exec.h"
 //char **spl = ft_split("ls -a > cat -b > mid -c > out -d", " \t");
 
 static void	parse_main(t_word *words, char *line, char **envp)
@@ -32,6 +33,7 @@ static void	parse_main(t_word *words, char *line, char **envp)
 		printf("Expanded && Sorted Split %d: %s\n", i + 1, split[i]);
 	categorize(split, &words, &data, &env); //Error Handled *** Not Tested
 	tokenization(&words, &data); //Error Handled *** Not Tested
+	execution(&words, &data);
 	printf("\n");
 	t_word *aux = words;
 	while (aux)

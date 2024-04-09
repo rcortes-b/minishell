@@ -51,7 +51,7 @@ static int	check_pipe(char **new_split)
 	i = -1;
 	while (new_split[++i])
 	{
-		if (new_split[i][0] == '|')
+		if (new_split[i][0] == '|' || new_split[i][0] == '<' || new_split[i][0] == '>')
 		{
 			new_split[i] = aux_check_pipe(&new_split[i]);
 			if (!new_split[i])

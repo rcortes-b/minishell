@@ -30,4 +30,7 @@ void	free_struct_nodes(t_word **words);
 //Throw Error
 void	handle_error(void);
 
+//Free Node of Word Struct
+void	free_word_node(t_word **lst);
+
 #endif

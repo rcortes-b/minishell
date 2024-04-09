@@ -53,6 +53,8 @@ typedef struct s_word
 	char			*com;
 	char			**flags;
 	int				token;
+	int				in;
+	int				out;
 	struct s_word	*next;
 }	t_word;
 

@@ -12,11 +12,12 @@ srcs/checker/checker.c \
 srcs/expander/expander.c srcs/expander/expander_utils.c srcs/expander/expander_utils2.c \
 srcs/builtins/echo.c srcs/builtins/change_dir.c  srcs/builtins/env.c srcs/builtins/export.c \
 srcs/error_handler/parse_errors.c srcs/error_handler/parse_errors2.c \
+srcs/exec/exec.c srcs/exec/heredoc.c srcs/exec/cooking_execution.c srcs/exec/exe_cmd.c\
 srcs/main.c
 
 OBJS = $(SRCS:.c=.o)
 
-HEAD = includes/minishell.h includes/parse.h includes/builtins.h includes/checker.h includes/expander.h
+HEAD = includes/minishell.h includes/parse.h includes/builtins.h includes/checker.h includes/expander.h includes/exec.h
 
 LIBFT = libft/libft.a
 READLINE = -L$(HOME)/.brew/Cellar/readline/8.2.10/lib -lreadline -lhistory

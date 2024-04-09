@@ -37,3 +37,19 @@ void	free_struct_nodes(t_word **words)
 		aux = tmp;
 	}
 }
+
+void	free_word_node(t_word **lst)
+{
+	int	i;
+
+	if ((*lst)->com)
+		free((*lst)->com);
+	i = -1;
+	if ((*lst)->flags)
+	{
+		while ((*lst)->flags[++i])
+			free((*lst)->flags[i]);
+		free((*lst)->flags);
+	}
+	free(*lst);
+}

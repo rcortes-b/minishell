@@ -42,6 +42,8 @@ static t_word	*new_word(char **words, int start, int end, t_operators *data)
 	}
 	else
 		put_command(&new, &words[start]);
+	new->in = -2;
+	new->out = -2;
 	new->next = NULL;
 	return (new);
 }
@@ -109,31 +111,3 @@ void	categorize(char **words, t_word **lst,
 		wordadd_back(lst, n_word);
 	}
 }
-
-/*void	categorize(char **words, t_word **lst, t_operators *data)
-{
-	t_word	*n_word;
-	int		start;
-	int		end;
-
-	start = 0;
-	end = 0;
-	while (words[end])
-	{
-		if (is_symbol(data, words[end][0]))
-		{
-			start = end;
-			n_word = new_word(words, start, end, data);
-			wordadd_back(lst, n_word);
-			end++;
-		}
-		else
-		{
-			start = end;
-			while (words[end] && !is_symbol(data, words[end][0]))
-				end++;
-			n_word = new_word(words, start, end - 1, data);
-			wordadd_back(lst, n_word);
-		}
-	}
-}*/
