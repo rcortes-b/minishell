@@ -1,17 +1,9 @@
-Estructura actual del proyecto:
-								-Un unico prompt que pide un input
-								-Se hace un split del input
-								-Se hace el check de que ni el primer ni el ultimo struct sea operator y de que no hayan dos seguidos
-								-Se ordena el input para ser ejecutado de forma correcta (order flags)
-								-Se pasa el input a estructura distinguiendo entre operador y comando / flags
-								-Se tokenizan las estructuras para saber que tipo de simbolo o si es comando
-
-
-			EL INFILE PUEDE PILLAR DESPUES DE UNA PIPE EN CUALQUIERE MOMENTO
-
-Apunts:
-		- En la ejecucion hay que tender en cuenta si el outfile es flow $teste si existe o no y si tiene comas dobles, simples o nada.
-		-  Que hacemos cuando la expansión pero o existe la variable $loquesea como lo gestionamos.
-		-
-		-
-		-
+Execution path:
+				-Se ordena todo ✅
+				-Se eliminan los redirects abriendo los archivos y almacenando los fds en estos ✅
+				-Se crea un doble char pointer con los builtins para hacer las comprobaciones ✅
+				-Se checkea si el comando a ejecutar es builtin o no
+					-Si es builtin:
+									-Se llama a la funcion del builtin en concreto
+					-Si no es builtin:
+									-Se llama a execve con el path completo y la lst->flags

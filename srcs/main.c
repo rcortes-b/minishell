@@ -33,7 +33,7 @@ static void	parse_main(t_word *words, char *line, char **envp)
 		printf("Expanded && Sorted Split %d: %s\n", i + 1, split[i]);
 	categorize(split, &words, &data, &env); //Error Handled *** Not Tested
 	tokenization(&words, &data); //Error Handled *** Not Tested
-	execution(&words, &data);
+	execution(&words, &data, &env);
 	printf("\n");
 	t_word *aux = words;
 	while (aux)

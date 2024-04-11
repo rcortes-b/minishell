@@ -52,4 +52,5 @@ void	free_word_node(t_word **lst)
 		free((*lst)->flags);
 	}
 	free(*lst);
+	*lst = NULL;
 }

@@ -1,88 +1,81 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/11 11:28:01 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/11 11:28:02 by rcortes-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/exec.h"
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
 
-static t_word	*open_redirect(t_word **lst, t_word *op)
+static char	**append_bar(char **split)
 {
-	if ((*lst)->in != -2)
-		close((*lst)->in);
-	else if ((*lst)->out != -2)
-		close((*lst)->out);
-	if (op->token == REINPUT)
+	char	**path;
+	int		j;
+
+	j = 0;
+	while (split[j])
+		j++;
+	path = malloc(sizeof(char *) * (j + 1));
+	if (!path)
+		printf("Error.\n");
+	j = -1;
+	while (split[++j])
 	{
-		(*lst)->in = open(op->next->com, O_RDONLY);
-		if ((*lst)->in == -1)
-			perror("KLK");
+		path[j] = ft_strjoin(split[j], "/");
+		if (!path[j])
+		{
+			printf("Error.\n");
+		}
+		free(split[j]);
 	}
-	else if (op->token == REOUTPUT)
-	{
-		(*lst)->out = open(op->next->com, O_CREAT | O_RDWR
-				| O_TRUNC, 0644);
-		if ((*lst)->out == -1)
-			perror("KLK");
-	}
-	else if (op->token == HEREDOC)
-	{
-		if (!do_heredoc(lst, op->next->com))
-			perror("KLK");
-	}
-	else if (op->token == APPEND_OPT)
-	{
-		(*lst)->out = open(op->next->com, O_CREAT | O_RDWR
-				| O_APPEND, 0644);
-		if ((*lst)->out == -1)
-			perror("KLK");
-	}
-	return (op);
+	free(split);
+	path[j] = NULL;
+	return (path);
 }
 
-static t_word	**set_redirects(t_word **lst, t_operators *data)
-{
-	t_word	*lst_ptr;
-	t_word	*aux;
-	t_word	*tmp;
-	int		is_redirect;
-	int		head_com;
 
-	aux = *lst;
-	head_com = 1;
-	is_redirect = 0;
-	while (aux)
+static char	**parse_path(t_env **my_env)
+{
+	t_env	*my_paths;
+	char	**paths;
+	int		i;
+
+	my_paths = get_env(my_env, "PATH");
+	i = 0;
+	while (my_paths->value[i] != '/')
+		i++;
+	paths = ft_esplit(my_paths->value, ':');
+	if (!paths)
 	{
-		if (head_com == 1)
-			lst_ptr = aux;
-		head_com = 0;
-		if (*aux->com == data->pipe)
-		{
-			head_com = 1;
-			if (is_redirect)
-				lst_ptr->next = aux;
-			is_redirect = 0;
-		}
-		if (*aux->com == data->reinput || *aux->com == data->reoutput)
-		{
-			if (!open_redirect(&lst_ptr, aux))
-				return (NULL);
-			tmp = aux->next->next;
-			free_word_node(&aux->next);
-			free_word_node(&aux);
-			aux = tmp;
-			is_redirect = 1;
-			continue ;
-		}
-		aux = aux->next;
+		ft_putendl_fd("utils.c Line 83: Malloc Error", 2);
+		exit(EXIT_FAILURE); //cuidao, no exit
 	}
-	if (is_redirect)
-		lst_ptr->next = NULL;
-	return (lst);
+	paths = append_bar(paths);
+	return (paths);
 }
 
-void	execution(t_word **lst, t_operators *data, t_env **my_env)
+char	*execution(t_word **lst, t_operators *data, t_env **my_env)
 {
-	//t_exec	*exe;
-	lst = set_redirects(lst, data);
+	t_exe	vars;
+
+	vars.env = my_env;
+	vars.lst = set_redirects(lst, data);
 	if (!lst)
-		return ;
-	if (!cooking_execution(lst, my_env))
-		return ;
+		return (NULL); //si es void hay que comprobar errores
+	vars.builtins = create_builtins();
+	if (!vars.builtins)
+		printf("Error.\n");
+	vars.path = parse_path(my_env);
+	if (!vars.path)
+		printf("Error.\n");
+	if (!cooking_execution(&vars))
+		return (NULL); //handle error aqui
+	return (*vars.path); //return temporal
 }
