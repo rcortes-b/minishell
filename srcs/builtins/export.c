@@ -1,94 +1,63 @@
+#include "../../includes/exec.h"
 #include "../../includes/builtins.h"
+#include "../../includes/error.h"
 
-static void	print_export(t_env **env)
+static char	*new_str(char *value, int size)
 {
-	t_env	*aux;
-
-	aux = *env;
-	while (aux)
-	{
-		if (ft_strcmp(aux->key, "_") != 0)
-		{
-			if (aux->only_exp)
-				printf("declare -x %s\n", aux->key);
-			else
-				printf("declare -x %s=\"%s\"\n", aux->key, aux->value);
-		}
-		aux = aux->next;
-	}
-}
-
-static void	ft_swap_env(t_env **aux, t_env **tmp)
-{
-	char	*str_aux;
-	int		temp;
-
-	str_aux = (*aux)->key;
-	(*aux)->key = (*tmp)->key;
-	(*tmp)->key = str_aux;
-
-	str_aux = (*aux)->value;
-	(*aux)->value = (*tmp)->value;
-	(*tmp)->value = str_aux;
-
-	temp = (*aux)->only_exp;
-	(*aux)->only_exp = (*tmp)->only_exp;
-	(*tmp)->only_exp = temp;
-}
-
-static void	sort_list(t_env **env)
-{
-	t_env	*aux;
-	t_env	*tmp;
+	char	*new_str;
 	int		i;
 
-	i = 0;
-	aux = *env;
-	while (aux)
-	{
-		tmp = aux->next;
-		while (tmp)
-		{
-			if (aux->key[0] > tmp->key[0])
-				ft_swap_env(&aux, &tmp);
-			else if (aux->key[0] == tmp->key[0])
-			{
-				i = 0;
-				while (aux->key[i] == tmp->key[i])
-					i++;
-				if (aux->key[i] > tmp->key[i])
-					ft_swap_env(&aux, &tmp);
-			}
-			tmp = tmp->next;
-		}
-		aux = aux->next;
-	}
+	new_str = (char *)malloc(sizeof(char) * size + 1);
+	if (!new_str)
+		return (NULL);
+	i = -1;
+	while (++i < size)
+		new_str[i] = value[i];
+	new_str[i] = '\0';
+	return (new_str);
 }
 
-void	empty_export(t_env **lst_env)
-{
-	t_env	*exp;
-	t_env	*aux;
-	t_env	*new;
-	int		is_oldpwd;
+/* a partir de la key todo es valido 
+1- comrobar si hay igual para el only export, si es onlyexp 0 funcion de checker
 
-	exp = *lst_env;
-	aux = *lst_env;
-	is_oldpwd = 0;
-	while (aux)
+*/
+
+static void	add_export(t_env **env, char *value)
+{
+	t_env	*new_env;
+	int	only_export;
+	int	i;
+
+	new_env = (t_env *)malloc(sizeof(t_env));
+	if (!new_env)
+		printf("Error.\n");
+	i = -1;
+	only_export = 1;
+	while (value[++i])
 	{
-		if (ft_strcmp(aux->key, "OLDPWD") == 0)
-			is_oldpwd = 1;
-		aux = aux->next;
+		if (!only_export && !new_env->value)
+			new_env->value = new_str(&value[i], ft_strlen(&value[i]));
+		if (value[i] == '=')
+		{
+			new_env->key = new_str(value, i);
+			only_export = 0;
+		}
 	}
-	if (!is_oldpwd)
+	new_env->only_exp = only_export;
+	new_env->next = NULL;
+	ft_envadd_back(env, new_env);
+}
+
+void	do_export(t_exe **vars)
+{
+	int	i;
+
+	i = 0;
+	if (!(*(*vars)->lst)->flags[1])
+		empty_export((*vars)->env);
+	else
 	{
-		new = ft_newenv();
-		new->key = ft_strdup("OLDPWD");
-		new->value = NULL;
-		new->only_exp = 1;
-		ft_envadd_back(&exp, new);
+		while ((*(*vars)->lst)->flags[++i])
+			add_export((*vars)->env, (*(*vars)->lst)->flags[i]);
 	}
-	sort_list(&exp); /* Se puede crear una lista nueva para que no haga sorting del env y solo del export :) */
-	print_export(&exp);
 }

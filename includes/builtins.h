@@ -13,6 +13,8 @@
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
+#define EXIT_CODE 256
+
 # include "minishell.h"
 # include "parse.h"
 
@@ -22,14 +24,18 @@ cd (relative && abs path)
 pwd
 export
 unset
-env    ***DONE***
+env
 exit
 */
 
+//Echo
 void	echo_builtin(t_word *word, int fd);
-void	print_env(char **envp);
+
+//Env
+void	print_env(t_env *env);
 
 //Export
 void	empty_export(t_env **lst_env);
+void	do_export(t_exe **vars);
 
 #endif

@@ -26,7 +26,7 @@ void	echo_builtin(t_word *word, int fd)
 	int	is_flag;
 
 	i = 1;
-	if (ft_strncmp(word->flags[i], "-n", 2) == 0)
+	if (ft_strcmp(word->flags[i], "-n") == 0)
 	{
 		is_flag = 1;
 		i++;

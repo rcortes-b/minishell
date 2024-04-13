@@ -11,3 +11,18 @@
 /* ************************************************************************** */
 
 #include "../../includes/builtins.h"
+
+void	print_env(t_env *env)
+{
+	t_env	*aux;
+
+	aux = env;
+	while (aux)
+	{
+		if (ft_strcmp(aux->key, "_") != 0 && !env->only_exp)
+			printf("%s=%s\n", aux->key, aux->value);
+		else
+			printf("%s=/usr/bin/env\n", aux->key);
+		aux = aux->next;
+	}
+}

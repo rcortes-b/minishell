@@ -7,3 +7,12 @@ Execution path:
 									-Se llama a la funcion del builtin en concreto
 					-Si no es builtin:
 									-Se llama a execve con el path completo y la lst->flags
+
+Builtins To Do:
+				- echo ✅
+				- cd
+				- pwd
+				- export
+				- unset ✅
+				- env ✅ *check el comment
+				- exit

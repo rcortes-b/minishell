@@ -34,7 +34,7 @@ static void	parse_main(t_word *words, char *line, char **envp)
 	categorize(split, &words, &data, &env); //Error Handled *** Not Tested
 	tokenization(&words, &data); //Error Handled *** Not Tested
 	execution(&words, &data, &env);
-	printf("\n");
+	/*printf("\n");
 	t_word *aux = words;
 	while (aux)
 	{
@@ -47,7 +47,7 @@ static void	parse_main(t_word *words, char *line, char **envp)
 		printf("Token: %d\n", aux->token);
 		aux = aux->next;
 		printf("\n");
-	}
+	}*/
 	free_env_mem(&env);
 	free_struct_nodes(&words);
 	free(split); /* Solo se libera el array general del split, ya que las otras direcciones estan en words */

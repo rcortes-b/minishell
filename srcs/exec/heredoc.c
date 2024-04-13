@@ -35,6 +35,8 @@ int	do_heredoc(t_word **lst, char *limiter)
 	char	*line;
 	int		fd[2];
 
+	if (!lst)
+		return (NULL);
 	line = NULL;
 	if (pipe(fd) == -1)
 		return (0);

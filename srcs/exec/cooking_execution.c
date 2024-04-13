@@ -14,6 +14,7 @@
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
 #include "../../includes/exec.h"
+#include "../../includes/builtins.h"
 
 /*static void	set_ins(t_exe *vars)
 {
@@ -66,7 +67,7 @@
 	}
 }*/
 
-static void	set_outs(t_exe *vars)
+/*static void	set_outs(t_exe *vars)
 {
 	if ((*vars->lst)->out != -2) //Si hay outfile
 	{
@@ -86,11 +87,11 @@ static void	set_outs(t_exe *vars)
 	}
 	else if ((*vars->lst)->out == -2)
 	{
-		/*if (!((*vars->lst)->next))
-		{
-			
-		}
-		//else*/
+	//	*if (!((*vars->lst)->next))
+	//	{
+	//		
+		//}
+		//else
 		if (((*vars->lst)->next))
 		{
 			close(vars->fd[READ_END]);
@@ -98,7 +99,7 @@ static void	set_outs(t_exe *vars)
 			close(vars->fd[WRITE_END]);
 		}
 	}
-}
+}*/
 
 static void	first_argument(t_exe *vars)
 {
@@ -144,20 +145,22 @@ int	cooking_execution(t_exe *vars)
 	{
 		if (aux->token != PIPE) //no es una pipe
 		{
-			if (aux->next != NULL)
+			if (ft_strncmp("env", (*vars->lst)->com, 4) == 0)
+				print_env(*vars->env);
+			/*if (aux->next != NULL)
 				pipe(vars->fd);
 			vars->pid = fork();
 			if (vars->pid == 0)
 			{
 				set_outs(vars);
-				execve("/bin/ls", (*vars->lst)->flags, NULL);
+				//execve("/bin/ls", (*vars->lst)->flags, NULL);
 			}
 			else
 			{
 				int	status;
 				wait(&status);
 				fprintf(stderr, "WAIT ERROR: %d\n", status);
-			}
+			}*/
 		}
 		aux = aux->next;
 	}
