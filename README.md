@@ -11,8 +11,8 @@ Execution path:
 Builtins To Do:
 				- echo ✅
 				- cd
-				- pwd
-				- export
+				- pwd ✅
+				- export ✅
 				- unset ✅
-				- env ✅ *check el comment
+				- env ✅
 				- exit

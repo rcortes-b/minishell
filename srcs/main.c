@@ -48,7 +48,7 @@ static void	parse_main(t_word *words, char *line, char **envp)
 		aux = aux->next;
 		printf("\n");
 	}*/
-	free_env_mem(&env);
+	//free_env_mem(&env);
 	free_struct_nodes(&words);
 	free(split); /* Solo se libera el array general del split, ya que las otras direcciones estan en words */
 }
@@ -61,6 +61,9 @@ int main(int argc, char **argv, char **envp)
 	words = NULL;
 	argc = 0;
 	argv = NULL;
-	line = readline("minishell> ");
-	parse_main(words, line, envp);
+	while (1)
+	{
+		line = readline("minishell> ");
+		parse_main(words, line, envp);
+	}
 }

@@ -29,14 +29,24 @@ void	set_redirect_values(t_word **lst_ptr, t_word **aux,
 	}
 }
 
-void	update_node(t_word **aux, int *is_redirect)
+void	update_node(t_word **lst, t_word **aux, int *is_redirect)
 {
 	t_word	*tmp;
+	int		is_head;
 
+	is_head = 0;
+	if (*lst == *aux)
+		is_head = 1;
 	tmp = (*aux)->next->next;
 	free_word_node(&(*aux)->next);
 	free_word_node(aux);
-	*aux = tmp;
+	if (is_head == 1)
+	{
+		*aux = tmp;
+		*lst = *aux;
+	}
+	else
+		*aux = tmp;
 	*is_redirect = 1;
 }
 
@@ -97,10 +107,12 @@ t_word	**set_redirects(t_word **lst, t_operators *data)
 		set_redirect_values(&lst_ptr, &aux, &head_com, &is_redirect);
 		if (*aux->com == data->reinput || *aux->com == data->reoutput)
 		{
+			//printf("%p   %p\n\n", *lst, aux);
 			if (!open_redirect(&lst_ptr, aux, *aux->com == data->reoutput))
 				return (NULL);
-			update_node(&aux, &is_redirect);
-			printf("\n");
+			update_node(lst, &aux, &is_redirect);
+			printf("%p   %p\n\n", *lst, aux);
+			//printf("\n");
 			continue ;
 		}
 		aux = aux->next;

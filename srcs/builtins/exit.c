@@ -13,7 +13,7 @@
 
 //ojo con estos: > <
 
-static void	open_files(char *op, char *file_name, int is_pipe)
+/*static void	open_files(char *op, char *file_name, int is_pipe)
 {
 	int	fd;
 
@@ -87,4 +87,4 @@ void	do_exit(char **split)
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 	}
-}
+}*/

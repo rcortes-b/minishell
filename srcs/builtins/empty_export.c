@@ -2,6 +2,24 @@
 #include "../../includes/builtins.h"
 #include "../../includes/error.h"
 
+int	key_is_valid(char *var)
+{
+	int	i;
+
+	if ((var[0] >= '0' && var[0] <= '9') && var[1] == '=')
+		return (0);
+	i = 0;
+	while (var[i] && var[i] != '=')
+	{
+		if (var[i] == '+' && var[i + 1] == '=')
+			return (1);
+		if (!ft_isalnum(var[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 static void	print_export(t_env **env)
 {
 	t_env	*aux;

@@ -17,6 +17,7 @@
 
 # include "minishell.h"
 # include "parse.h"
+# include "exec.h"
 
 /*
 echo && echo -n
@@ -36,6 +37,10 @@ void	print_env(t_env *env);
 
 //Export
 void	empty_export(t_env **lst_env);
-void	do_export(t_exe **vars);
+int		key_is_valid(char *var);
+void	do_export(t_word *lst, t_exe **vars);
+
+//Pwd
+void	print_pwd(t_env *env);
 
 #endif

@@ -30,5 +30,7 @@ int		is_builtin(char **builtins, char *cmd);
 //Redirects
 t_word	**set_redirects(t_word **lst, t_operators *data);
 
+void	ejecutar_cosas(t_exe *vars, t_word *cmd);
+
 #endif
 

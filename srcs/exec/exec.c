@@ -75,7 +75,12 @@ char	*execution(t_word **lst, t_operators *data, t_env **my_env)
 	vars.path = parse_path(my_env);
 	if (!vars.path)
 		printf("Error.\n");
-	if (!cooking_execution(&vars))
-		return (NULL); //handle error aqui
-	return (*vars.path); //return temporal
+	//if (!(*lst)->next && (exit || cd))
+		///do exit o cd
+	//else
+	//{
+		if (!cooking_execution(&vars))
+			return (NULL); //handle error aqui
+		return (*vars.path); //return temporal
+	//}
 }
