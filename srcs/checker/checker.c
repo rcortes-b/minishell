@@ -76,6 +76,10 @@ void	check_tokens(char **words, t_operators *data, t_env **lst_env)
 	i = -1;
 	while (words[++i])
 	{
+		if (*words[i] == data->reinput && *words[i + 1] == data->reinput)
+			custom_error_checker(words, words[i + 1], data, lst_env);
+		if (*words[i] == data->reoutput && *words[i + 1] == data->reoutput)
+			custom_error_checker(words, words[i + 1], data, lst_env);
 		if (!words[i + 1] && is_symbol(data, words[i][0]))
 			custom_error_checker(words, words[i + 1], data, lst_env);
 		if (words[i + 1])

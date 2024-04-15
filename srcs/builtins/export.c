@@ -20,7 +20,7 @@ static int	var_exists(t_env *env, char *value, int size)
 	return (0);
 }
 
-static void	new_var(t_env **env, char *value, int is_onlyexp)
+static void	new_var(t_env **env, char *value, int is_onlyexp, int is_append)
 {
 	t_env	*new;
 	int		i;
@@ -31,16 +31,20 @@ static void	new_var(t_env **env, char *value, int is_onlyexp)
 	new->only_exp = is_onlyexp;
 	new->next = NULL;
 	i = 0;
-	while (value[i] && (value[i] != '=' || (value[i] != '+' && value[i + 1] == '=')))
+	while (value[i] && value[i] != '=' && value[i] != '+')
 		i++;
 	new->key = ft_substr(value, 0, i);
+	printf("Value: %s  NEW KEY: %s  I: %d\n", value, new->key, i);
 	if (!new->key)
 		printf("Malloc error en substr.\n");
 	if (is_onlyexp)
-		new->value = NULL;
+	{
+		new->value = malloc(1);
+		new->value[0]= '\0';
+	}
 	else
 	{
-		if (value[i] == '+')
+		if (is_append)
 			i += 2;
 		else
 			i++;
@@ -57,22 +61,30 @@ static void	update_var(t_env **env, char *value, int is_append, int is_onlyexp)
 	if (is_onlyexp)
 		return ;
 	i = 0;
-	while (value[i - 1] != '=')
+	//while (value[i - 1] != '=')
+	while (value[i] != '=' && value[i] != '+')
 		i++;
 	aux = *env;
-	while (ft_strncmp(aux->key, value, i))
+	while (ft_strncmp(aux->key, value, i) != 0)
 		aux = aux->next;
+	if (aux->only_exp)
+		aux->only_exp = is_onlyexp;
 	if (is_append)
 	{
-		if (!ft_strjoin(aux->value, &value[i]))
+		aux->value = ft_strjoin(aux->value, &value[i + 2]);
+		if (!aux->value)
 			printf("strjoin error.\n");
 	}
 	else
 	{
-		free(aux->value);
-		aux->value = ft_strdup(&value[i]);
+		//if (aux->value)
+		//	free(aux->value);
+		printf("VALUEEEE %p\n", aux->value);
+		//lolazo(&aux, &value[i]);
+		aux->value = ft_strdup(&value[i + 1]);
 		if (!aux->value)
 			printf("strdup error.\n");
+		printf("AUCS VALIU: %p\n", aux->value);
 	}
 }
 
@@ -86,6 +98,7 @@ static void	add_export(t_env **env, char *value)
 	i = -1;
 	is_new = 1;
 	is_onlyexp = 0;
+	is_append = 0;
 	while (value[++i] && (value[i] != '=' || (value[i] != '+' && value[i + 1] == '=')))
 	{
 		if (value[i] == '+' && value[i + 1] == '=')
@@ -99,7 +112,7 @@ static void	add_export(t_env **env, char *value)
 	if (!value[i])
 		is_onlyexp = 1;
 	if (is_new)
-		new_var(env, value, is_onlyexp);
+		new_var(env, value, is_onlyexp, is_append);
 	else
 		update_var(env, value, is_append, is_onlyexp);
 }

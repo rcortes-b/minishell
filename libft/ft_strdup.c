@@ -28,3 +28,4 @@ char	*ft_strdup(const char *s)
 	str[size] = '\0';
 	return (str);
 }
+

@@ -16,7 +16,6 @@
 #include "../../includes/exec.h"
 #include "../../includes/builtins.h"
 
-
 static void	set_ins(t_exe *vars, t_word *aux)
 {
 	if (aux->next != NULL)
@@ -37,7 +36,7 @@ static void	set_ins(t_exe *vars, t_word *aux)
 		}
 		else if (aux->next->in == -2)
 		{
-			fprintf(stderr, "aqui pasa\n");
+			fprintf(stderr, "set ins -2\n");
 			close(vars->fd[WRITE_END]);
 			dup2(vars->fd[READ_END], STDIN_FILENO);
 			close(vars->fd[READ_END]);
@@ -58,7 +57,7 @@ static void	set_outs(t_exe *vars, t_word *aux)
 		}
 		else //Se redirige al file descriptor del outfile
 		{
-			fprintf(stderr, "aqui pasa\n");
+			fprintf(stderr, "set out 1, 2, 3 pasa\n");
 			// fprintf(stderr, "FILE WORKING! EN FD-OUT: %p! :D\n", &(*vars->lst)->out);
 			dup2(aux->out, STDOUT_FILENO);
 			close(aux->out);
@@ -68,7 +67,7 @@ static void	set_outs(t_exe *vars, t_word *aux)
 	{
 		if ((aux->next))
 		{
-			fprintf(stderr, "aqui pasa\n");
+			fprintf(stderr, "set out -2 pasa\n");
 			close(vars->fd[READ_END]);
 			dup2(vars->fd[WRITE_END], STDOUT_FILENO);
 			close(vars->fd[WRITE_END]);
@@ -95,12 +94,17 @@ static void	first_argument(t_exe *vars)
 			close((*vars->lst)->in);
 		}
 	}
-	else if ((*vars->lst)->in == -2)
-	{
-
-	}
 }
 
+static void	ejecutar_builtins(t_exe *vars, t_word *aux)
+{
+	if (ft_strcmp(aux->com, "export") == 0)
+		do_export(aux, &vars);
+	else if (ft_strcmp(aux->com, "env") == 0)
+		print_env(*vars->env);
+	else if (ft_strcmp(aux->com, "unset") == 0)
+		unset_env(vars->env, (*vars->lst)->flags);
+}
 
 int	cooking_execution(t_exe *vars)
 {
@@ -113,12 +117,6 @@ int	cooking_execution(t_exe *vars)
 //	aux = aux->next;
 	while (aux)
 	{
-		if (ft_strcmp(aux->com, "export") == 0)
-			do_export(aux, &vars);
-		else if (ft_strcmp(aux->com, "env") == 0)
-			print_env(*vars->env);
-		else
-		{
 		if (aux->token != PIPE) //no es una pipe
 		{
 			if (aux->next != NULL)
@@ -126,19 +124,25 @@ int	cooking_execution(t_exe *vars)
 			vars->pid = fork();
 			if (vars->pid == 0)
 			{
+				fprintf(stderr, "PASA POR AKI\n");
 				set_outs(vars, aux);
-				ejecutar_cosas(vars, aux);
+				if (is_builtin(create_builtins(), aux->com))
+					ejecutar_builtins(vars, aux);
+				else
+					ejecutar_cosas(vars, aux);
 			}
 			else
 			{
 				set_ins(vars, aux);
 			}
 		}
-		}
 		aux = aux->next;
 	}
 	wait(NULL);
 	wait(NULL);
+	wait(NULL);
 	dup2(fd, STDIN_FILENO);
+
+	fprintf(stderr, "alo polisia\n");
 	return (1);
 }

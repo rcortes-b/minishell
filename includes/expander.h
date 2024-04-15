@@ -24,4 +24,6 @@ int		aux_lead(char lead, char ***split, char **str);
 void	iterate_expand(char *str, int *j, int i);
 char	*invalid_env(char **str, char **env_name);
 
+char	*remove_quotes(char *str);
+
 #endif

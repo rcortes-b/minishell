@@ -16,20 +16,27 @@ void	update_env(t_env **aux, t_env **del_node)
 void	unset_env(t_env **env, char **values)
 {
 	t_env	*aux;
+	int		is_last;
 	int		i;
 
 	aux = *env;
-	while (aux)
+	is_last = 0;
+	while (aux->next)
 	{
 		i = 0;
 		while (values[++i])
 		{
 			if (ft_strcmp(aux->next->key, values[i]) == 0)
 			{
+					printf("LOL.\n");
 				update_env(&aux, &aux->next);
+				is_last = 1;
 				break ;
 			}
 		}
-		aux = aux->next;
+		if (is_last)
+			is_last = 0;
+		else
+			aux = aux->next;
 	}
 }

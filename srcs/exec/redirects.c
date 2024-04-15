@@ -29,11 +29,34 @@ void	set_redirect_values(t_word **lst_ptr, t_word **aux,
 	}
 }
 
-void	update_node(t_word **lst, t_word **aux, int *is_redirect)
+static void	repair_redirect(t_word *lst_ptr)
 {
+	if (lst_ptr->com[0] == '<' || lst_ptr->com[0] == '>')
+	{
+		if (lst_ptr->in != -2)
+		{
+			close(lst_ptr->in);
+			lst_ptr->in = -2;
+		}
+		if (lst_ptr->out != -2)
+		{ 
+			close(lst_ptr->out);
+			lst_ptr->out = -2;
+		}
+	}
+}
+
+void	update_node(t_word **lst, t_word **aux, int *is_redirect, t_word *lst_ptr)
+{
+	t_word *auxi; //del
 	t_word	*tmp;
 	int		is_head;
 
+	repair_redirect(lst_ptr);
+	auxi = *lst; //d
+	printf("AUXI: %s LST: %p\n", auxi->next->com, *aux);
+	while (auxi != *aux && auxi->next != *aux) {printf("AAA\n");
+		auxi = auxi->next;}
 	is_head = 0;
 	if (*lst == *aux)
 		is_head = 1;
@@ -47,6 +70,8 @@ void	update_node(t_word **lst, t_word **aux, int *is_redirect)
 	}
 	else
 		*aux = tmp;
+	auxi->next = tmp;
+	printf("vamo  %p\n", *lst);
 	*is_redirect = 1;
 }
 
@@ -71,6 +96,7 @@ static t_word	*open_redirect(t_word **lst, t_word *op, int check)
 		close((*lst)->in);
 	else if ((*lst)->out != -2 && check == 1)
 		close((*lst)->out);
+	printf("lst_ptr: %s\n", (*lst)->com);
 	if (op->token == REINPUT && !open_files(&(*lst)->in, op->next->com, 1))
 			printf("File no se ha podido abrir.\n");
 	else if (op->token == REOUTPUT)
@@ -101,25 +127,36 @@ t_word	**set_redirects(t_word **lst, t_operators *data)
 	aux = *lst;
 	head_com = 1;
 	is_redirect = 0;
+
 	lst_ptr = NULL;
 	while (aux)
 	{
 		set_redirect_values(&lst_ptr, &aux, &head_com, &is_redirect);
+		
 		if (*aux->com == data->reinput || *aux->com == data->reoutput)
 		{
 			//printf("%p   %p\n\n", *lst, aux);
 			if (!open_redirect(&lst_ptr, aux, *aux->com == data->reoutput))
 				return (NULL);
-			update_node(lst, &aux, &is_redirect);
-			printf("%p   %p\n\n", *lst, aux);
+			update_node(lst, &aux, &is_redirect, lst_ptr);
+			if (!*lst)
+			{
+				printf("AAAAAAAAAAAA\n");
+				return (NULL);
+			}
+			//printf("%p   %p\n\n", *lst, aux);
 			//printf("\n");
 			continue ;
 		}
 		aux = aux->next;
 	}
 	if (is_redirect)
+	{
 		lst_ptr->next = NULL;
-	fprintf(stderr, "IN: %d\nOUT: %d\n", (*lst)->in, (*lst)->out); // gestion de errores
+		//printf("lstptr: %s\n", lst_ptr->com);
+	}
+	//printf("%s    %s    %p\n", (*lst)->com, (*lst)->next->com, (*lst)->next->next);
+	//fprintf(stderr, "IN: %d\nOUT: %d\n", (*lst)->in, (*lst)->out); // gestion de errores
 	return (lst);
 }
 

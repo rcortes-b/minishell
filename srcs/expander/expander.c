@@ -123,11 +123,39 @@ char	**expand_cli(char **words, t_env **lst_env)
 	{
 		if (!check_if_expand(lst_env, &words[i], &words))
 			handle_env_error(lst_env, words);
+		else
+			words[i] = remove_quotes(words[i]);
 	}
 	return (words);
 }
 
-/*static char	*remove_quotes(char *str)
+static char	*del_quotes(char *str, char *new_str)
+{
+	char	lead;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'' || str[i] == '"')
+		{
+			lead = str[i++];
+			while (str[i] != lead)
+				new_str[j++] = str[i++];
+			i++;
+		}
+		else
+			new_str[j++] = str[i++];
+	}
+	new_str[j] = '\0';
+	free(str);
+	str = NULL;
+	return (new_str);
+}
+
+char	*remove_quotes(char *str)
 {
 	char	lead;
 	char	*new_comm;
@@ -154,29 +182,3 @@ char	**expand_cli(char **words, t_env **lst_env)
 		printf("loll error\n");
 	return (del_quotes(str, new_comm));
 }
-
-char	*del_quotes(char *str, char *new_str)
-{
-	char	lead;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'' || str[i] == '"')
-		{
-			lead = str[i++];
-			while (str[i] != lead)
-				new_str[j++] = str[i++];
-			i++;
-		}
-		else
-			new_str[j++] = str[i++];
-	}
-	new_str[j] = '\0';
-	free(str);
-	str = NULL;
-	return (new_str);
-}*/

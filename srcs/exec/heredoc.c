@@ -41,11 +41,12 @@ int	do_heredoc(t_word **lst, char *limiter)
 	if (pipe(fd) == -1)
 		return (0);
 		//Throw error
-	while (1)
+	while (1) //expand de una variable de entorno
 	{
-		line = readline(">");
+		line = readline("> ");
 		if (!line)
 			continue ;
+		if (!ft_strchr(line, '$'))
 		if (check_limiter(line, limiter))
 			break ;
 		write(fd[1], line, ft_strlen(line));

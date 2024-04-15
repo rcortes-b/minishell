@@ -42,5 +42,6 @@ void	do_export(t_word *lst, t_exe **vars);
 
 //Pwd
 void	print_pwd(t_env *env);
+void	unset_env(t_env **env, char **values);
 
 #endif

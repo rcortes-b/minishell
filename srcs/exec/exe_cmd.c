@@ -42,4 +42,3 @@ void	ejecutar_cosas(t_exe *vars, t_word *cmd)
 	if (execve(correct_path, cmd->flags, NULL) == -1)
 	fprintf(stderr, "BAD PATH!\n");
 }
-

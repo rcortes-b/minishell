@@ -67,8 +67,11 @@ char	*execution(t_word **lst, t_operators *data, t_env **my_env)
 
 	vars.env = my_env;
 	vars.lst = set_redirects(lst, data);
-	if (!lst)
+	if (!vars.lst)
+	{
+		printf("un poco kekw de tu parte\n");
 		return (NULL); //si es void hay que comprobar errores
+	}
 	vars.builtins = create_builtins();
 	if (!vars.builtins)
 		printf("Error.\n");

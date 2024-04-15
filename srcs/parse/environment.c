@@ -27,7 +27,7 @@ t_env	*get_env(t_env **env_lst, char *get_key)
 	return (NULL);
 }
 
-void	parse_environment(t_env **env_lst, char **envp, char **split)
+void	parse_environment(t_env **env_lst, char **envp)
 {
 	t_env	*aux;
 	int		i;
@@ -40,16 +40,16 @@ void	parse_environment(t_env **env_lst, char **envp, char **split)
 		j = 0;
 		aux = ft_newenv();
 		if (!aux)
-			handle_env_error(env_lst, split);
+			free_env_mem(env_lst);
 		while (envp[i][j] != '=')
 			j++;
 		aux->key = ft_substr(envp[i], 0, j);
 		if (!aux->key)
-			handle_env_error(env_lst, split);
+			free_env_mem(env_lst);
 		j++;
 		aux->value = ft_substr(envp[i], j, ft_strlen(envp[i]));
 		if (!aux->value)
-			handle_env_error(env_lst, split);
+			free_env_mem(env_lst);
 		aux->only_exp = 0;
 		ft_envadd_back(env_lst, aux);
 	}

@@ -7,9 +7,9 @@
 #include "../includes/exec.h"
 //char **spl = ft_split("ls -a > cat -b > mid -c > out -d", " \t");
 
-static void	parse_main(t_word *words, char *line, char **envp)
+static void	parse_main(t_word *words, char *line, t_env **env)
 {
-	t_env		*env;
+	//t_env		*env;
 	t_operators	data;
 	char		**split;
 
@@ -20,10 +20,10 @@ static void	parse_main(t_word *words, char *line, char **envp)
 	for (int i = 0; split[i]; i++)
 		printf("Split %d: %s\n", i + 1, split[i]);
 	free(line);
-	parse_environment(&env, envp, split); //Error Handled *** Not Tested
+	//parse_environment(&env, envp); //Error Handled *** Not Tested
 	//empty_export(&env);
-	check_tokens(split, &data, &env); //Error Handled *** Not Tested
-	split = expand_cli(split, &env); //Error Handled *** Not Tested
+	check_tokens(split, &data, env); //Error Handled *** Not Tested
+	split = expand_cli(split, env); //Error Handled *** Not Tested
 	printf("\n");
 	for (int i = 0; split[i]; i++)
 		printf("Expanded Split %d: %s\n", i + 1, split[i]);
@@ -31,9 +31,9 @@ static void	parse_main(t_word *words, char *line, char **envp)
 	printf("\n");
 	for (int i = 0; split[i]; i++)
 		printf("Expanded && Sorted Split %d: %s\n", i + 1, split[i]);
-	categorize(split, &words, &data, &env); //Error Handled *** Not Tested
+	categorize(split, &words, &data, env); //Error Handled *** Not Tested
 	tokenization(&words, &data); //Error Handled *** Not Tested
-	execution(&words, &data, &env);
+	execution(&words, &data, env);
 	/*printf("\n");
 	t_word *aux = words;
 	while (aux)
@@ -56,14 +56,17 @@ static void	parse_main(t_word *words, char *line, char **envp)
 int main(int argc, char **argv, char **envp)
 {
 	t_word	*words;
+	t_env	*env;
 	char *line;
 
 	words = NULL;
 	argc = 0;
 	argv = NULL;
+	parse_environment(&env, envp);
 	while (1)
 	{
 		line = readline("minishell> ");
-		parse_main(words, line, envp);
+		add_history(line);
+		parse_main(words, line, &env);
 	}
 }
