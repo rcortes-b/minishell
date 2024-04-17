@@ -25,4 +25,5 @@ void	print_env(t_env *env)
 			printf("%s=/usr/bin/env\n", aux->key);
 		aux = aux->next;
 	}
+	//exit(0);
 }

@@ -96,7 +96,7 @@ static void	first_argument(t_exe *vars)
 	}
 }
 
-static void	ejecutar_builtins(t_exe *vars, t_word *aux)
+void	ejecutar_builtins(t_exe *vars, t_word *aux)
 {
 	if (ft_strcmp(aux->com, "export") == 0)
 		do_export(aux, &vars);
@@ -104,43 +104,55 @@ static void	ejecutar_builtins(t_exe *vars, t_word *aux)
 		print_env(*vars->env);
 	else if (ft_strcmp(aux->com, "unset") == 0)
 		unset_env(vars->env, (*vars->lst)->flags);
+	else if (ft_strcmp(aux->com, "cd") == 0)
+		change_directory(vars);
+	else if (ft_strcmp(aux->com, "exit") == 0)
+		do_exit(vars);
+	else if (ft_strcmp(aux->com, "echo") == 0)
+		echo_builtin(aux);
+	else if (ft_strcmp(aux->com, "pwd") == 0)
+		print_pwd(*vars->env);
+	if (is_builtin(aux->com) == 1)
+		exit(0);
 }
 
 int	cooking_execution(t_exe *vars)
 {
 	t_word	*aux;
 	int		fd;
+	int		counter;
 
 	aux = *vars->lst;
 	fd = dup(STDIN_FILENO);
+	counter = 0;
 	first_argument(vars);
-//	aux = aux->next;
 	while (aux)
 	{
-		if (aux->token != PIPE) //no es una pipe
+		if (is_builtin(aux->com) != 2)
 		{
-			if (aux->next != NULL)
-				pipe(vars->fd);
-			vars->pid = fork();
-			if (vars->pid == 0)
-			{
-				fprintf(stderr, "PASA POR AKI\n");
-				set_outs(vars, aux);
-				if (is_builtin(create_builtins(), aux->com))
-					ejecutar_builtins(vars, aux);
+			counter++;
+			if (aux->token != PIPE)
+			{	
+				if (aux->next != NULL)
+					pipe(vars->fd);
+				vars->pid = fork();
+				if (vars->pid == 0)
+				{
+					fprintf(stderr, "PASA POR AKI\n");
+					set_outs(vars, aux);
+					if (is_builtin(aux->com) == 1)
+						ejecutar_builtins(vars, aux);
+					else
+						ejecutar_cosas(vars, aux);
+				}
 				else
-					ejecutar_cosas(vars, aux);
-			}
-			else
-			{
-				set_ins(vars, aux);
+					set_ins(vars, aux);
 			}
 		}
 		aux = aux->next;
 	}
-	wait(NULL);
-	wait(NULL);
-	wait(NULL);
+	printf("AAAAAAAAAAAAA: %d\n", counter);
+	wait_childs(vars, counter);
 	dup2(fd, STDIN_FILENO);
 
 	fprintf(stderr, "alo polisia\n");

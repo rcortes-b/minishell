@@ -23,16 +23,7 @@ static void	set_expand_values(char *lead, int *quote, char c, int *index)
 	*lead = c;
 	if (index)
 		*index = -1;
-}
-
-/*static void	set_expand_values(char *lead, int *quote,
-		char c, int value, int *index)
-{
-	*lead = c;
-	*quote = value;
-	if (index)
-		*index = -1;
-}*/
+} 
 
 static char	*get_expanded(char *new_str, t_env *env, char *str, int index)
 {
@@ -56,7 +47,7 @@ static char	*get_expanded(char *new_str, t_env *env, char *str, int index)
 	return (new_str);
 }
 
-static char	*do_expand(t_env **lst_env, char *str, int index)
+char	*do_expand(t_env **lst_env, char *str, int index)
 {
 	char	*env_name;
 	t_env	*env;
@@ -98,7 +89,7 @@ static char	*check_if_expand(t_env **lst_env, char **str, char ***split)
 			set_expand_values(&lead, &second, str[0][i], NULL);
 		else if (second && str[0][i] == lead)
 			set_expand_values(&lead, &second, 'x', NULL);
-		if (str[0][i] == '$' && lead != '\'' )
+		if (str[0][i] == '$' && lead != '\'')
 		{
 			*str = do_expand(lst_env, *str, i);
 			if (!*str)
@@ -121,8 +112,15 @@ char	**expand_cli(char **words, t_env **lst_env)
 	i = -1;
 	while (words[++i])
 	{
+		if (words[i][0] == '$' && words[i][1] == '?' && !words[i][2])
+			continue ;
+		if (i > 0 && ft_strcmp(words[i - 1], "<<") == 0)
+		{
+			words[i] = remove_quotes(words[i]);
+			continue ;
+		}
 		if (!check_if_expand(lst_env, &words[i], &words))
-			handle_env_error(lst_env, words);
+				handle_env_error(lst_env, words);
 		else
 			words[i] = remove_quotes(words[i]);
 	}

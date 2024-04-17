@@ -20,7 +20,7 @@ posicion flags[1]. Y depende de si es la ultima palabra que escribir o no y si h
 	 ******								    NOT TESTED xd								    ******
 */
 
-void	echo_builtin(t_word *word, int fd)
+void	echo_builtin(t_word *word)
 {
 	int	i;
 	int	is_flag;
@@ -35,11 +35,14 @@ void	echo_builtin(t_word *word, int fd)
 		is_flag = 0;
 	while (word->flags[i])
 	{
-		write(fd, word->flags[i], ft_strlen(word->flags[i]));
+		if (word->flags[i][0] == '$' && word->flags[i][1] == '?' && !word->flags[i][2])
+			ft_putnbr_fd(g_errstatus, 1);
+		else
+			write(1, word->flags[i], ft_strlen(word->flags[i]));
 		if (word->flags[i + 1])
-			write(fd, " ", 1);
+			write(1, " ", 1);
 		else if (!word->flags[i + 1] && is_flag == 0)
-			write(fd, "\n", 1);
+			write(1, "\n", 1);
 		i++;
 	}
 }

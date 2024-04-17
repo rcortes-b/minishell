@@ -7,6 +7,8 @@
 #include "../includes/exec.h"
 //char **spl = ft_split("ls -a > cat -b > mid -c > out -d", " \t");
 
+
+
 static void	parse_main(t_word *words, char *line, t_env **env)
 {
 	//t_env		*env;
@@ -62,10 +64,21 @@ int main(int argc, char **argv, char **envp)
 	words = NULL;
 	argc = 0;
 	argv = NULL;
+	g_errstatus = 0;
 	parse_environment(&env, envp);
 	while (1)
 	{
+		do_signal();
+		signal(SIGTSTP, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
 		line = readline("minishell> ");
+		if (!line)
+		{
+			printf("exit\n");
+			exit(EXIT_SUCCESS);
+		}
+		if (!line[0])
+			continue ;
 		add_history(line);
 		parse_main(words, line, &env);
 	}

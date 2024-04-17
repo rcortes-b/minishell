@@ -13,12 +13,33 @@
 #include "../../includes/exec.h"
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
+#include "../../includes/builtins.h"
+
+int	is_builtin(char *cmd)
+{
+	if (ft_strcmp(cmd, "echo") == 0)
+		return(1);
+	else if (ft_strcmp(cmd, "cd") == 0)
+		return(2);
+	else if (ft_strcmp(cmd, "pwd") == 0)
+		return(1);
+	else if (ft_strcmp(cmd, "export") == 0)
+		return(2);
+	else if (ft_strcmp(cmd, "unset") == 0)
+		return(2);
+	else if (ft_strcmp(cmd, "env") == 0)
+		return(1);
+	else if (ft_strcmp(cmd, "exit") == 0)
+		return(2);
+	return (0);
+}
 
 static char	**append_bar(char **split)
 {
 	char	**path;
 	int		j;
 
+	
 	j = 0;
 	while (split[j])
 		j++;
@@ -66,24 +87,24 @@ char	*execution(t_word **lst, t_operators *data, t_env **my_env)
 	t_exe	vars;
 
 	vars.env = my_env;
-	vars.lst = set_redirects(lst, data);
+	vars.lst = set_redirects(lst, data, my_env);
 	if (!vars.lst)
 	{
 		printf("un poco kekw de tu parte\n");
 		return (NULL); //si es void hay que comprobar errores
 	}
-	vars.builtins = create_builtins();
-	if (!vars.builtins)
-		printf("Error.\n");
 	vars.path = parse_path(my_env);
 	if (!vars.path)
 		printf("Error.\n");
-	//if (!(*lst)->next && (exit || cd))
+	//if (!(*lst)->next && (ft_strcmp((*lst)->com, "cd") == 0))
+	//	change_directory(&vars);
 		///do exit o cd
-	//else
-	//{
+	if (!(*lst)->next && is_builtin((*lst)->com) == 2)
+			ejecutar_builtins(&vars, *lst);
+	else
+	{
 		if (!cooking_execution(&vars))
 			return (NULL); //handle error aqui
-		return (*vars.path); //return temporal
-	//}
+	}
+	return (*vars.path); //return temporal
 }

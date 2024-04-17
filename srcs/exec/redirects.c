@@ -90,7 +90,7 @@ static int	open_files(int *fd, char *file, int flag_type)
 	return (1);
 }
 
-static t_word	*open_redirect(t_word **lst, t_word *op, int check)
+static t_word	*open_redirect(t_word **lst, t_word *op, int check, t_env **my_env)
 {
 	if ((*lst)->in != -2 && check == 0)
 		close((*lst)->in);
@@ -106,7 +106,7 @@ static t_word	*open_redirect(t_word **lst, t_word *op, int check)
 	}
 	else if (op->token == HEREDOC)
 	{
-		if (!do_heredoc(lst, op->next->com))
+		if (!do_heredoc(lst, op->next->com, my_env))
 			perror("KLK");
 	}
 	else if (op->token == APPEND_OPT)
@@ -117,7 +117,7 @@ static t_word	*open_redirect(t_word **lst, t_word *op, int check)
 	return (op);
 }
 
-t_word	**set_redirects(t_word **lst, t_operators *data)
+t_word	**set_redirects(t_word **lst, t_operators *data, t_env **my_env)
 {
 	t_word	*lst_ptr;
 	t_word	*aux;
@@ -136,7 +136,7 @@ t_word	**set_redirects(t_word **lst, t_operators *data)
 		if (*aux->com == data->reinput || *aux->com == data->reoutput)
 		{
 			//printf("%p   %p\n\n", *lst, aux);
-			if (!open_redirect(&lst_ptr, aux, *aux->com == data->reoutput))
+			if (!open_redirect(&lst_ptr, aux, *aux->com == data->reoutput, my_env))
 				return (NULL);
 			update_node(lst, &aux, &is_redirect, lst_ptr);
 			if (!*lst)

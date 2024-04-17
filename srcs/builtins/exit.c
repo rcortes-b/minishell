@@ -13,78 +13,51 @@
 
 //ojo con estos: > <
 
-/*static void	open_files(char *op, char *file_name, int is_pipe)
-{
-	int	fd;
-
-	if (ft_strlen(op) > 2)
-		ft_putstr_fd("near unexpected token lulw\n" ,2);
-	fd = -2;
-	if (*op == '>' && op[1] == '>' && !op[2])
-		fd = open(file_name, O_CREAT | O_RDWR
-				| O_APPEND, 0644);
-	else if (*op == '<' && op[1] == '<' && !op[2])
-		do_heredoc(NULL, file_name);
-	else if (*op == '>')
-		fd = open(file_name, O_CREAT | O_RDWR
-				| O_TRUNC, 0644);
-	else if (*op == '<')
-		fd = open(file_name, O_RDONLY);
-}
-
-static void	do_redirects(char **split, int size, int is_pipe)
-{
-	char **new_split;
-	int	i;
-
-	new_split = malloc(sizeof(char *) * (size + 1));
-	if (!new_split)
-		return (NULL);
-	i = -1;
-	while (split[++i])
-	{
-		if (*split[i] == '<' || *split[i] == '>')
-			open_files(split[i], split[i + 1], is_pipe);
-
-	}
-}
-
 static int	check_main_arg(char *arg)
 {
 	int	i;
 
 	i = -1;
+	if (!arg[0])
+		return (0);
 	while (arg[++i])
 	{
-		if (arg[i] < '0' || arg[i] > '9')
+		if ((arg[i] < '0' || arg[i] > '9'))
 			return (0);
 	}
 	return (1);
 }
 
-void	do_exit(char **split)
-{
-	int	i;
-	int	re_counter;
-	int	is_pipe;
+// *    ?    
 
-	i = -1;
-	re_counter = 0;
-	is_pipe = 0;
-	while (split[++i])
+void	do_exit(t_exe *vars)
+{
+	if ((*vars->lst)->flags[1] && (*vars->lst)->flags[2])
 	{
-		if (*split[i] == '|' && !split[i][1])
-			is_pipe = 1; //Hay una
-		else if ((*split[i] == '<' || *split[i] == '>') && split[i][1])
-			re_counter++;
-		else if ((*split[i] == '<' || *split[i] == '>') && !split[i][1])
-			handle_exit_error();
+		if (((*vars->lst)->flags[1][0] == '?' || (*vars->lst)->flags[1][0] == '*') && !(*vars->lst)->flags[1][1])
+			printf("exit.\nbash:exit: too many arguments\n");
+		else if (!check_main_arg((*vars->lst)->flags[1]))
+		{
+			printf("bash: exit: numeric argument required");
+			printf("exit code: 255\n");  //del
+			exit(255);
+		}
+		else
+			printf("exit.\nbash:exit: too many arguments\n");
+		return ;
 	}
-	do_redirects(split, i - (re_counter * 2), is_pipe);
-	if (!is_pipe)
-		printf("exit\n");
-	if ((i - (re_counter * 2)) > 2 )
+	else if ((*vars->lst)->flags[1])
 	{
-		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		if ((*vars->lst)->flags[1][0] == '*' && !(*vars->lst)->flags[1][1])
+		{
+			printf("exit.\nbash:exit: too many arguments\n");
+			return ;
+		}
+		if (!check_main_arg((*vars->lst)->flags[1])) {
+			ft_atoi((*vars->lst)->flags[1]); exit(255); } //del
+		printf("exit code: %d\n", ft_atoi((*vars->lst)->flags[1])); //del
+		exit(ft_atoi((*vars->lst)->flags[1]));
 	}
-}*/
+	printf("exit code: 0\n"); // del
+	exit(0);
+}

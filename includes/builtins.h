@@ -30,7 +30,7 @@ exit
 */
 
 //Echo
-void	echo_builtin(t_word *word, int fd);
+void	echo_builtin(t_word *word);
 
 //Env
 void	print_env(t_env *env);
@@ -43,5 +43,12 @@ void	do_export(t_word *lst, t_exe **vars);
 //Pwd
 void	print_pwd(t_env *env);
 void	unset_env(t_env **env, char **values);
+
+//Change Directory
+void	change_directory(t_exe *vars);
+char	*parse_home(t_env *home, char **path);
+
+//Exit
+void	do_exit(t_exe *vars);
 
 #endif

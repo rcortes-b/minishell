@@ -23,6 +23,7 @@ char	**resplit(char **str, char ***split);
 int		aux_lead(char lead, char ***split, char **str);
 void	iterate_expand(char *str, int *j, int i);
 char	*invalid_env(char **str, char **env_name);
+char	*do_expand(t_env **lst_env, char *str, int index);
 
 char	*remove_quotes(char *str);
 

@@ -12,7 +12,6 @@ typedef struct s_exe
 	t_word	**lst;
 	t_env	**env;
 	char	**path;
-	char	**builtins;
 	pid_t	pid;
 	int		fd[2];
 } t_exe;
@@ -20,17 +19,22 @@ typedef struct s_exe
 char	*execution(t_word **lst, t_operators *data, t_env **my_env);
 int		cooking_execution(t_exe *vars);
 
-//Heredod
-int		do_heredoc(t_word **lst, char *limiter);
+//Heredoc
+int		do_heredoc(t_word **lst, char *limiter, t_env **my_env);
+
+//Waits
+void	wait_childs(t_exe *vars, int child_nbr);
 
 //Builtins
-char	**create_builtins(void);
-int		is_builtin(char **builtins, char *cmd);
+int		is_builtin(char *cmd);
 
 //Redirects
-t_word	**set_redirects(t_word **lst, t_operators *data);
+t_word	**set_redirects(t_word **lst, t_operators *data, t_env **my_env);
 
 void	ejecutar_cosas(t_exe *vars, t_word *cmd);
+void	ejecutar_builtins(t_exe *vars, t_word *aux);
+
+void	do_signal(void);
 
 #endif
 
