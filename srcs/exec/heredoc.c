@@ -15,6 +15,35 @@
 #include "../../includes/expander.h"
 #include "../../includes/error.h"
 
+static char	*expand_heredoc(t_env **lst_env, char *str, int index)
+{
+	char	*env_name;
+	t_env	*env;
+	char	*new_str;
+	int		i;
+	int		j;
+
+	i = index + 1;
+	j = 0;
+	while (str[i])
+	{
+		iterate_expand(str, &j, i);
+		env_name = ft_substr(str, i, j);
+		if (!env_name)
+			return (NULL);
+		env = get_env(lst_env, env_name);
+		if (!env)
+			return (free(env_name), NULL);
+		new_str = malloc(ft_strlen(str) + ft_strlen(env->value)
+				- ft_strlen(env->key) - 1);
+		if (!new_str)
+			return (free(env_name), NULL);
+		new_str = get_expanded(new_str, env, str, index);
+		return (free(str), free(env_name), new_str);
+	}
+	return (NULL);
+}
+
 static char	*check_hdoc_expand(char **line, t_env **my_env)
 {
 	int	i;
@@ -24,7 +53,7 @@ static char	*check_hdoc_expand(char **line, t_env **my_env)
 	{
 		if ((*line)[i] == '$')
 		{
-			*line = do_expand(my_env, *line, i);
+			*line = expand_heredoc(my_env, *line, i);
 			i = 0;
 		}
 		i++;
@@ -76,23 +105,4 @@ int	do_heredoc(t_word **lst, char *limiter, t_env **my_env)
 	close(fd[1]);
 	(*lst)->in = fd[0];
 	return (1);
-}
-
-void	wait_childs(t_exe *vars, int child_nbr)
-{
-	int	status;
-
-	while (child_nbr--)
-	{
-		if (vars->pid == waitpid(-1, &status, 0))
-		{
-			g_errstatus = WEXITSTATUS(status);
-			fprintf(stderr, "child status: %d\n", g_errstatus);
-			if (g_errstatus != 0)
-			{
-				//gestion errores
-				fprintf(stderr, "child error: %d\n", g_errstatus);
-			}
-		}
-	}
 }

@@ -14,21 +14,6 @@
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
 
-void	set_redirect_values(t_word **lst_ptr, t_word **aux,
-	int *head_com, int *is_redirect)
-{
-	if (*head_com == 1)
-		*lst_ptr = *aux;
-	*head_com = 0;
-	if (*(*aux)->com == '|')
-	{
-		*head_com = 1;
-		if (*is_redirect)
-			(*lst_ptr)->next = *aux;
-		*is_redirect = 0;
-	}
-}
-
 static void	repair_redirect(t_word *lst_ptr)
 {
 	if (lst_ptr->com[0] == '<' || lst_ptr->com[0] == '>')
@@ -46,7 +31,7 @@ static void	repair_redirect(t_word *lst_ptr)
 	}
 }
 
-void	update_node(t_word **lst, t_word **aux, int *is_redirect, t_word *lst_ptr)
+static void	update_node(t_word **lst, t_word **aux, int *is_redirect, t_word *lst_ptr)
 {
 	t_word *auxi; //del
 	t_word	*tmp;
@@ -127,7 +112,6 @@ t_word	**set_redirects(t_word **lst, t_operators *data, t_env **my_env)
 	aux = *lst;
 	head_com = 1;
 	is_redirect = 0;
-
 	lst_ptr = NULL;
 	while (aux)
 	{
@@ -135,50 +119,16 @@ t_word	**set_redirects(t_word **lst, t_operators *data, t_env **my_env)
 		
 		if (*aux->com == data->reinput || *aux->com == data->reoutput)
 		{
-			//printf("%p   %p\n\n", *lst, aux);
 			if (!open_redirect(&lst_ptr, aux, *aux->com == data->reoutput, my_env))
 				return (NULL);
 			update_node(lst, &aux, &is_redirect, lst_ptr);
 			if (!*lst)
-			{
-				printf("AAAAAAAAAAAA\n");
 				return (NULL);
-			}
-			//printf("%p   %p\n\n", *lst, aux);
-			//printf("\n");
 			continue ;
 		}
 		aux = aux->next;
 	}
 	if (is_redirect)
-	{
 		lst_ptr->next = NULL;
-		//printf("lstptr: %s\n", lst_ptr->com);
-	}
-	//printf("%s    %s    %p\n", (*lst)->com, (*lst)->next->com, (*lst)->next->next);
-	//fprintf(stderr, "IN: %d\nOUT: %d\n", (*lst)->in, (*lst)->out); // gestion de errores
 	return (lst);
 }
-
-//Esto lo cambio por set_redirect_values//
-
-/*if (head_com == 1)
-	lst_ptr = aux;
-head_com = 0;
-if (*aux->com == data->pipe)
-{
-	head_com = 1;
-	if (is_redirect)
-		lst_ptr->next = aux;
-	is_redirect = 0;
-}*/
-
-//Esto lo cambio por update node//
-
-/*
-tmp = aux->next->next;
-free_word_node(&aux->next);
-free_word_node(&aux);
-aux = tmp;
-is_redirect = 1;
-*/

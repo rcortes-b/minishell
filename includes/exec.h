@@ -14,10 +14,17 @@ typedef struct s_exe
 	char	**path;
 	pid_t	pid;
 	int		fd[2];
+	int		stdin_fd;
 } t_exe;
 
+
+//Utils
+char	*check_path(char **path, char *cmd);
+
+//Execution
 char	*execution(t_word **lst, t_operators *data, t_env **my_env);
 int		cooking_execution(t_exe *vars);
+void	ejecutar_cosas(t_exe *vars, t_word *cmd);
 
 //Heredoc
 int		do_heredoc(t_word **lst, char *limiter, t_env **my_env);
@@ -30,9 +37,14 @@ int		is_builtin(char *cmd);
 
 //Redirects
 t_word	**set_redirects(t_word **lst, t_operators *data, t_env **my_env);
+void	set_redirect_values(t_word **lst_ptr, t_word **aux,
+	int *head_com, int *is_redirect);
 
 void	ejecutar_cosas(t_exe *vars, t_word *cmd);
-void	ejecutar_builtins(t_exe *vars, t_word *aux);
+void	exec_builtins(t_exe *vars, t_word *aux, int do_exec);
+
+//Wait to Childs
+void	wait_childs(t_exe *vars, int child_nbr);
 
 void	do_signal(void);
 

@@ -5,54 +5,41 @@
 #include "../includes/error.h"
 #include "../includes/builtins.h"
 #include "../includes/exec.h"
-//char **spl = ft_split("ls -a > cat -b > mid -c > out -d", " \t");
 
-
-
-static void	parse_main(t_word *words, char *line, t_env **env)
+static void	check_args(int argc, char **argv)
 {
-	//t_env		*env;
+	if (argc > 1)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(argv[1], 2);
+		ft_putendl_fd(": No such file or directory", 2);
+		exit(127);
+	}
+}
+
+static void	do_line(t_word *words, char *line, t_env **env)
+{
 	t_operators	data;
 	char		**split;
 
 	init_data(&data);
-	printf("Line: %s\n", line);
-	printf("\n");
-	split = ft_split(line, " \t", &data); //Error Handled *** Not Tested
-	for (int i = 0; split[i]; i++)
-		printf("Split %d: %s\n", i + 1, split[i]);
+	split = ft_split(line, " \t", &data); //HACER EL 'MAL CLOSE QUOTING' POR EL PERROR, etc 17/04
 	free(line);
-	//parse_environment(&env, envp); //Error Handled *** Not Tested
-	//empty_export(&env);
-	check_tokens(split, &data, env); //Error Handled *** Not Tested
-	split = expand_cli(split, env); //Error Handled *** Not Tested
-	printf("\n");
-	for (int i = 0; split[i]; i++)
-		printf("Expanded Split %d: %s\n", i + 1, split[i]);
-	order_split(split, &data); //MODIFY THIS *** EL PRIMER COMANDO PUEDE SER INFILE
-	printf("\n");
-	for (int i = 0; split[i]; i++)
-		printf("Expanded && Sorted Split %d: %s\n", i + 1, split[i]);
-	categorize(split, &words, &data, env); //Error Handled *** Not Tested
-	tokenization(&words, &data); //Error Handled *** Not Tested
-	execution(&words, &data, env);
-	/*printf("\n");
-	t_word *aux = words;
-	while (aux)
+	if (!split)
 	{
-		int	i = -1;
-		printf("com: %s\n", aux->com);
-		if (aux->flags) {
-		printf("flags:\n");
-		while (aux->flags[++i])
-			printf("  - %s\n", aux->flags[i]); }
-		printf("Token: %d\n", aux->token);
-		aux = aux->next;
-		printf("\n");
-	}*/
-	//free_env_mem(&env);
+		free_env_mem(env);
+		handle_error();
+	}
+	check_tokens(split, &data, env);
+	split = expand_cli(split, env); //Creo que esta mal 17/04 (Ingente cantidad de texto)
+	order_split(split, &data);
+	categorize(split, &words, &data, env);
+	tokenization(&words, &data);
+	//Hasta aqui esta checkeao y ta bien (BORRAR ESTE COMMENT 17/04)
+	execution(&words, &data, env);
+
 	free_struct_nodes(&words);
-	free(split); /* Solo se libera el array general del split, ya que las otras direcciones estan en words */
+	//free_env_mem(env);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -61,11 +48,11 @@ int main(int argc, char **argv, char **envp)
 	t_env	*env;
 	char *line;
 
+	check_args(argc, argv);
 	words = NULL;
-	argc = 0;
-	argv = NULL;
 	g_errstatus = 0;
-	parse_environment(&env, envp);
+	if (!parse_environment(&env, envp))
+		handle_error();
 	while (1)
 	{
 		do_signal();
@@ -78,8 +65,11 @@ int main(int argc, char **argv, char **envp)
 			exit(EXIT_SUCCESS);
 		}
 		if (!line[0])
+		{
+			free(line);
 			continue ;
+		}
 		add_history(line);
-		parse_main(words, line, &env);
+		do_line(words, line, &env);
 	}
 }

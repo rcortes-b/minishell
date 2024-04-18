@@ -38,17 +38,17 @@ void	print_env(t_env *env);
 //Export
 void	empty_export(t_env **lst_env);
 int		key_is_valid(char *var);
-void	do_export(t_word *lst, t_exe **vars);
+void	do_export(t_word *lst, t_exe **vars, int do_exec);
 
 //Pwd
 void	print_pwd(t_env *env);
-void	unset_env(t_env **env, char **values);
+void	unset_env(t_env **env, char **values, int do_exec);
 
 //Change Directory
-void	change_directory(t_exe *vars);
+void	change_directory(t_exe *vars, int do_exec);
 char	*parse_home(t_env *home, char **path);
 
 //Exit
-void	do_exit(t_exe *vars);
+void	do_exit(t_exe *vars, int do_exec);
 
 #endif

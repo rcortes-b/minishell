@@ -81,7 +81,7 @@ static void	update_directory(t_env **env, char **old_pwd)
 	}
 }
 
-void	change_directory(t_exe *vars)
+void	change_directory(t_exe *vars, int do_exec)
 {
 	t_env	*aux;
 	char	*old_pwd;
@@ -97,7 +97,7 @@ void	change_directory(t_exe *vars)
 	(*vars->lst)->flags[1] = is_absolute(vars, (*vars->lst)->flags[1], &is_relative);
 	if (access((*vars->lst)->flags[1], X_OK) != 0)
 		printf("no such file or dir.\n");
-	else
+	else if (do_exec == 1)
 	{
 		if (chdir((*vars->lst)->flags[1]) == 0)
 		{
@@ -110,10 +110,4 @@ void	change_directory(t_exe *vars)
 			printf("no sa cambiao.\n"); //no se hace nada
 		}
 	}
-	char buff[100];
-	getcwd(buff, 100);
-	//else
-	printf("PATH: %s\n", (*vars->lst)->flags[1]);
-	printf("NEW PATH: %s\n", buff);
-	printf("Is Relative: %d\n", is_relative);
 }

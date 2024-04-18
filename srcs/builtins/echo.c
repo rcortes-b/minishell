@@ -12,14 +12,6 @@
 
 #include "../../includes/builtins.h"
 
-/* La idea general: recibe fd (se le pasa 1 si va a terminal o se le pasa el fd[1] de la pipe para escribir ahi */
-/* Se tiene en cuenta la unica flag que hay que tener en cuenta, la cual solo tiene posicion correcta despues del echo
-posicion flags[1]. Y depende de si es la ultima palabra que escribir o no y si hay flag o no se escribe \n o nada :)  
-
-     ******				ES UN PROTOTIPO, LUEGO HAY QUE AJUSTARLO AL CODIGO FINAL			******
-	 ******								    NOT TESTED xd								    ******
-*/
-
 void	echo_builtin(t_word *word)
 {
 	int	i;
@@ -35,7 +27,8 @@ void	echo_builtin(t_word *word)
 		is_flag = 0;
 	while (word->flags[i])
 	{
-		if (word->flags[i][0] == '$' && word->flags[i][1] == '?' && !word->flags[i][2])
+		if (word->flags[i][0] == '$'
+			&& word->flags[i][1] == '?' && !word->flags[i][2])
 			ft_putnbr_fd(g_errstatus, 1);
 		else
 			write(1, word->flags[i], ft_strlen(word->flags[i]));

@@ -27,10 +27,9 @@ static int	check_main_arg(char *arg)
 	}
 	return (1);
 }
+  
 
-// *    ?    
-
-void	do_exit(t_exe *vars)
+void	do_exit(t_exe *vars, int do_exec)
 {
 	if ((*vars->lst)->flags[1] && (*vars->lst)->flags[2])
 	{
@@ -39,8 +38,8 @@ void	do_exit(t_exe *vars)
 		else if (!check_main_arg((*vars->lst)->flags[1]))
 		{
 			printf("bash: exit: numeric argument required");
-			printf("exit code: 255\n");  //del
-			exit(255);
+			if (do_exec == 1)
+				exit(255);
 		}
 		else
 			printf("exit.\nbash:exit: too many arguments\n");
@@ -53,11 +52,11 @@ void	do_exit(t_exe *vars)
 			printf("exit.\nbash:exit: too many arguments\n");
 			return ;
 		}
-		if (!check_main_arg((*vars->lst)->flags[1])) {
-			ft_atoi((*vars->lst)->flags[1]); exit(255); } //del
-		printf("exit code: %d\n", ft_atoi((*vars->lst)->flags[1])); //del
-		exit(ft_atoi((*vars->lst)->flags[1]));
+		if (!check_main_arg((*vars->lst)->flags[1]) && do_exec == 1)
+			exit(255);
+		if (do_exec == 1)
+			exit(ft_atoi((*vars->lst)->flags[1]));
 	}
-	printf("exit code: 0\n"); // del
-	exit(0);
+	if (do_exec == 1)
+		handle_exit(vars, 0);
 }

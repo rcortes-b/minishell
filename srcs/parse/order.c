@@ -12,9 +12,6 @@
 
 #include "../../includes/parse.h"
 
-/* Esta funcion termina de hacer el sorting, 
-teniendo en cuenta el checkpoint (comando) y el indice (primer redirection) */
-
 static void	order_flags(char **split, int checkpoint, int i, t_operators *data)
 {
 	char	*temp;
@@ -38,8 +35,6 @@ static void	order_flags(char **split, int checkpoint, int i, t_operators *data)
 	}
 }
 
-/* Condicionales para detectar si la funcion tiene que ordenar flags o no */
-
 static int	check_flag(char **split, int index, t_operators *data)
 {
 	int	i;
@@ -52,9 +47,6 @@ static int	check_flag(char **split, int index, t_operators *data)
 	return (0);
 }
 
-/* Sirve para ordenar los flags. 
-Por ejemplo: 'ls > out -l'  --> 'ls -l > out' */
-
 void	order_split(char **split, t_operators *data)
 {
 	int			i;
@@ -62,11 +54,6 @@ void	order_split(char **split, t_operators *data)
 
 	i = -1;
 	checkpoint = 0;
-	/*if (split[checkpoint][0] == data->reinput)
-	{
-		checkpoint++;
-		i++;
-	}*/
 	while (split[++i])
 	{
 		if (data->pipe == split[i][0])

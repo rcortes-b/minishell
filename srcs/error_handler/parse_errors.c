@@ -14,7 +14,7 @@
 
 void	handle_error(void)
 {
-	perror("Error");
+	perror("minishell: ");
 	exit(errno);
 }
 
@@ -23,15 +23,16 @@ void	free_mem(char **split)
 	int	i;
 
 	i = -1;
-	while (split[++i])
-		free(split[i]);
-	free(split);
-}
+	if (split)
+	{
+		if (*split)
+		{
+			while (split[++i])
+				free(split[i]);
+		}
+		free(split);
+	}
 
-void	handle_split_error(char **split)
-{
-	free_mem(split);
-	handle_error();
 }
 
 void	free_env_mem(t_env **lst_env)
@@ -54,9 +55,25 @@ void	free_env_mem(t_env **lst_env)
 	}
 }
 
+void	handle_expand_error(t_env **lst_env)
+{
+	free_env_mem(lst_env);
+	handle_error();
+}
+
 void	handle_env_error(t_env **lst_env, char **split)
 {
 	free_env_mem(lst_env);
 	free_mem(split);
 	handle_error();
+}
+
+void	handle_exit(t_exe *vars, int is_error)
+{
+	free_mem(vars->path);
+	free_env_mem(vars->env);
+	free_struct_nodes(vars->lst);
+	if (is_error == 1)
+		perror("minishell: ");
+	exit(errno);
 }

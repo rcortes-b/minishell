@@ -16,6 +16,26 @@
 #include "../../includes/exec.h"
 #include "../../includes/builtins.h"
 
+static void	first_argument(t_exe *vars)
+{
+	if ((*vars->lst)->in != -2)
+	{
+		if ((*vars->lst)->in == -1)
+		{
+			if (pipe(vars->fd) == -1)
+				fprintf(stderr, "PIPE NOT WORKING! :C\n"); // gestion de errores
+			close(vars->fd[WRITE_END]);
+			dup2(vars->fd[READ_END], STDIN_FILENO);
+			close(vars->fd[READ_END]);
+		}
+		else
+		{
+			dup2((*vars->lst)->in, STDIN_FILENO);
+			close((*vars->lst)->in);
+		}
+	}
+}
+
 static void	set_ins(t_exe *vars, t_word *aux)
 {
 	if (aux->next != NULL)
@@ -46,19 +66,17 @@ static void	set_ins(t_exe *vars, t_word *aux)
 
 static void	set_outs(t_exe *vars, t_word *aux)
 {
-	if (aux->out != -2) //Si hay outfile
+	if (aux->out != -2)
 	{
-		if (aux->out == -1) //Si la lectura del outfile ha fallado
+		if (aux->out == -1)
 		{
-			//fprintf(stderr, "FILE NOT WORKING! :C\n"); // gestion de errores
 			close(vars->fd[READ_END]);
 			dup2(vars->fd[WRITE_END], STDOUT_FILENO);
 			close(vars->fd[WRITE_END]);
 		}
-		else //Se redirige al file descriptor del outfile
+		else
 		{
 			fprintf(stderr, "set out 1, 2, 3 pasa\n");
-			// fprintf(stderr, "FILE WORKING! EN FD-OUT: %p! :D\n", &(*vars->lst)->out);
 			dup2(aux->out, STDOUT_FILENO);
 			close(aux->out);
 		}
@@ -75,64 +93,45 @@ static void	set_outs(t_exe *vars, t_word *aux)
 	}
 }
 
-static void	first_argument(t_exe *vars)
+void	ejecutar_cosas(t_exe *vars, t_word *cmd)
 {
-	if ((*vars->lst)->in != -2)
-	{
-		if ((*vars->lst)->in == -1)
-		{
-			if (pipe(vars->fd) == -1)
-				fprintf(stderr, "PIPE NOT WORKING! :C\n"); // gestion de errores
-			close(vars->fd[WRITE_END]);
-			dup2(vars->fd[READ_END], STDIN_FILENO);
-			close(vars->fd[READ_END]);
-		}
-		else
-		{
-			//fprintf(stderr, "FILE WORKING! EN FD-IN: %p! :D\n", &(*vars->lst)->in);
-			dup2((*vars->lst)->in, STDIN_FILENO);
-			close((*vars->lst)->in);
-		}
-	}
-}
+	char	*correct_path;
 
-void	ejecutar_builtins(t_exe *vars, t_word *aux)
-{
-	if (ft_strcmp(aux->com, "export") == 0)
-		do_export(aux, &vars);
-	else if (ft_strcmp(aux->com, "env") == 0)
-		print_env(*vars->env);
-	else if (ft_strcmp(aux->com, "unset") == 0)
-		unset_env(vars->env, (*vars->lst)->flags);
-	else if (ft_strcmp(aux->com, "cd") == 0)
-		change_directory(vars);
-	else if (ft_strcmp(aux->com, "exit") == 0)
-		do_exit(vars);
-	else if (ft_strcmp(aux->com, "echo") == 0)
-		echo_builtin(aux);
-	else if (ft_strcmp(aux->com, "pwd") == 0)
-		print_pwd(*vars->env);
-	if (is_builtin(aux->com) == 1)
-		exit(0);
+	if (ft_strchr(cmd->com, '/') || *cmd->com == '~')
+	{
+		if (*cmd->com == '~')
+			cmd->com = parse_home(get_env(vars->env, "HOME"), &cmd->com);
+		correct_path = cmd->com;
+	}
+	else
+		correct_path = check_path(vars->path, cmd->com);
+	printf("LOL %s\n", correct_path);
+	if (execve(correct_path, cmd->flags, NULL) == -1)
+	{
+		fprintf(stderr, "minishell: ");
+		perror(correct_path);
+		exit(127);
+	}
 }
 
 int	cooking_execution(t_exe *vars)
 {
 	t_word	*aux;
-	int		fd;
 	int		counter;
 
 	aux = *vars->lst;
-	fd = dup(STDIN_FILENO);
+	vars->stdin_fd = dup(STDIN_FILENO);
 	counter = 0;
 	first_argument(vars);
 	while (aux)
 	{
-		if (is_builtin(aux->com) != 2)
+		if (is_builtin(aux->com) == 2)
+			exec_builtins(vars, aux, 0);
+		else
 		{
-			counter++;
 			if (aux->token != PIPE)
 			{	
+				counter++; //El counter estaba fuera y contaba la pipe como un counter++. Ta bien eso??
 				if (aux->next != NULL)
 					pipe(vars->fd);
 				vars->pid = fork();
@@ -141,7 +140,7 @@ int	cooking_execution(t_exe *vars)
 					fprintf(stderr, "PASA POR AKI\n");
 					set_outs(vars, aux);
 					if (is_builtin(aux->com) == 1)
-						ejecutar_builtins(vars, aux);
+						exec_builtins(vars, aux, 0);
 					else
 						ejecutar_cosas(vars, aux);
 				}
@@ -151,10 +150,8 @@ int	cooking_execution(t_exe *vars)
 		}
 		aux = aux->next;
 	}
-	printf("AAAAAAAAAAAAA: %d\n", counter);
+	printf("Wait Counter: %d\n", counter);
 	wait_childs(vars, counter);
-	dup2(fd, STDIN_FILENO);
-
-	fprintf(stderr, "alo polisia\n");
+	dup2(vars->stdin_fd, STDIN_FILENO);
 	return (1);
 }

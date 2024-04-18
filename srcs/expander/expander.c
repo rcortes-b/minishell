@@ -23,9 +23,9 @@ static void	set_expand_values(char *lead, int *quote, char c, int *index)
 	*lead = c;
 	if (index)
 		*index = -1;
-} 
+}
 
-static char	*get_expanded(char *new_str, t_env *env, char *str, int index)
+char	*get_expanded(char *new_str, t_env *env, char *str, int index)
 {
 	int	i;
 	int	j;
@@ -47,7 +47,7 @@ static char	*get_expanded(char *new_str, t_env *env, char *str, int index)
 	return (new_str);
 }
 
-char	*do_expand(t_env **lst_env, char *str, int index)
+char	*do_expand(t_env **lst_env, char *str, int index, char **split)
 {
 	char	*env_name;
 	t_env	*env;
@@ -57,6 +57,7 @@ char	*do_expand(t_env **lst_env, char *str, int index)
 
 	i = index + 1;
 	j = 0;
+	printf("strrrrrr: %s\n", str);
 	while (str[i])
 	{
 		iterate_expand(str, &j, i);
@@ -65,12 +66,15 @@ char	*do_expand(t_env **lst_env, char *str, int index)
 			return (NULL);
 		env = get_env(lst_env, env_name);
 		if (!env)
-			return (invalid_env(&str, &env_name));
+			return (free(env_name), free_mem(split), NULL);
+		printf("QUEEE\n");
 		new_str = malloc(ft_strlen(str) + ft_strlen(env->value)
 				- ft_strlen(env->key) - 1);
 		if (!new_str)
-			return (free(env_name), NULL);
+			return (free(env_name), free_mem(split), NULL);
 		new_str = get_expanded(new_str, env, str, index);
+		printf("%s\n", str);
+		printf("new_str: %s\n", new_str);
 		return (free(str), free(env_name), new_str);
 	}
 	return (NULL);
@@ -91,13 +95,15 @@ static char	*check_if_expand(t_env **lst_env, char **str, char ***split)
 			set_expand_values(&lead, &second, 'x', NULL);
 		if (str[0][i] == '$' && lead != '\'')
 		{
-			*str = do_expand(lst_env, *str, i);
+			*str = do_expand(lst_env, *str, i, *split);
+			printf("STRING: %s\n", *str);
 			if (!*str)
 				return (NULL);
 			else if (!*(*str))
 				return (*str);
-			else if (!aux_lead(lead, split, str))
-				return (NULL);
+			//(*split)[ind] = *str;
+			if (!aux_lead(lead, split, str))
+				return (free_mem(*split), NULL);
 			second = 0;
 			i = -1;
 		}
@@ -114,69 +120,21 @@ char	**expand_cli(char **words, t_env **lst_env)
 	{
 		if (words[i][0] == '$' && words[i][1] == '?' && !words[i][2])
 			continue ;
-		if (i > 0 && ft_strcmp(words[i - 1], "<<") == 0)
+		else if (i > 0 && ft_strcmp(words[i - 1], "<<") == 0)
 		{
-			words[i] = remove_quotes(words[i]);
+			words[i] = remove_quotes(words[i], words);
+			if (!words[i])
+				handle_expand_error(lst_env);
 			continue ;
 		}
 		if (!check_if_expand(lst_env, &words[i], &words))
-				handle_env_error(lst_env, words);
+			handle_expand_error(lst_env);
 		else
-			words[i] = remove_quotes(words[i]);
+		{
+			words[i] = remove_quotes(words[i], words);
+			if (!words[i])
+				handle_expand_error(lst_env);
+		}
 	}
 	return (words);
-}
-
-static char	*del_quotes(char *str, char *new_str)
-{
-	char	lead;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'' || str[i] == '"')
-		{
-			lead = str[i++];
-			while (str[i] != lead)
-				new_str[j++] = str[i++];
-			i++;
-		}
-		else
-			new_str[j++] = str[i++];
-	}
-	new_str[j] = '\0';
-	free(str);
-	str = NULL;
-	return (new_str);
-}
-
-char	*remove_quotes(char *str)
-{
-	char	lead;
-	char	*new_comm;
-	int		i;
-	int		lead_counter;
-
-	lead = 'x';
-	lead_counter = 0;
-	i = -1;
-	while (str[++i])
-	{
-		while (str[i] && str[i] != '"' && str[i] != '\'')
-			i++;
-		if (str[i] == '\'' || str[i] == '"')
-		{
-			lead = str[i++];
-			lead_counter++;
-		}
-		while (str[i] && str[i] != lead)
-			i++;
-	}
-	new_comm = (char *)malloc(ft_strlen(str) - (lead_counter * 2) + 1);
-	if (!new_comm)
-		printf("loll error\n");
-	return (del_quotes(str, new_comm));
 }

@@ -31,7 +31,8 @@ static int	count_words(char *line, const char *set, t_operators *data)
 				&& !is_symbol(data, line[i]))
 			{
 				if (line[i] == data->dquote || line[i] == data->squote)
-					iterate_quote(line, &i, line[i], 0);
+					if (!iterate_quote(line, &i, line[i], 0))
+						return (-1);
 				i++;
 			}
 		}
@@ -60,7 +61,8 @@ static int	get_word_size(char *line, const char *set,
 				&& !is_symbol(data, line[index]))
 			{
 				if (line[index] == data->dquote || line[index] == data->squote)
-					iterate_quote(line, &index, line[index], &size);
+					if (!iterate_quote(line, &index, line[index], &size))
+						return (-1);
 				index++;
 				size++;
 			}
@@ -68,10 +70,10 @@ static int	get_word_size(char *line, const char *set,
 		}
 		index++;
 	}
-	return (0);
+	return (1);
 }
 
-static void	split_word(char *word, const char *set, char *line, int *index)
+static int	split_word(char *word, const char *set, char *line, int *index)
 {
 	t_operators	data;
 	int			i;
@@ -88,7 +90,8 @@ static void	split_word(char *word, const char *set, char *line, int *index)
 				&& !is_symbol(&data, line[*index]))
 			{
 				if (line[*index] == data.dquote || line[*index] == data.squote)
-					copy_quotes(word, line, &i, index);
+					if (!copy_quotes(word, line, &i, index))
+						return (0);
 				word[i++] = line[(*index)++];
 			}
 			word[i] = '\0';
@@ -97,6 +100,7 @@ static void	split_word(char *word, const char *set, char *line, int *index)
 		else
 			(*index)++;
 	}
+	return (1);
 }
 
 static char	**get_split(char **split, const char *set,
@@ -113,10 +117,13 @@ static char	**get_split(char **split, const char *set,
 	while (++counter < word_counter)
 	{
 		size = get_word_size(line, set, i, &data);
+		if (size == -1)
+			return (free_mem(split), NULL);
 		split[counter] = malloc(sizeof(char) * size + 1);
 		if (!split[counter])
-			handle_split_error(split);
-		split_word(split[counter], set, line, &i);
+			return (free_mem(split), NULL);
+		if (!split_word(split[counter], set, line, &i))
+			return (free_mem(split), NULL);
 	}
 	split[counter] = NULL;
 	return (split);
@@ -128,12 +135,13 @@ char	**ft_split(char *line, const char *set, t_operators *data)
 	int			counter;
 
 	counter = count_words(line, set, data);
-	split = (char **)malloc(sizeof(char *) * (counter + 1));
+	if (counter == -1)
+		return (NULL);
+	split = ft_calloc(sizeof(char *), counter + 1);
 	if (!split)
-		handle_error();
+		return (NULL);
 	split = get_split(split, set, line, counter);
 	if (!split)
-		free(split);
-	printf("\n");
+		return (NULL);
 	return (split);
 }

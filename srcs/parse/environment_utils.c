@@ -20,6 +20,8 @@ t_env	*ft_newenv(void)
 	if (!new)
 		return (NULL);
 	new->next = NULL;
+	new->value = NULL;
+	new->key = NULL;
 	return (new);
 }
 
@@ -50,10 +52,10 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
-char *ft_strcat(char *dest, char *src)
+char	*ft_strcat(char *dest, char *src)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (dest[i] != '\0')

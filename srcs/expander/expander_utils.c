@@ -21,14 +21,14 @@ void	free_node(t_env **node)
 	free(*node);
 }
 
-static char	*aux_check_pipe(char **new_split)
+static char	*aux_check_pipe(char **new_split, char **split)
 {
 	char	*temp;
 	int		j;
 
 	temp = (char *)malloc(ft_strlen(*new_split) + 1 + 2);
 	if (!temp)
-		return (NULL);
+		return (free_mem(split), NULL);
 	j = 0;
 	temp[j++] = '"';
 	while ((*new_split)[j - 1])
@@ -51,9 +51,10 @@ static int	check_pipe(char **new_split)
 	i = -1;
 	while (new_split[++i])
 	{
-		if (new_split[i][0] == '|' || new_split[i][0] == '<' || new_split[i][0] == '>')
+		if (new_split[i][0] == '|'
+			|| new_split[i][0] == '<' || new_split[i][0] == '>')
 		{
-			new_split[i] = aux_check_pipe(&new_split[i]);
+			new_split[i] = aux_check_pipe(&new_split[i], new_split);
 			if (!new_split[i])
 				return (0);
 		}
@@ -68,9 +69,14 @@ static char	**create_split(char **def_split, char **split,
 	int	j;
 	int	k;
 
-	i = -1;
-	while (split[++i] != str)
+	i = 0;
+	printf("aaa\n");
+	printf("NIU%s\nSTR%s\n", *new_split, str);
+	while(ft_strcmp(*new_split, str) != 0)
+	{
 		def_split[i] = split[i];
+		i++;
+	}
 	k = i + 1;
 	j = 0;
 	while (new_split[j])
@@ -78,9 +84,9 @@ static char	**create_split(char **def_split, char **split,
 	while (split[k])
 		def_split[i++] = split[k++];
 	def_split[i] = NULL;
-	free(str);
-	free(new_split);
-	free(split);
+	//free(str);
+	//free(new_split);
+	//free(split);
 	return (def_split);
 }
 
@@ -97,7 +103,7 @@ char	**resplit(char **str, char ***split)
 	if (!new_split)
 		return (NULL);
 	if (!check_pipe(new_split))
-		return (free_mem(new_split), NULL);
+		return (NULL);
 	i = 0;
 	while ((*split)[i])
 		i++;
@@ -107,6 +113,10 @@ char	**resplit(char **str, char ***split)
 	def_split = (char **)malloc(sizeof(char *) * (i + counter));
 	if (!def_split)
 		return (free_mem(new_split), NULL);
+	for (int m = 0; new_split[m]; m++)
+		printf("m: %s\n",new_split[m]);
+	for (int n = 0; (*split)[n]; n++)
+		printf("n: %s\n",(*split)[n]);
 	def_split = create_split(def_split, *split, new_split, *str);
 	return (def_split);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   empty_export.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/17 20:20:12 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/17 20:20:12 by rcortes-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/parse.h"
 #include "../../includes/builtins.h"
 #include "../../includes/error.h"
@@ -46,11 +58,9 @@ static void	ft_swap_env(t_env **aux, t_env **tmp)
 	str_aux = (*aux)->key;
 	(*aux)->key = (*tmp)->key;
 	(*tmp)->key = str_aux;
-
 	str_aux = (*aux)->value;
 	(*aux)->value = (*tmp)->value;
 	(*tmp)->value = str_aux;
-
 	temp = (*aux)->only_exp;
 	(*aux)->only_exp = (*tmp)->only_exp;
 	(*tmp)->only_exp = temp;
@@ -104,7 +114,11 @@ void	empty_export(t_env **lst_env)
 	if (!is_oldpwd)
 	{
 		new = ft_newenv();
+		if (!new)
+			printf("xd\n"); //aqui hay que hacer un free de todo y exit
 		new->key = ft_strdup("OLDPWD");
+		if (!new->key)
+			//aqui hay que hacer un free de todo y exit
 		new->value = NULL;
 		new->only_exp = 1;
 		ft_envadd_back(&exp, new);

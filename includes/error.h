@@ -15,10 +15,15 @@
 
 # include "minishell.h"
 # include "parse.h"
+# include "exec.h"
+
+//General Error
+void	handle_exit(t_exe *vars, int is_error);
 
 //Environment
 void	free_env_mem(t_env **lst_env);
 void	handle_env_error(t_env **lst_env, char **split);
+void	handle_expand_error(t_env **lst_env);
 
 //Split
 void	free_mem(char **split);

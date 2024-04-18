@@ -27,11 +27,7 @@ void	free_struct_nodes(t_word **words)
 			free(aux->com);
 		i = -1;
 		if (aux->flags)
-		{
-			while (aux->flags[++i])
-				free(aux->flags[i]);
-			free(aux->flags);
-		}
+			free_mem(aux->flags);
 		tmp = aux->next;
 		free(aux);
 		aux = tmp;

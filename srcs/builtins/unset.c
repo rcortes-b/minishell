@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/17 20:18:23 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/17 20:18:23 by rcortes-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/parse.h"
 #include "../../includes/builtins.h"
 #include "../../includes/error.h"
@@ -13,7 +25,7 @@ void	update_env(t_env **aux, t_env **del_node)
 	(*aux)->next = tmp;
 }
 
-void	unset_env(t_env **env, char **values)
+void	unset_env(t_env **env, char **values, int do_exec)
 {
 	t_env	*aux;
 	int		is_last;
@@ -26,9 +38,8 @@ void	unset_env(t_env **env, char **values)
 		i = 0;
 		while (values[++i])
 		{
-			if (ft_strcmp(aux->next->key, values[i]) == 0)
+			if (ft_strcmp(aux->next->key, values[i]) == 0 && do_exec == 1)
 			{
-					printf("LOL.\n");
 				update_env(&aux, &aux->next);
 				is_last = 1;
 				break ;

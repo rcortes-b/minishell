@@ -24,8 +24,8 @@ typedef struct s_env
 }					t_env;
 
 //ESTO ES SPLIT
-void	copy_quotes(char *word, char *line, int *i, int *index);
-void	iterate_quote(char *line, int *index, char c, int *size);
+int		copy_quotes(char *word, char *line, int *i, int *index);
+int		iterate_quote(char *line, int *index, char c, int *size);
 int		do_operator(char *line, int *index, t_operators *data, int *size);
 int		split_word_symbol(char **word, char *line,
 			int *index, t_operators *data);
@@ -45,7 +45,7 @@ void	tokenization(t_word **lst, t_operators *data);
 
 t_env	*ft_newenv(void);
 void	ft_envadd_back(t_env **env_lst, t_env *new_env);
-void	parse_environment(t_env **env_lst, char **envp);
+t_env	*parse_environment(t_env **env_lst, char **envp);
 int		ft_strcmp(char *s1, char *s2);
 t_env	*get_env(t_env **env_lst, char *get_key);
 //ENVIROMENT ANTIGUO PELIGRO!!

@@ -1,10 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/17 20:20:03 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/17 20:20:04 by rcortes-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/exec.h"
 #include "../../includes/builtins.h"
 #include "../../includes/error.h"
-
-
-// a partir de la key todo es valido 
-//1- comrobar si hay igual para el only export, si es onlyexp 0 funcion de checker
 
 static int	var_exists(t_env *env, char *value, int size)
 {
@@ -27,19 +35,21 @@ static void	new_var(t_env **env, char *value, int is_onlyexp, int is_append)
 
 	new = (t_env *)malloc(sizeof(t_env));
 	if (!new)
-		printf("Error malloc.\n");
+		printf("Error malloc.\n"); //aqui hay que hacer un free de todo y exit
 	new->only_exp = is_onlyexp;
 	new->next = NULL;
 	i = 0;
 	while (value[i] && value[i] != '=' && value[i] != '+')
 		i++;
 	new->key = ft_substr(value, 0, i);
-	printf("Value: %s  NEW KEY: %s  I: %d\n", value, new->key, i);
 	if (!new->key)
-		printf("Malloc error en substr.\n");
+		printf("Malloc error en substr.\n"); //aqui hay que hacer un free de todo y exit
 	if (is_onlyexp)
 	{
-		new->value = malloc(1);
+		new->value = (char *)malloc(sizeof(char));
+		if (!new->value)
+			printf("malloc error.\n");
+			//aqui hay que hacer un free de todo y exit
 		new->value[0]= '\0';
 	}
 	else
@@ -49,6 +59,9 @@ static void	new_var(t_env **env, char *value, int is_onlyexp, int is_append)
 		else
 			i++;
 		new->value = ft_strdup(&value[i]);
+		if (!new->value)
+			printf("malloc error.\n");
+			//aqui hay que hacer un free de todo y exit
 	}
 	ft_envadd_back(env, new);
 }
@@ -61,7 +74,6 @@ static void	update_var(t_env **env, char *value, int is_append, int is_onlyexp)
 	if (is_onlyexp)
 		return ;
 	i = 0;
-	//while (value[i - 1] != '=')
 	while (value[i] != '=' && value[i] != '+')
 		i++;
 	aux = *env;
@@ -73,7 +85,7 @@ static void	update_var(t_env **env, char *value, int is_append, int is_onlyexp)
 	{
 		aux->value = ft_strjoin(aux->value, &value[i + 2]);
 		if (!aux->value)
-			printf("strjoin error.\n");
+			printf("strjoin error.\n"); //aqui hay que hacer un free de todo y exit
 	}
 	else
 	{
@@ -83,7 +95,7 @@ static void	update_var(t_env **env, char *value, int is_append, int is_onlyexp)
 		//lolazo(&aux, &value[i]);
 		aux->value = ft_strdup(&value[i + 1]);
 		if (!aux->value)
-			printf("strdup error.\n");
+			printf("strdup error.\n"); //aqui hay que hacer un free de todo y exit
 		printf("AUCS VALIU: %p\n", aux->value);
 	}
 }
@@ -117,14 +129,14 @@ static void	add_export(t_env **env, char *value)
 		update_var(env, value, is_append, is_onlyexp);
 }
 
-void	do_export(t_word *lst, t_exe **vars)
+void	do_export(t_word *lst, t_exe **vars, int do_exec)
 {
 	int	i;
 
 	i = 0;
-	if (!lst->flags[1])
+	if (!lst->flags[1] && do_exec == 1)
 		empty_export((*vars)->env);
-	else
+	else if (do_exec == 1)
 	{
 		while (lst->flags[++i])
 		{

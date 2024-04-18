@@ -12,7 +12,7 @@
 
 #include "../../includes/parse.h"
 
-void	iterate_quote(char *line, int *index, char c, int *size)
+int	iterate_quote(char *line, int *index, char c, int *size)
 {
 	(*index)++;
 	if (size)
@@ -24,13 +24,11 @@ void	iterate_quote(char *line, int *index, char c, int *size)
 			(*size)++;
 	}
 	if (!line[*index])
-	{
-		fprintf(stderr, "MAL CLOSE QUOTING\n");
-		exit(EXIT_FAILURE);
-	}
+		return (0);
+	return (1);
 }
 
-void	copy_quotes(char *word, char *line, int *i, int *index)
+int	copy_quotes(char *word, char *line, int *i, int *index)
 {
 	char	c;
 
@@ -39,10 +37,8 @@ void	copy_quotes(char *word, char *line, int *i, int *index)
 	while (line[*index] && line[*index] != c)
 		word[(*i)++] = line[(*index)++];
 	if (!line[*index])
-	{
-		fprintf(stderr, "MAL CLOSE QUOTING\n");
-		exit(EXIT_FAILURE);
-	}
+		return (0);
+	return (1);
 }
 
 int	do_operator(char *line, int *index, t_operators *data, int *size)

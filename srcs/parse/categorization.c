@@ -34,7 +34,7 @@ static t_word	*new_word(char **words, int start, int end, t_operators *data)
 			return (free(new), NULL);
 		new->flags = (char **)malloc(sizeof (char *) * (end - start + 2));
 		if (!new->flags)
-			return (free(new), free(new->com), NULL);
+			return (free(new->com), free(new), NULL);
 		i = -1;
 		while ((start + (++i)) <= end)
 			new->flags[i] = words[start + i];
