@@ -20,27 +20,30 @@ void	iterate_expand(char *str, int *j, int i)
 		(*j)++;
 }
 
-int	aux_lead(char lead, char ***split, char **str)
+int	aux_lead(char lead, char ***split, char *str, int ind)
 {
 	if (lead == 'x')
 	{
-		*split = resplit(str, split);
+		for (int i = 0; (*split)[i]; i++)
+			printf("Split Before: %s\n", (*split)[i]);
+		*split = resplit(str, split, ind);
 		if (!*split)
 			return (0);
+		for (int l = 0; (*split)[l]; l++)
+			printf("Split After def: %p\n", (*split)[l]);
 	}
 	return (1);
 }
 
-char	*invalid_env(char **str, char **env_name)
+char	*invalid_env(char *env_name)
 {
 	char	*new_str;
 
-	free(*env_name);
+	free(env_name);
 	new_str = (char *)malloc(sizeof(char));
 	if (!new_str)
 		return (NULL);
 	*new_str = '\0';
-	free(*str);
 	return (new_str);
 }
 

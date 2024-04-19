@@ -65,6 +65,7 @@ char	*ft_strjoin_v2(char *s1, char *s2)
 		str[s1_len++] = s2[i++];
 	str[s1_len] = '\0';
 	free(s1);
+	free(s2);
 	s1 = NULL;
 	return (str);
 }

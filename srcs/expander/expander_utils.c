@@ -63,16 +63,14 @@ static int	check_pipe(char **new_split)
 }
 
 static char	**create_split(char **def_split, char **split,
-	char **new_split, char *str)
+	char **new_split, int ind)
 {
 	int	i;
 	int	j;
 	int	k;
 
 	i = 0;
-	printf("aaa\n");
-	printf("NIU%s\nSTR%s\n", *new_split, str);
-	while(ft_strcmp(*new_split, str) != 0)
+	while(i < ind)
 	{
 		def_split[i] = split[i];
 		i++;
@@ -84,22 +82,20 @@ static char	**create_split(char **def_split, char **split,
 	while (split[k])
 		def_split[i++] = split[k++];
 	def_split[i] = NULL;
-	//free(str);
-	//free(new_split);
-	//free(split);
+	free(split);
 	return (def_split);
 }
 
 //str es el pointer a la palabra expandida no al head del array
 
-char	**resplit(char **str, char ***split)
+char	**resplit(char *str, char ***split, int ind)
 {
 	char	**new_split;
 	char	**def_split;
 	int		counter;
 	int		i;
 
-	new_split = ft_esplit(*str, ' ');
+	new_split = ft_esplit(str, ' ');
 	if (!new_split)
 		return (NULL);
 	if (!check_pipe(new_split))
@@ -110,13 +106,16 @@ char	**resplit(char **str, char ***split)
 	counter = 0;
 	while (new_split[counter])
 		counter++;
+	/*for (int k = 0; new_split[k]; k++)
+		printf("newsplit dirs: %p\n", new_split[k]);
+	printf("newsplit dir: %p\n",new_split);*/
 	def_split = (char **)malloc(sizeof(char *) * (i + counter));
 	if (!def_split)
 		return (free_mem(new_split), NULL);
-	for (int m = 0; new_split[m]; m++)
-		printf("m: %s\n",new_split[m]);
-	for (int n = 0; (*split)[n]; n++)
-		printf("n: %s\n",(*split)[n]);
-	def_split = create_split(def_split, *split, new_split, *str);
+	def_split = create_split(def_split, *split, new_split, ind);
+	/*for (int k = 0; def_split[k]; k++)
+		printf("defsplit dirs: %p\n", def_split[k]);
+	printf("desplit dir: %p\n", def_split);*/
+	free(new_split);
 	return (def_split);
 }

@@ -31,15 +31,25 @@ static void	do_line(t_word *words, char *line, t_env **env)
 		handle_error();
 	}
 	check_tokens(split, &data, env);
-	split = expand_cli(split, env); //Creo que esta mal 17/04 (Ingente cantidad de texto)
+	split = lets_expand(env, split);
+	//split = expand_cli(split, env); //Creo que esta mal 17/04 (Ingente cantidad de texto)
+	//free_struct_nodes(&words);
+	//free_env_mem(env);
+	//exit(1);
+	/*for (int l = 0; split[l]; l++)
+		printf("Split After: %p\n", split[l]);
+	for (int l = 0; split[l]; l++)
+		printf("Split After: %s\n", split[l]);*/
+	//printf("split main dir: %p\n", split);
 	order_split(split, &data);
 	categorize(split, &words, &data, env);
+	free(split);
 	tokenization(&words, &data);
 	//Hasta aqui esta checkeao y ta bien (BORRAR ESTE COMMENT 17/04)
 	execution(&words, &data, env);
 
 	free_struct_nodes(&words);
-	//free_env_mem(env);
+	free_env_mem(env);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -53,8 +63,8 @@ int main(int argc, char **argv, char **envp)
 	g_errstatus = 0;
 	if (!parse_environment(&env, envp))
 		handle_error();
-	while (1)
-	{
+//	while (1)
+	//{
 		do_signal();
 		signal(SIGTSTP, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
@@ -67,9 +77,10 @@ int main(int argc, char **argv, char **envp)
 		if (!line[0])
 		{
 			free(line);
-			continue ;
+		//	continue ;
 		}
 		add_history(line);
 		do_line(words, line, &env);
-	}
+		return (1);
+	//}
 }

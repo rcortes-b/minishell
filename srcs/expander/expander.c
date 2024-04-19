@@ -25,7 +25,7 @@ static void	set_expand_values(char *lead, int *quote, char c, int *index)
 		*index = -1;
 }
 
-char	*get_expanded(char *new_str, t_env *env, char *str, int index)
+char	*get_expanded(char **new_str, t_env *env, char *str, int index)
 {
 	int	i;
 	int	j;
@@ -34,17 +34,16 @@ char	*get_expanded(char *new_str, t_env *env, char *str, int index)
 
 	i = -1;
 	while (++i < index)
-		new_str[i] = str[i];
+		(*new_str)[i] = str[i];
 	j = 0;
 	key_len = ft_strlen(env->key);
 	k = i + key_len + 1;
 	while (env->value[j])
-		new_str[i++] = env->value[j++];
-	j = 1;
+		(*new_str)[i++] = env->value[j++];
 	while (str[k])
-		new_str[i++] = str[k++];
-	new_str[i] = '\0';
-	return (new_str);
+		(*new_str)[i++] = str[k++];
+	(*new_str)[i] = '\0';
+	return (*new_str);
 }
 
 char	*do_expand(t_env **lst_env, char *str, int index, char **split)
@@ -57,58 +56,57 @@ char	*do_expand(t_env **lst_env, char *str, int index, char **split)
 
 	i = index + 1;
 	j = 0;
-	printf("strrrrrr: %s\n", str);
-	while (str[i])
-	{
-		iterate_expand(str, &j, i);
-		env_name = ft_substr(str, i, j);
-		if (!env_name)
-			return (NULL);
-		env = get_env(lst_env, env_name);
-		if (!env)
-			return (free(env_name), free_mem(split), NULL);
-		printf("QUEEE\n");
-		new_str = malloc(ft_strlen(str) + ft_strlen(env->value)
-				- ft_strlen(env->key) - 1);
-		if (!new_str)
-			return (free(env_name), free_mem(split), NULL);
-		new_str = get_expanded(new_str, env, str, index);
-		printf("%s\n", str);
-		printf("new_str: %s\n", new_str);
-		return (free(str), free(env_name), new_str);
-	}
-	return (NULL);
+	iterate_expand(str, &j, i);
+	env_name = ft_substr(str, i, j);	
+	if (!env_name)
+		return (free_mem(split), NULL);
+	env = get_env(lst_env, env_name);
+	if (!env)
+		return (free_mem(split), invalid_env(env_name));
+	new_str = malloc(ft_strlen(str) + ft_strlen(env->value)
+			- ft_strlen(env->key) - 1);
+	if (!new_str)
+		return (free(env_name), free_mem(split), NULL);
+	new_str = get_expanded(&new_str, env, str, index);
+	printf("str in dir: %p\n", str);
+	//free(str);
+	return (free(env_name), new_str);
 }
 
-static char	*check_if_expand(t_env **lst_env, char **str, char ***split)
+static char	**check_if_expand(t_env **lst_env, char *str, char **split, int ind)
 {
 	int		i;
 	char	lead;
 	int		second;
+	char	*tmp;
 
 	set_expand_values(&lead, &second, 'x', &i);
-	while (str[0][++i])
+	//tmp = str;
+	while (str[++i])
 	{
-		if (!second && (str[0][i] == '"' || str[0][i] == '\''))
-			set_expand_values(&lead, &second, str[0][i], NULL);
-		else if (second && str[0][i] == lead)
+		if (!second && (str[i] == '"' || str[i] == '\''))
+			set_expand_values(&lead, &second, str[i], NULL);
+		else if (second && str[i] == lead)
 			set_expand_values(&lead, &second, 'x', NULL);
-		if (str[0][i] == '$' && lead != '\'')
+		if (str[i] == '$' && lead != '\'')
 		{
-			*str = do_expand(lst_env, *str, i, *split);
-			printf("STRING: %s\n", *str);
-			if (!*str)
+			printf("Str Before dir: %p\n", str);
+			tmp = do_expand(lst_env, str, i, split);
+			free(str);
+			if (!tmp)
 				return (NULL);
-			else if (!*(*str))
-				return (*str);
-			//(*split)[ind] = *str;
-			if (!aux_lead(lead, split, str))
-				return (free_mem(*split), NULL);
+			else if (!*tmp)
+				return (NULL);
+			if (!aux_lead(lead, &split, tmp, ind))
+				return (free_mem(split), NULL);
 			second = 0;
 			i = -1;
+			str = ft_strdup(tmp);
+			free(tmp);
 		}
 	}
-	return (*str);
+	//free(str);
+	return (split);
 }
 
 char	**expand_cli(char **words, t_env **lst_env)
@@ -127,7 +125,8 @@ char	**expand_cli(char **words, t_env **lst_env)
 				handle_expand_error(lst_env);
 			continue ;
 		}
-		if (!check_if_expand(lst_env, &words[i], &words))
+		words = check_if_expand(lst_env, words[i], words, i);
+		if (!words)
 			handle_expand_error(lst_env);
 		else
 		{

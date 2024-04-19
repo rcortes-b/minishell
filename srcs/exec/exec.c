@@ -86,5 +86,7 @@ char	*execution(t_word **lst, t_operators *data, t_env **my_env)
 			return (NULL); //handle error aqui
 	}
 	free_mem(vars.path);
-	return (*vars.path); //return temporal
+	//free_env_mem(vars.env);
+	//free_struct_nodes(vars.lst);
+	return (NULL); //return temporal
 }

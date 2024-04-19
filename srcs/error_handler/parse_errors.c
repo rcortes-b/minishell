@@ -28,11 +28,14 @@ void	free_mem(char **split)
 		if (*split)
 		{
 			while (split[++i])
+			{
 				free(split[i]);
+				split[i] = NULL;
+			}
 		}
 		free(split);
+		split = NULL;
 	}
-
 }
 
 void	free_env_mem(t_env **lst_env)

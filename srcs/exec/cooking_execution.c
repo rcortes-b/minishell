@@ -36,7 +36,7 @@ static void	first_argument(t_exe *vars)
 	}
 }
 
-static void	set_ins(t_exe *vars, t_word *aux)
+/*static void	set_ins(t_exe *vars, t_word *aux)
 {
 	if (aux->next != NULL)
 	{
@@ -62,7 +62,7 @@ static void	set_ins(t_exe *vars, t_word *aux)
 			close(vars->fd[READ_END]);
 		}
 	}
-}
+}*/
 
 static void	set_outs(t_exe *vars, t_word *aux)
 {
@@ -134,18 +134,17 @@ int	cooking_execution(t_exe *vars)
 				counter++; //El counter estaba fuera y contaba la pipe como un counter++. Ta bien eso??
 				if (aux->next != NULL)
 					pipe(vars->fd);
-				vars->pid = fork();
-				if (vars->pid == 0)
-				{
-					fprintf(stderr, "PASA POR AKI\n");
+				//vars->pid = fork();
+				//if (vars->pid == 0)
+				//{
 					set_outs(vars, aux);
 					if (is_builtin(aux->com) == 1)
 						exec_builtins(vars, aux, 0);
 					else
 						ejecutar_cosas(vars, aux);
-				}
-				else
-					set_ins(vars, aux);
+				//}
+				//else
+				//	set_ins(vars, aux);
 			}
 		}
 		aux = aux->next;

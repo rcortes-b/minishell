@@ -1,7 +1,7 @@
 NAME = minishell
 
 CC = gcc
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 RM = rm -rf
 #SRCS_ALL = ${addprefix "srcs", $(SRCS)}
 
@@ -9,13 +9,14 @@ SRCS = srcs/parse/split.c srcs/parse/split_utils.c srcs/parse/environment.c  src
 srcs/parse/order.c srcs/parse/parse_utils.c \
 srcs/parse/categorization.c  srcs/parse/tokenization.c \
 srcs/checker/checker.c \
-srcs/expander/expander.c srcs/expander/expander_utils.c srcs/expander/expander_utils2.c \
+srcs/expander/new_expander.c \
 srcs/builtins/echo.c srcs/builtins/env.c srcs/builtins/export.c srcs/builtins/empty_export.c \
 srcs/builtins/unset.c  srcs/builtins/exit.c srcs/builtins/pwd.c srcs/builtins/chdir.c \
 srcs/error_handler/parse_errors.c srcs/error_handler/parse_errors2.c \
 srcs/exec/exec.c srcs/exec/cooking_execution.c srcs/exec/exec_utils.c \
 srcs/exec/heredoc.c srcs/exec/files.c srcs/exec/signal.c srcs/exec/exec_builtins.c \
 srcs/main.c
+#srcs/expander/expander.c srcs/expander/expander_utils.c srcs/expander/expander_utils2.c \
 
 OBJS = $(SRCS:.c=.o)
 

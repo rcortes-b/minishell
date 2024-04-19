@@ -38,7 +38,7 @@ static char	*expand_heredoc(t_env **lst_env, char *str, int index)
 				- ft_strlen(env->key) - 1);
 		if (!new_str)
 			return (free(env_name), NULL);
-		new_str = get_expanded(new_str, env, str, index);
+		new_str = get_expanded(&new_str, env, str, index);
 		return (free(str), free(env_name), new_str);
 	}
 	return (NULL);

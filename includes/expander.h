@@ -16,16 +16,31 @@
 # include "minishell.h"
 # include "parse.h"
 
-//char	*del_quotes(char *str, char *new_str);
-void	free_node(t_env **node);
-char	**expand_cli(char **words, t_env **lst_env);
-char	**resplit(char **str, char ***split);
-int		aux_lead(char lead, char ***split, char **str);
-void	iterate_expand(char *str, int *j, int i);
-char	*invalid_env(char **str, char **env_name);
-char	*do_expand(t_env **lst_env, char *str, int index, char **split);
-char	*get_expanded(char *new_str, t_env *env, char *str, int index);
+typedef struct s_exp 
+{
+	char 	**og_split; //og
+	char	**exp_split; // expand
+	char	**new_split; // definitive
+	char	*expanded_str;
+	int		index;
+	int		is_first;
+} 			t_exp;
 
-char	*remove_quotes(char *str, char **split);
+char	**lets_expand(t_env **lst_env, char **split);
+char	*get_expanded(char **new_str, t_env *env, char *str, int index);
+void	iterate_expand(char *str, int *j, int i);
+
+//EXPANDER PASADO
+//char	*del_quotes(char *str, char *new_str);
+/*void	free_node(t_env **node);
+char	**expand_cli(char **words, t_env **lst_env);
+char	**resplit(char *str, char ***split, int ind);
+int		aux_lead(char lead, char ***split, char *str, int ind);
+void	iterate_expand(char *str, int *j, int i);
+char	*invalid_env(char *env_name);
+char	*do_expand(t_env **lst_env, char *str, int index, char **split);
+char	*get_expanded(char **new_str, t_env *env, char *str, int index);
+
+char	*remove_quotes(char *str, char **split);*/
 
 #endif
