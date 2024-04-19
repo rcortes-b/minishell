@@ -26,7 +26,7 @@ static char	*invalid_env(char *new_str, char *env_name, char *str, int index)
 	int		i;
 
 	i = -1;
-	new_str = malloc(ft_strlen(str) - ft_strlen(env_name) - 1);
+	new_str = malloc(ft_strlen(str) - ft_strlen(env_name));
 	if (!new_str)
 		return (free(str), free(env_name), NULL);
 	while (++i < index)
@@ -59,7 +59,7 @@ static void	set_expand_values(char *lead, int *quote, char c, int *index)
 		*index = -1;
 }
 
-char	*get_expanded(char **new_str, t_env *env, char *str, int index)
+char	*get_expanded(char *new_str, t_env *env, char *str, int index)
 {
 	int	i;
 	int	j;
@@ -68,19 +68,19 @@ char	*get_expanded(char **new_str, t_env *env, char *str, int index)
 
 	i = -1;
 	while (++i < index)
-		(*new_str)[i] = str[i];
+		new_str[i] = str[i];
 	j = 0;
 	key_len = ft_strlen(env->key);
 	k = i + key_len + 1;
 	while (env->value[j])
-		(*new_str)[i++] = env->value[j++];
+		new_str[i++] = env->value[j++];
 	while (str[k])
-		(*new_str)[i++] = str[k++];
-	(*new_str)[i] = '\0';
-	return (*new_str);
+		new_str[i++] = str[k++];
+	new_str[i] = '\0';
+	return (new_str);
 }
 
-static char	*do_expand(t_env **lst_env, t_exp *exp, char *str, int index)
+static char	*do_expand(t_env **lst_env, char *str, int index, t_exp *exp)
 {
 	t_env	*env;
 	char	*env_name;
@@ -89,13 +89,12 @@ static char	*do_expand(t_env **lst_env, t_exp *exp, char *str, int index)
 
 	j = 0;
 	iterate_expand(str, &j, index + 1);
-	env_name = ft_substr(str, index + 1, j);	
+	env_name = ft_substr(str, index + 1, j);
 	if (!env_name)
 		return (free(str), NULL);
 	env = get_env(lst_env, env_name);
 	if (env)
-		new_str = malloc(ft_strlen(str) + ft_strlen(env->value)
-			- ft_strlen(env->key) - 1);
+		new_str = malloc(ft_strlen(str) + ft_strlen(env->value) - ft_strlen(env->key));
 	else
 	{
 		new_str = NULL;
@@ -103,7 +102,7 @@ static char	*do_expand(t_env **lst_env, t_exp *exp, char *str, int index)
 	}
 	if (!new_str)
 		return (free(str), free(env_name), NULL);
-	new_str = get_expanded(&new_str, env, str, index);
+	new_str = get_expanded(new_str, env, exp->expanded_str, index);
 	free(exp->expanded_str);
 	free(env_name);
 	return (new_str);
@@ -127,9 +126,9 @@ static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str, int il) //do 
 			set_expand_values(&lead, &second, 'x', NULL);
 		if ((exp->expanded_str[i] == '$' && lead != '\'') && (exp->is_first == 1 || !is_expanded(str, &exp->expanded_str[i])))
 		{
-			exp->expanded_str = do_expand(lst_env, exp, exp->expanded_str, i);
+			exp->expanded_str = do_expand(lst_env, exp->expanded_str, i, exp);
 			if (!exp->expanded_str)
-				return (0); //si es invalid env
+				return (0);
 			exp->is_first = 0;
 			second = 0;
 			i = -1;
@@ -165,8 +164,8 @@ char	**lets_expand(t_env **lst_env, char **split)
 				handle_expand_error(lst_env);
 			continue ;
 		}
-		if (!exp.expanded_str)
-			return (NULL);
+		//if (!exp.expanded_str)
+		//	return (NULL);
 		if (!check_if_expand(lst_env, &exp, exp.og_split[exp.index], exp.index))
 			printf("ke");
 	}

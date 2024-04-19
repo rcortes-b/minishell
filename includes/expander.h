@@ -27,7 +27,7 @@ typedef struct s_exp
 } 			t_exp;
 
 char	**lets_expand(t_env **lst_env, char **split);
-char	*get_expanded(char **new_str, t_env *env, char *str, int index);
+char	*get_expanded(char *new_str, t_env *env, char *str, int index);
 void	iterate_expand(char *str, int *j, int i);
 
 //EXPANDER PASADO
