@@ -81,7 +81,7 @@ static t_word	*open_redirect(t_word **lst, t_word *op, int check, t_env **my_env
 		close((*lst)->in);
 	else if ((*lst)->out != -2 && check == 1)
 		close((*lst)->out);
-	printf("lst_ptr: %s\n", (*lst)->com);
+	printf("lst_ptr: %s %d\n", (*lst)->com, (*lst)->token);
 	if (op->token == REINPUT && !open_files(&(*lst)->in, op->next->com, 1))
 			printf("File no se ha podido abrir.\n");
 	else if (op->token == REOUTPUT)

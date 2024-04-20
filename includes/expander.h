@@ -23,12 +23,27 @@ typedef struct s_exp
 	char	**new_split; // definitive
 	char	*expanded_str;
 	int		index;
+	int		new_index;
 	int		is_first;
+	int		is_split;
 } 			t_exp;
 
-char	**lets_expand(t_env **lst_env, char **split);
-char	*get_expanded(char *new_str, t_env *env, char *str, int index);
+//Utils
+char	*invalid_env(char *new_str, char *env_name, char *str, int index);
 void	iterate_expand(char *str, int *j, int i);
+void	set_expand_values(char *lead, int *quote, char c, int *index);
+int		is_expanded(char const *s1, char const *s2);
+
+//Expand
+int		modify_split(t_exp *exp, char *str);
+char	*get_expanded(char *new_str, t_env *env, char *str, int index);
+char	**lets_expand(t_env **lst_env, char **split);
+
+//Split for Expansor
+char	**expander_split(char const *s, char c);
+
+//Remove Quotes
+int	remove_quotes(char **new_split);
 
 //EXPANDER PASADO
 //char	*del_quotes(char *str, char *new_str);

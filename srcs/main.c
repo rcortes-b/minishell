@@ -32,6 +32,8 @@ static void	do_line(t_word *words, char *line, t_env **env)
 	}
 	check_tokens(split, &data, env);
 	split = lets_expand(env, split);
+	if (!split)
+		handle_env_error(env, split); //esto recibe split pero es NULL, entiendo q lo protege en free_mem 20/04
 	//split = expand_cli(split, env); //Creo que esta mal 17/04 (Ingente cantidad de texto)
 	//free_struct_nodes(&words);
 	//free_env_mem(env);

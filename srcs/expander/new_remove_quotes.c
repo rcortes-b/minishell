@@ -1,53 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander_utils2.c                                  :+:      :+:    :+:   */
+/*   new_remove_quotes.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/05 13:00:12 by rcortes-          #+#    #+#             */
-/*   Updated: 2024/04/05 13:00:13 by rcortes-         ###   ########.fr       */
+/*   Created: 2024/04/20 15:05:23 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/20 15:05:23 by rcortes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/expander.h"
+#include "../../includes/parse.h"
 #include "../../includes/error.h"
 
-void	iterate_expand(char *str, int *j, int i)
-{
-	while (str[i + *j] && str[i + *j] != '$'
-		&& str[i + *j] != '"' && str[i + *j] != '\'' && str[i + *j] != ' ')
-		(*j)++;
-}
-
-int	aux_lead(char lead, char ***split, char *str, int ind)
-{
-	if (lead == 'x')
-	{
-		for (int i = 0; (*split)[i]; i++)
-			printf("Split Before: %s\n", (*split)[i]);
-		*split = resplit(str, split, ind);
-		if (!*split)
-			return (0);
-		for (int l = 0; (*split)[l]; l++)
-			printf("Split After def: %p\n", (*split)[l]);
-	}
-	return (1);
-}
-
-char	*invalid_env(char *env_name)
-{
-	char	*new_str;
-
-	free(env_name);
-	new_str = (char *)malloc(sizeof(char));
-	if (!new_str)
-		return (NULL);
-	*new_str = '\0';
-	return (new_str);
-}
-
-static char	*del_quotes(char *str, char *new_str)
+static char	*delete_quotes(char *str, char *new_str)
 {
 	char	lead;
 	int		i;
@@ -73,7 +40,7 @@ static char	*del_quotes(char *str, char *new_str)
 	return (new_str);
 }
 
-static char	*remove_quotes(char *str, char **split)
+static char	*prep_quotes(char *str)
 {
 	char	lead;
 	char	*new_comm;
@@ -97,6 +64,27 @@ static char	*remove_quotes(char *str, char **split)
 	}
 	new_comm = (char *)malloc(ft_strlen(str) - (lead_counter * 2) + 1);
 	if (!new_comm)
-		return (free_mem(split), NULL);
-	return (del_quotes(str, new_comm));
+		return (NULL);
+	return (delete_quotes(str, new_comm));
+}
+
+int	remove_quotes(char **new_split)
+{
+	int	i;
+
+	i = -1;
+	while (new_split[++i])
+	{
+		if (!(ft_strcmp(new_split[i], "\"|\"") == 0)
+			&& !(ft_strcmp(new_split[i], "\"<\"") == 0)
+			&& !(ft_strcmp(new_split[i], "\"<<\"") == 0)
+			&& !(ft_strcmp(new_split[i], "\">\"") == 0)
+			&& !(ft_strcmp(new_split[i], "\">>\"") == 0))
+		{
+			new_split[i] = prep_quotes(new_split[i]);
+			if (!new_split[i])
+				return (0);
+		}
+	}
+	return (1);
 }
