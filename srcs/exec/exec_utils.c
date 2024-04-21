@@ -56,3 +56,9 @@ char	*check_path(char **path, char *cmd)
 	fprintf(stderr, "exec_cmd.c Line 34: Command not found\n");
 	return (cmd);
 }
+
+void	close_pipes(int	fd[2])
+{
+	close(fd[0]);
+	close(fd[1]);
+}

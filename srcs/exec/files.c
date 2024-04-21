@@ -80,21 +80,21 @@ static t_word	*open_redirect(t_word **lst, t_word *op, int check, t_env **my_env
 	else if ((*lst)->out != -2 && check == 1)
 		close((*lst)->out);
 	if (op->token == REINPUT && !open_files(&(*lst)->in, op->next->com, 1))
-			perror("minishell:");
+			return (perror("minishell"), g_errstatus = 1, op);
 	else if (op->token == REOUTPUT)
 	{
 		if (!open_files(&(*lst)->out, op->next->com, 2))
-			perror("minishell:");
+			return (perror("minishell"), g_errstatus = 1, op);
 	}
 	else if (op->token == HEREDOC)
 	{
 		if (!do_heredoc(lst, op->next->com, my_env))
-			perror("minishell:");
+			return (perror("minishell"), g_errstatus = 1, op);
 	}
 	else if (op->token == APPEND_OPT)
 	{
 		if (!open_files(&(*lst)->out, op->next->com, 3))
-			perror("minishell:");
+			return (perror("minishell"), g_errstatus = 1, op);
 	}
 	return (op);
 }
@@ -115,9 +115,10 @@ t_word	**set_redirects(t_word **lst, t_operators *data, t_env **my_env)
 		set_redirect_values(&lst_ptr, &aux, &head_com, &is_redirect);
 		if (*aux->com == data->reinput || *aux->com == data->reoutput)
 		{
-			if (!open_redirect(&lst_ptr, aux, *aux->com == data->reoutput, my_env))
-				return (free_struct_nodes(lst), free_env_mem(my_env), NULL);
+			open_redirect(&lst_ptr, aux, *aux->com == data->reoutput, my_env);
 			update_node(lst, &aux, &is_redirect, lst_ptr);
+			if (!*lst)
+				return (NULL);
 			continue ;
 		}
 		aux = aux->next;

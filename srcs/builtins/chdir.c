@@ -1,26 +1,57 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   chdir.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/21 14:47:23 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/21 14:47:24 by rcortes-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/builtins.h"
 #include "../../includes/parse.h"
-//#include "../../includes/exec.h"
+#include "../../includes/error.h"
 
-/*
-Comprobar si es relativo o absoluto el path DONE
-Comprobar si existe y puedes acceder
-Cambiar el directory
-Actualizar el pwd y el oldpwd
+static int	get_oldpwd(t_env **env, t_env **old, char **old_pwd)
+{
+	t_env	*new;
 
-------Check de que solo si la siguiente structura es NULL y te han pasado bien el input---- Solo un path despues del ch y nada mas , aux.next == NULL------
-*/
+	if (!*old)
+	{
+		new = ft_newenv();
+		if (!new)
+			return (handle_error(), 0);
+		new->key = ft_strdup("OLDPWD");
+		if (!new->key)
+			return (free(new), handle_error(), 0);
+		new->value = *old_pwd;
+		if (!new->value)
+			return (free(new->key), free(new), handle_error(), 0);
+		new->only_exp = 0;
+		ft_envadd_back(env, new);
+	}
+	else
+	{
+		if ((*old)->value)
+			free((*old)->value);
+		(*old)->value = *old_pwd;
+		(*old)->only_exp = 0;
+	}
+	return (1);
+}
 
 char	*parse_home(t_env *home, char **path)
 {
 	char	*new_path;
 
 	new_path = ft_strdup(home->value);
-	if(!new_path)
-		printf("error poniendo la primera parte");
+	if (!new_path)
+		return (handle_error(), NULL);
 	new_path = ft_strjoin(new_path, &(*path)[1]);
 	if (!new_path)
-		printf("error juntando todo el path modified.\n");
+		return (handle_error(), NULL);
 	free(*path);
 	return (new_path);
 }
@@ -37,15 +68,14 @@ static char	*is_absolute(t_exe *vars, char *path, int *is_relative)
 		path = parse_home(aux, &path);
 		*is_relative = 0;
 	}
-	else if (ft_strncmp(aux->value, path, home_size) == 0 && (path[home_size] == '/' || !path[home_size]))
+	else if (ft_strncmp(aux->value, path, home_size) == 0
+		&& (path[home_size] == '/' || !path[home_size]))
 		*is_relative = 0;
 	return (path);
 }
 
-
-static void	update_directory(t_env **env, char **old_pwd)
+static int	update_directory(t_env **env, char **old_pwd)
 {
-	t_env	*new = NULL;
 	t_env	*aux;
 	t_env	*old;
 	char	*tmp_pwd;
@@ -53,35 +83,23 @@ static void	update_directory(t_env **env, char **old_pwd)
 	aux = get_env(env, "PWD");
 	tmp_pwd = ft_strdup(aux->value);
 	if (!tmp_pwd)
-		printf("strdup error.\n");
+		return (handle_error(), 0);
 	free(aux->value);
 	aux->value = getcwd(NULL, 0);
 	if (!aux->value)
 	{
 		aux->value = ft_strdup(tmp_pwd);
 		if (!aux->value)
-			printf("strdup error.\n");
+			return (handle_error(), 0);
 	}
 	free(tmp_pwd);
 	old = get_env(env, "OLDPWD");
-	if (!old)
-	{
-		new = ft_newenv();
-		new->key = ft_strdup("OLDPWD");
-		new->value = *old_pwd;
-		ft_envadd_back(env, new);
-		new->only_exp = 0;
-	}
-	else
-	{
-		if (old->value)
-			free(old->value);
-		old->value = *old_pwd;
-		old->only_exp = 0;
-	}
+	if (!get_oldpwd(env, &old, old_pwd))
+		return (0);
+	return (1);
 }
 
-void	change_directory(t_exe *vars, int do_exec)
+int	change_directory(t_exe *vars, int do_exec)
 {
 	t_env	*aux;
 	char	*old_pwd;
@@ -91,23 +109,20 @@ void	change_directory(t_exe *vars, int do_exec)
 	aux = get_env(vars->env, "PWD");
 	old_pwd = ft_strdup(aux->value);
 	if (!old_pwd)
-		printf("fallo de strdup.\n");
-	if ((*vars->lst)->flags[2])
-		printf("Error porque solo puede recibir un path rel or abs.\n");
-	(*vars->lst)->flags[1] = is_absolute(vars, (*vars->lst)->flags[1], &is_relative);
+		return (handle_error(), 0);
+	(*vars->lst)->flags[1] = is_absolute(vars,
+			(*vars->lst)->flags[1], &is_relative);
 	if (access((*vars->lst)->flags[1], X_OK) != 0)
-		printf("no such file or dir.\n");
+		return (free(old_pwd), handle_error(), 0);
 	else if (do_exec == 1)
 	{
 		if (chdir((*vars->lst)->flags[1]) == 0)
 		{
-			update_directory(vars->env, &old_pwd);
-			printf("sa cambiao.\n"); //getcwd, update pwd and update oldpwd
+			if (!update_directory(vars->env, &old_pwd))
+				return (free(old_pwd), 0);
 		}
 		else
-		{
 			free(old_pwd);
-			printf("no sa cambiao.\n"); //no se hace nada
-		}
 	}
+	return (1);
 }

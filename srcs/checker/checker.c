@@ -14,8 +14,8 @@
 #include "../../includes/checker.h"
 #include "../../includes/error.h"
 
-static void	custom_error_checker(char **words, char *c2,
-	t_operators *data, t_env **lst_env)
+static int	custom_error_checker(char **words, char *c2,
+	t_operators *data)
 {
 	ft_putstr_fd("syntax error near unexpected token ", 2);
 	if (!c2)
@@ -28,35 +28,35 @@ static void	custom_error_checker(char **words, char *c2,
 		write(2, "'>'", 3);
 	write(2, "\n", 1);
 	free_mem(words);
-	free_env_mem(lst_env);
-	exit(258);
+	g_errstatus = 258;
+	return (-1);
 }
 
-void	check_tokens(char **words, t_operators *data, t_env **lst_env)
+int	check_tokens(char **words, t_operators *data)
 {
 	int	i;
 
 	if (words[0][0] == data->pipe)
-		custom_error_checker(words, words[0], data, lst_env);
+		custom_error_checker(words, words[0], data);
 	i = -1;
 	while (words[++i])
 	{
 		if ((*words[i] == data->reinput && *words[i + 1] == data->reinput)
 			|| (*words[i] == data->reoutput && *words[i + 1] == data->reoutput)
 			|| (!words[i + 1] && is_symbol(data, words[i][0])))
-			custom_error_checker(words, words[i + 1], data, lst_env);
+			i = custom_error_checker(words, words[i + 1], data);
 		if (words[i + 1])
 		{
 			if ((*words[i] == data->pipe && *words[i + 1] == data->pipe)
 				|| ((*words[i] == data->reinput
 						&& *words[i + 1] == data->reoutput)
-					|| (*words[i] == data->reinput
-						&& *words[i + 1] == data->pipe))
-				|| ((*words[i] == data->reoutput
-						&& *words[i + 1] == data->reinput)
-					|| (*words[i] == data->reoutput
-						&& *words[i + 1] == data->pipe)))
-				custom_error_checker(words, words[i + 1], data, lst_env);
+					|| (*words[i] == '<' && *words[i + 1] == '|'))
+				|| ((*words[i] == '>' && *words[i + 1] == '<')
+					|| (*words[i] == '>' && *words[i + 1] == '|')))
+				i = custom_error_checker(words, words[i + 1], data);
 		}
+		if (i == -1)
+			return (0);
 	}
+	return (1);
 }

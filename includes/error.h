@@ -18,7 +18,7 @@
 # include "exec.h"
 
 //General Error
-void	handle_exit(t_exe *vars, int is_error);
+void	handle_exit(t_exe *vars, int err_code);
 
 //Environment
 void	free_env_mem(t_env **lst_env);

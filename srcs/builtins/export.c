@@ -28,29 +28,20 @@ static int	var_exists(t_env *env, char *value, int size)
 	return (0);
 }
 
-static void	new_var(t_env **env, char *value, int is_onlyexp, int is_append)
+static int	new_var(t_env **env, char *value, int is_onlyexp, int is_append)
 {
 	t_env	*new;
 	int		i;
 
-	new = (t_env *)malloc(sizeof(t_env));
+	new = prepare_node(value, is_onlyexp, &i);
 	if (!new)
-		printf("Error malloc.\n"); //aqui hay que hacer un free de todo y exit
-	new->only_exp = is_onlyexp;
-	new->next = NULL;
-	i = 0;
-	while (value[i] && value[i] != '=' && value[i] != '+')
-		i++;
-	new->key = ft_substr(value, 0, i);
-	if (!new->key)
-		printf("Malloc error en substr.\n"); //aqui hay que hacer un free de todo y exit
+		return (0);
 	if (is_onlyexp)
 	{
 		new->value = (char *)malloc(sizeof(char));
 		if (!new->value)
-			printf("malloc error.\n");
-			//aqui hay que hacer un free de todo y exit
-		new->value[0]= '\0';
+			return (free(new), free(new->key), 0);
+		new->value[0] = '\0';
 	}
 	else
 	{
@@ -60,19 +51,19 @@ static void	new_var(t_env **env, char *value, int is_onlyexp, int is_append)
 			i++;
 		new->value = ft_strdup(&value[i]);
 		if (!new->value)
-			printf("malloc error.\n");
-			//aqui hay que hacer un free de todo y exit
+			return (free(new), free(new->key), 0);
 	}
 	ft_envadd_back(env, new);
+	return (1);
 }
 
-static void	update_var(t_env **env, char *value, int is_append, int is_onlyexp)
+static int	update_var(t_env **env, char *value, int is_append, int is_onlyexp)
 {
 	t_env	*aux;
 	int		i;
 
 	if (is_onlyexp)
-		return ;
+		return (1);
 	i = 0;
 	while (value[i] != '=' && value[i] != '+')
 		i++;
@@ -85,22 +76,17 @@ static void	update_var(t_env **env, char *value, int is_append, int is_onlyexp)
 	{
 		aux->value = ft_strjoin(aux->value, &value[i + 2]);
 		if (!aux->value)
-			printf("strjoin error.\n"); //aqui hay que hacer un free de todo y exit
+			return (0);
 	}
 	else
 	{
-		//if (aux->value)
-		//	free(aux->value);
-		printf("VALUEEEE %p\n", aux->value);
-		//lolazo(&aux, &value[i]);
-		aux->value = ft_strdup(&value[i + 1]);
-		if (!aux->value)
-			printf("strdup error.\n"); //aqui hay que hacer un free de todo y exit
-		printf("AUCS VALIU: %p\n", aux->value);
+		if (!update_value(&aux, value, i))
+			return (0);
 	}
+	return (1);
 }
 
-static void	add_export(t_env **env, char *value)
+static int	add_export(t_env **env, char *value)
 {
 	int	is_onlyexp;
 	int	is_append;
@@ -110,42 +96,48 @@ static void	add_export(t_env **env, char *value)
 	i = -1;
 	is_new = 1;
 	is_onlyexp = 0;
-	is_append = 0;
-	while (value[++i] && (value[i] != '=' || (value[i] != '+' && value[i + 1] == '=')))
-	{
-		if (value[i] == '+' && value[i + 1] == '=')
-		{
-			is_append = 1;
-			break ;
-		}
-	}
+	check_value(value, &i, &is_append);
 	if (var_exists(*env, value, i))
 		is_new = 0;
 	if (!value[i])
 		is_onlyexp = 1;
 	if (is_new)
-		new_var(env, value, is_onlyexp, is_append);
+	{
+		if (!new_var(env, value, is_onlyexp, is_append))
+			return (0);
+	}
 	else
-		update_var(env, value, is_append, is_onlyexp);
+	{
+		if (!update_var(env, value, is_append, is_onlyexp))
+			return (0);
+	}
+	return (1);
 }
 
-void	do_export(t_word *lst, t_exe **vars, int do_exec)
+int	do_export(t_word *lst, t_exe **vars, int do_exec)
 {
 	int	i;
 
 	i = 0;
 	if (!lst->flags[1] && do_exec == 1)
-		empty_export((*vars)->env);
+	{
+		if (!empty_export((*vars)->env))
+			return (free_mem((*vars)->path), 0);
+	}
 	else if (do_exec == 1)
 	{
 		while (lst->flags[++i])
 		{
 			if (lst->flags[i][0] == '_' && lst->flags[i][1] == '=')
-				return ;
+				return (1);
 			if (!key_is_valid(lst->flags[i]))
-				printf("Key is not valid.!\n");
+				return (0);
 			else
-				add_export((*vars)->env, lst->flags[i]);
+			{
+				if (!add_export((*vars)->env, lst->flags[i]))
+					return (0);
+			}
 		}
 	}
+	return (1);
 }

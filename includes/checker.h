@@ -15,6 +15,6 @@
 
 # include "minishell.h"
 
-void	check_tokens(char **words, t_operators *data, t_env **lst_env);
+int	check_tokens(char **words, t_operators *data);
 
 #endif

@@ -36,16 +36,20 @@ void	echo_builtin(t_word *word);
 void	print_env(t_env *env);
 
 //Export
-void	empty_export(t_env **lst_env);
+int		empty_export(t_env **lst_env);
 int		key_is_valid(char *var);
-void	do_export(t_word *lst, t_exe **vars, int do_exec);
+int		do_export(t_word *lst, t_exe **vars, int do_exec);
+void	set_oldpwd(t_env **lst_env, int *is_oldpwd);
+int		update_value(t_env **aux, char *value, int i);
+void	check_value(char *value, int *i, int *is_append);
+t_env	*prepare_node(char *value, int is_onlyexp, int *i);
 
 //Pwd
 void	print_pwd(t_env *env);
 void	unset_env(t_env **env, char **values, int do_exec);
 
 //Change Directory
-void	change_directory(t_exe *vars, int do_exec);
+int		change_directory(t_exe *vars, int do_exec);
 char	*parse_home(t_env *home, char **path);
 
 //Exit

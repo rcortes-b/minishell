@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/21 12:05:19 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/21 12:05:20 by rcortes-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/parse.h"
 #include "../includes/minishell.h"
 #include "../includes/checker.h"
@@ -17,6 +29,35 @@ static void	check_args(int argc, char **argv)
 	}
 }
 
+static int	check_line(char *line, t_env **env)
+{
+	if (!line)
+	{
+		free_env_mem(env);
+		printf("exit\n");
+		exit(EXIT_SUCCESS);
+	}
+	if (!line[0])
+	{
+		free(line);
+		return (0);
+	}
+	return (1);
+}
+
+static void	aux_do_line(t_word *words, t_operators *data,
+		t_env **env, char **split)
+{
+	order_split(split, data);
+	if (!categorize(split, &words))
+		return ;
+	free(split);
+	tokenization(&words, data);
+	//Hasta aqui esta checkeao y ta bien (BORRAR ESTE COMMENT 21/04)
+	execution(&words, data, env);
+	free_struct_nodes(&words);
+}
+
 static void	do_line(t_word *words, char *line, t_env **env)
 {
 	t_operators	data;
@@ -27,53 +68,45 @@ static void	do_line(t_word *words, char *line, t_env **env)
 	free(line);
 	if (!split)
 	{
-		free_env_mem(env);
 		handle_error();
+		return ;
 	}
-	check_tokens(split, &data, env);
+	if (!check_tokens(split, &data))
+		return ;
 	split = lets_expand(env, split);
 	if (!split)
-		handle_env_error(env, split);
-	order_split(split, &data);
-	categorize(split, &words, env);
-	free(split);
-	tokenization(&words, &data);
-	//Hasta aqui esta checkeao y ta bien (BORRAR ESTE COMMENT 20/04)
-	if (!execution(&words, &data, env))
-		exit(1);
-	free_struct_nodes(&words);
-	//free_env_mem(env);
+	{
+		handle_error();
+		return ;
+	}
+	aux_do_line(words, &data, env, split);
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	t_word	*words;
 	t_env	*env;
-	char *line;
+	char	*line;
 
 	check_args(argc, argv);
 	words = NULL;
+	env = NULL;
 	g_errstatus = 0;
-	if (!parse_environment(&env, envp))
-		handle_error();
 	while (1)
 	{
+		if (!env)
+		{
+			if (!parse_environment(&env, envp))
+				handle_error();
+		}
 		do_signal();
 		signal(SIGTSTP, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("minishell> ");
-		if (!line)
-		{
-			printf("exit\n");
-			exit(EXIT_SUCCESS);
-		}
-		if (!line[0])
-		{
-			free(line);
+		if (!check_line(line, &env))
 			continue ;
-		}
 		add_history(line);
 		do_line(words, line, &env);
 	}
-	return (1);
+	return (0);
 }

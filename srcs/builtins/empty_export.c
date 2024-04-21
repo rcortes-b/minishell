@@ -95,34 +95,28 @@ static void	sort_list(t_env **env)
 	}
 }
 
-void	empty_export(t_env **lst_env)
+int	empty_export(t_env **lst_env)
 {
 	t_env	*exp;
-	t_env	*aux;
 	t_env	*new;
 	int		is_oldpwd;
 
 	exp = *lst_env;
-	aux = *lst_env;
 	is_oldpwd = 0;
-	while (aux)
-	{
-		if (ft_strcmp(aux->key, "OLDPWD") == 0)
-			is_oldpwd = 1;
-		aux = aux->next;
-	}
+	set_oldpwd(lst_env, &is_oldpwd);
 	if (!is_oldpwd)
 	{
 		new = ft_newenv();
 		if (!new)
-			printf("xd\n"); //aqui hay que hacer un free de todo y exit
+			return (0);
 		new->key = ft_strdup("OLDPWD");
 		if (!new->key)
-			//aqui hay que hacer un free de todo y exit
+			return (0);
 		new->value = NULL;
 		new->only_exp = 1;
 		ft_envadd_back(&exp, new);
 	}
-	sort_list(&exp); /* Se puede crear una lista nueva para que no haga sorting del env y solo del export :) */
+	sort_list(&exp);
 	print_export(&exp);
+	return (1);
 }

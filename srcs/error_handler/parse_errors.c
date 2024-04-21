@@ -15,7 +15,7 @@
 void	handle_error(void)
 {
 	perror("minishell: ");
-	exit(errno);
+	g_errstatus = errno;
 }
 
 void	free_mem(char **split)
@@ -58,12 +58,6 @@ void	free_env_mem(t_env **lst_env)
 	}
 }
 
-void	handle_expand_error(t_env **lst_env)
-{
-	free_env_mem(lst_env);
-	handle_error();
-}
-
 void	handle_env_error(t_env **lst_env, char **split)
 {
 	free_env_mem(lst_env);
@@ -71,12 +65,10 @@ void	handle_env_error(t_env **lst_env, char **split)
 	handle_error();
 }
 
-void	handle_exit(t_exe *vars, int is_error)
+void	handle_exit(t_exe *vars, int err_code)
 {
 	free_mem(vars->path);
 	free_env_mem(vars->env);
 	free_struct_nodes(vars->lst);
-	if (is_error == 1)
-		perror("minishell: ");
-	exit(errno);
+	exit(err_code);
 }

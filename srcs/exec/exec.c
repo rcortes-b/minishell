@@ -61,26 +61,23 @@ char	**parse_path(t_env **my_env)
 	return (paths);
 }
 
-char	*execution(t_word **lst, t_operators *data, t_env **my_env)
+void	execution(t_word **lst, t_operators *data, t_env **my_env)
 {
 	t_exe	vars;
 
 	vars.env = my_env;
 	vars.lst = set_redirects(lst, data, my_env);
 	if (!vars.lst)
-		return (NULL);
+		return ;
 	vars.path = parse_path(my_env);
 	if (!vars.path)
-		return (free_struct_nodes(lst), NULL);
+		return ;
 	if (!(*lst)->next && is_builtin((*lst)->com) == 2)
-			exec_builtins(&vars, *lst, 1); //error handling
-	else
 	{
-		if (!cooking_execution(&vars))
-			return (NULL); //handle error aqui
+		if (!exec_builtins(&vars, *lst, 1))
+			handle_error();
 	}
+	else
+		cooking_execution(&vars);
 	free_mem(vars.path);
-	//free_env_mem(vars.env);
-	//free_struct_nodes(vars.lst);
-	return (""); //return temporal
 }

@@ -1,17 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/21 14:18:22 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/21 14:18:23 by rcortes-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/error.h"
 #include "../../includes/builtins.h"
 #include "../../includes/exec.h"
-
-/* hay que comprobar que exit sea la unica estructura. El comando EXIT se ejecuta SOLO */
-/* Puede ser una  comprobacion inicial si el primero es exit y argc es >  */
-
-//exit solo es 0
-//exit a es exit + error
-//exit 5 es 5
-//exit a 5 es exit + error
-//exit 5 6 NO es exit y da error de too many args
-
-//ojo con estos: > <
 
 static int	check_main_arg(char *arg)
 {
@@ -27,19 +28,33 @@ static int	check_main_arg(char *arg)
 	}
 	return (1);
 }
-  
+
+static int	exit_aux(t_exe *vars, int do_exec)
+{
+	if ((*vars->lst)->flags[1][0] == '*' && !(*vars->lst)->flags[1][1])
+	{
+		printf("exit\nbash:exit: too many arguments\n");
+		return (0);
+	}
+	if (!check_main_arg((*vars->lst)->flags[1]) && do_exec == 1)
+		handle_exit(vars, 255);
+	if (do_exec == 1)
+		handle_exit(vars, ft_atoi((*vars->lst)->flags[1]));
+	return (1);
+}
 
 void	do_exit(t_exe *vars, int do_exec)
 {
 	if ((*vars->lst)->flags[1] && (*vars->lst)->flags[2])
 	{
-		if (((*vars->lst)->flags[1][0] == '?' || (*vars->lst)->flags[1][0] == '*') && !(*vars->lst)->flags[1][1])
+		if (((*vars->lst)->flags[1][0] == '?'
+			|| (*vars->lst)->flags[1][0] == '*') && !(*vars->lst)->flags[1][1])
 			printf("exit\nminishell:exit: too many arguments\n");
 		else if (!check_main_arg((*vars->lst)->flags[1]))
 		{
 			printf("exit\nminishell: exit: numeric argument required\n");
 			if (do_exec == 1)
-				exit(255);
+				handle_exit(vars, 255);
 		}
 		else
 			printf("exit\nbash:exit: too many arguments\n");
@@ -47,15 +62,8 @@ void	do_exit(t_exe *vars, int do_exec)
 	}
 	else if ((*vars->lst)->flags[1])
 	{
-		if ((*vars->lst)->flags[1][0] == '*' && !(*vars->lst)->flags[1][1])
-		{
-			printf("exit\nbash:exit: too many arguments\n");
+		if (!exit_aux(vars, do_exec))
 			return ;
-		}
-		if (!check_main_arg((*vars->lst)->flags[1]) && do_exec == 1)
-			exit(255);
-		if (do_exec == 1)
-			exit(ft_atoi((*vars->lst)->flags[1]));
 	}
 	if (do_exec == 1)
 		handle_exit(vars, 0);

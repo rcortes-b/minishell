@@ -12,13 +12,28 @@
 
 #include "../../includes/builtins.h"
 
+static int	is_newline(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[i] != '-')
+		return (1);
+	while (str[++i])
+	{
+		if (str[i] != 'n')
+			return (1);
+	}
+	return (0);
+}
+
 void	echo_builtin(t_word *word)
 {
 	int	i;
 	int	is_flag;
 
 	i = 1;
-	if (ft_strcmp(word->flags[i], "-n") == 0)
+	if (!is_newline(word->flags[i]))
 	{
 		is_flag = 1;
 		i++;

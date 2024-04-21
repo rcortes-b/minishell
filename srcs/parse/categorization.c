@@ -91,7 +91,7 @@ static t_word	*aux_categorize(char **words, int *start,
 	return (n_word);
 }
 
-void	categorize(char **words, t_word **lst, t_env **lst_env)
+int	categorize(char **words, t_word **lst)
 {
 	t_word	*n_word;
 	int		start;
@@ -105,8 +105,10 @@ void	categorize(char **words, t_word **lst, t_env **lst_env)
 		if (!n_word)
 		{
 			free_struct_nodes(lst);
-			handle_env_error(lst_env, words);
+			handle_error();
+			return (0);
 		}
 		wordadd_back(lst, n_word);
 	}
+	return (1);
 }

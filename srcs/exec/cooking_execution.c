@@ -16,14 +16,14 @@
 #include "../../includes/exec.h"
 #include "../../includes/builtins.h"
 
-static void	first_argument(t_exe *vars)
+static int	first_argument(t_exe *vars)
 {
 	if ((*vars->lst)->in != -2)
 	{
 		if ((*vars->lst)->in == -1)
 		{
 			if (pipe(vars->fd) == -1)
-				fprintf(stderr, "PIPE NOT WORKING! :C\n"); // gestion de errores
+				return (handle_error(), 0);
 			close(vars->fd[WRITE_END]);
 			dup2(vars->fd[READ_END], STDIN_FILENO);
 			close(vars->fd[READ_END]);
@@ -34,6 +34,7 @@ static void	first_argument(t_exe *vars)
 			close((*vars->lst)->in);
 		}
 	}
+	return (1);
 }
 
 static void	set_ins(t_exe *vars, t_word *aux)
@@ -56,7 +57,6 @@ static void	set_ins(t_exe *vars, t_word *aux)
 		}
 		else if (aux->next->in == -2)
 		{
-			fprintf(stderr, "set ins -2\n");
 			close(vars->fd[WRITE_END]);
 			dup2(vars->fd[READ_END], STDIN_FILENO);
 			close(vars->fd[READ_END]);
@@ -76,7 +76,6 @@ static void	set_outs(t_exe *vars, t_word *aux)
 		}
 		else
 		{
-			fprintf(stderr, "set out 1, 2, 3 pasa\n");
 			dup2(aux->out, STDOUT_FILENO);
 			close(aux->out);
 		}
@@ -85,7 +84,6 @@ static void	set_outs(t_exe *vars, t_word *aux)
 	{
 		if ((aux->next))
 		{
-			fprintf(stderr, "set out -2 pasa\n");
 			close(vars->fd[READ_END]);
 			dup2(vars->fd[WRITE_END], STDOUT_FILENO);
 			close(vars->fd[WRITE_END]);
@@ -105,10 +103,8 @@ void	ejecutar_cosas(t_exe *vars, t_word *cmd)
 	}
 	else
 		correct_path = check_path(vars->path, cmd->com);
-	printf("LOL %s\n", correct_path);
 	if (execve(correct_path, cmd->flags, NULL) == -1)
 	{
-		fprintf(stderr, "minishell: ");
 		perror(correct_path);
 		exit(127);
 	}
@@ -122,26 +118,40 @@ int	cooking_execution(t_exe *vars)
 	aux = *vars->lst;
 	vars->stdin_fd = dup(STDIN_FILENO);
 	counter = 0;
-	first_argument(vars);
+	if (!first_argument(vars))
+		return (0);
 	while (aux)
 	{
 		if (is_builtin(aux->com) == 2)
-			exec_builtins(vars, aux, 0);
+		{
+			if (!exec_builtins(vars, aux, 0))
+				return (0);
+		}
 		else
 		{
 			if (aux->token != PIPE)
 			{	
-				counter++; //El counter estaba fuera y contaba la pipe como un counter++. Ta bien eso??
+				counter++;
 				if (aux->next != NULL)
-					pipe(vars->fd);
+				{
+					if (pipe(vars->fd) == -1)
+						return (0);
+				}
 				vars->pid = fork();
+				if (vars->pid == -1)
+					return (handle_error(), close_pipes(vars->fd), 0);
 				if (vars->pid == 0)
 				{
 					set_outs(vars, aux);
 					if (is_builtin(aux->com) == 1)
-						exec_builtins(vars, aux, 0);
+					{
+						if (!exec_builtins(vars, aux, 0))
+							return (0);
+					}
 					else
+					{
 						ejecutar_cosas(vars, aux);
+					}
 				}
 				else
 					set_ins(vars, aux);
@@ -149,7 +159,6 @@ int	cooking_execution(t_exe *vars)
 		}
 		aux = aux->next;
 	}
-	printf("Wait Counter: %d\n", counter);
 	wait_childs(vars, counter);
 	dup2(vars->stdin_fd, STDIN_FILENO);
 	return (1);

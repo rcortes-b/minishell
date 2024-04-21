@@ -33,7 +33,7 @@ typedef struct s_exe
 char	*check_path(char **path, char *cmd);
 
 //Execution
-char	*execution(t_word **lst, t_operators *data, t_env **my_env);
+void	execution(t_word **lst, t_operators *data, t_env **my_env);
 int		cooking_execution(t_exe *vars);
 void	ejecutar_cosas(t_exe *vars, t_word *cmd);
 
@@ -52,10 +52,13 @@ void	set_redirect_values(t_word **lst_ptr, t_word **aux,
 			int *head_com, int *is_redirect);
 
 void	ejecutar_cosas(t_exe *vars, t_word *cmd);
-void	exec_builtins(t_exe *vars, t_word *aux, int do_exec);
+int		exec_builtins(t_exe *vars, t_word *aux, int do_exec);
 
 //Wait to Childs
 void	wait_childs(t_exe *vars, int child_nbr);
+
+//Pipes
+void	close_pipes(int fd[2]);
 
 void	do_signal(void);
 

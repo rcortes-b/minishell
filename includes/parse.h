@@ -37,7 +37,7 @@ int		is_symbol(t_operators *data, char c);
 void	order_split(char **split, t_operators *data);
 
 //ESTO ES CATEGORIZE && TOKENIZATION
-void	categorize(char **words, t_word **lst, t_env **lst_env);
+int		categorize(char **words, t_word **lst);
 int		is_operator(char *new_split);
 void	tokenization(t_word **lst, t_operators *data);
 
