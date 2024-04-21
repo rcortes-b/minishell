@@ -38,6 +38,6 @@ void	exec_builtins(t_exe *vars, t_word *aux, int do_exec)
 		echo_builtin(aux);
 	else if (ft_strcmp(aux->com, "pwd") == 0)
 		print_pwd(*vars->env);
-	//if (is_builtin(aux->com) == 1) //Comentado para leaks check
-	//	exit(0);
+	if (is_builtin(aux->com) == 1) //Comentado para leaks check
+		exit(0);
 }

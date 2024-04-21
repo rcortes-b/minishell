@@ -4,6 +4,8 @@ To Do:
 	-builtins error aunque no se tenga que ejecutar
 	-norminette
 
-cmd: echo $dawds
+HACER FREE en EXIT
+HACER EXPORT, UNSET, ENV handle errors y COOKING EXECUTION
+DO TODO LA NORMINETTE
 
-PROBLEMAS CON echo "$test$USER"  test="<<"
+

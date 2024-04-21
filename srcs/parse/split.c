@@ -43,62 +43,60 @@ static int	count_words(char *line, const char *set, t_operators *data)
 }
 
 static int	get_word_size(char *line, const char *set,
-	int index, t_operators *data)
+	int ind, t_operators *data)
 {
 	int	size;
 
 	size = 0;
-	while (line[index])
+	while (line[ind])
 	{
-		if (is_symbol(data, line[index]))
+		if (is_symbol(data, line[ind]))
 		{
-			do_operator(line, &index, data, &size);
+			do_operator(line, &ind, data, &size);
 			return (size);
 		}
-		else if (!ft_strchr(set, line[index]))
+		else if (!ft_strchr(set, line[ind]))
 		{
-			while (!ft_strchr(set, line[index])
-				&& !is_symbol(data, line[index]))
+			while (!ft_strchr(set, line[ind]) && !is_symbol(data, line[ind]))
 			{
-				if (line[index] == data->dquote || line[index] == data->squote)
-					if (!iterate_quote(line, &index, line[index], &size))
+				if (line[ind] == data->dquote || line[ind] == data->squote)
+					if (!iterate_quote(line, &ind, line[ind], &size))
 						return (-1);
-				index++;
+				ind++;
 				size++;
 			}
 			return (size);
 		}
-		index++;
+		ind++;
 	}
 	return (1);
 }
 
-static int	split_word(char *word, const char *set, char *line, int *index)
+static int	split_word(char *word, const char *set, char *line, int *ind)
 {
 	t_operators	data;
 	int			i;
 
 	init_data(&data);
 	i = 0;
-	while (line[*index])
+	while (line[*ind])
 	{
-		if (!split_word_symbol(&word, line, index, &data))
+		if (!split_word_symbol(&word, line, ind, &data))
 			break ;
-		else if (!ft_strchr(set, line[*index]))
+		else if (!ft_strchr(set, line[*ind]))
 		{
-			while (!ft_strchr(set, line[*index])
-				&& !is_symbol(&data, line[*index]))
+			while (!ft_strchr(set, line[*ind]) && !is_symbol(&data, line[*ind]))
 			{
-				if (line[*index] == data.dquote || line[*index] == data.squote)
-					if (!copy_quotes(word, line, &i, index))
+				if (line[*ind] == data.dquote || line[*ind] == data.squote)
+					if (!copy_quotes(word, line, &i, ind))
 						return (0);
-				word[i++] = line[(*index)++];
+				word[i++] = line[(*ind)++];
 			}
 			word[i] = '\0';
 			break ;
 		}
 		else
-			(*index)++;
+			(*ind)++;
 	}
 	return (1);
 }

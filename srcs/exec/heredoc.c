@@ -87,11 +87,9 @@ int	do_heredoc(t_word **lst, char *limiter, t_env **my_env)
 	line = NULL;
 	if (pipe(fd) == -1)
 		return (0);
-		//Throw error
-	while (1) //expand de una variable de entorno
+	while (1)
 	{
 		line = readline("> ");
-		printf("Line: %s Limiter: %s\n", line, limiter);
 		if (!line)
 			continue ;
 		if (check_limiter(line, limiter))
@@ -99,9 +97,9 @@ int	do_heredoc(t_word **lst, char *limiter, t_env **my_env)
 		check_hdoc_expand(&line, my_env);
 		write(fd[1], line, ft_strlen(line));
 		write(fd[1], "\n", 1);
-		//free(line);
+		free(line);
 	}
-	//free(line);
+	free(line);
 	close(fd[1]);
 	(*lst)->in = fd[0];
 	return (1);

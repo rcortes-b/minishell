@@ -81,9 +81,11 @@ int	remove_quotes(char **new_split)
 			&& !(ft_strcmp(new_split[i], "\">\"") == 0)
 			&& !(ft_strcmp(new_split[i], "\">>\"") == 0))
 		{
+			printf("Bef: %s\n", new_split[i]);
 			new_split[i] = prep_quotes(new_split[i]);
 			if (!new_split[i])
 				return (0);
+			printf("Bef: %s\n", new_split[i]);
 		}
 	}
 	return (1);

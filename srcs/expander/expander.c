@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/26 17:23:16 by rcortes-          #+#    #+#             */
-/*   Updated: 2024/04/02 18:07:39 by mvallhon         ###   ########.fr       */
+/*   Created: 2024/04/21 10:54:14 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/21 10:54:14 by rcortes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,28 @@
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
 
-static void	set_expand_values(char *lead, int *quote, char c, int *index)
+static int	init_newspl(t_exp *exp)
 {
-	if (c == 'x')
-		*quote = 0;
-	else
-		*quote = 1;
-	*lead = c;
-	if (index)
-		*index = -1;
+	int	i;
+
+	i = 0;
+	while (exp->og_split[i])
+		i++;
+	exp->new_split = ft_calloc(sizeof(char *), i + 1);
+	if (!exp->new_split)
+		return (0);
+	i = -1;
+	while (exp->og_split[++i])
+	{
+		exp->new_split[i] = ft_strdup(exp->og_split[i]);
+		if (!exp->new_split[i])
+			return (free_mem(exp->new_split), 0);
+	}
+	exp->new_split[i] = NULL;
+	return (1);
 }
 
-char	*get_expanded(char **new_str, t_env *env, char *str, int index)
+char	*get_expanded(char *new_str, t_env *env, char *str, int index)
 {
 	int	i;
 	int	j;
@@ -34,106 +44,88 @@ char	*get_expanded(char **new_str, t_env *env, char *str, int index)
 
 	i = -1;
 	while (++i < index)
-		(*new_str)[i] = str[i];
+		new_str[i] = str[i];
 	j = 0;
 	key_len = ft_strlen(env->key);
 	k = i + key_len + 1;
 	while (env->value[j])
-		(*new_str)[i++] = env->value[j++];
+		new_str[i++] = env->value[j++];
 	while (str[k])
-		(*new_str)[i++] = str[k++];
-	(*new_str)[i] = '\0';
-	return (*new_str);
+		new_str[i++] = str[k++];
+	new_str[i] = '\0';
+	return (new_str);
 }
 
-char	*do_expand(t_env **lst_env, char *str, int index, char **split)
+char	*do_expand(t_env **lst_env, char *str, int index, t_exp *exp)
 {
-	char	*env_name;
 	t_env	*env;
+	char	*env_name;
 	char	*new_str;
-	int		i;
 	int		j;
 
-	i = index + 1;
 	j = 0;
-	iterate_expand(str, &j, i);
-	env_name = ft_substr(str, i, j);	
+	iterate_expand(str, &j, index + 1);
+	env_name = ft_substr(str, index + 1, j);
 	if (!env_name)
-		return (free_mem(split), NULL);
+		return (free(str), NULL);
 	env = get_env(lst_env, env_name);
-	if (!env)
-		return (free_mem(split), invalid_env(env_name));
-	new_str = malloc(ft_strlen(str) + ft_strlen(env->value)
-			- ft_strlen(env->key) - 1);
+	if (env)
+		new_str = malloc(ft_strlen(str)
+				+ ft_strlen(env->value) - ft_strlen(env->key));
+	else
+	{
+		new_str = NULL;
+		return (invalid_env(new_str, env_name, str, index));
+	}
 	if (!new_str)
-		return (free(env_name), free_mem(split), NULL);
-	new_str = get_expanded(&new_str, env, str, index);
-	printf("str in dir: %p\n", str);
-	//free(str);
-	return (free(env_name), new_str);
+		return (free(str), free(env_name), NULL);
+	new_str = get_expanded(new_str, env, exp->expanded_str, index);
+	free(exp->expanded_str);
+	free(env_name);
+	return (new_str);
 }
 
-static char	**check_if_expand(t_env **lst_env, char *str, char **split, int ind)
+static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str)
 {
-	int		i;
 	char	lead;
-	int		second;
-	char	*tmp;
 
-	set_expand_values(&lead, &second, 'x', &i);
-	//tmp = str;
-	while (str[++i])
-	{
-		if (!second && (str[i] == '"' || str[i] == '\''))
-			set_expand_values(&lead, &second, str[i], NULL);
-		else if (second && str[i] == lead)
-			set_expand_values(&lead, &second, 'x', NULL);
-		if (str[i] == '$' && lead != '\'')
-		{
-			printf("Str Before dir: %p\n", str);
-			tmp = do_expand(lst_env, str, i, split);
-			free(str);
-			if (!tmp)
-				return (NULL);
-			else if (!*tmp)
-				return (NULL);
-			if (!aux_lead(lead, &split, tmp, ind))
-				return (free_mem(split), NULL);
-			second = 0;
-			i = -1;
-			str = ft_strdup(tmp);
-			free(tmp);
-		}
-	}
-	//free(str);
-	return (split);
+	exp->expanded_str = ft_strdup(str);
+	if (!exp->expanded_str)
+		return (0);
+	lead = 'x';
+	if (!expander_aux(exp, lst_env, str, &lead))
+		return (0);
+	if (exp->new_index < exp->index)
+		exp->new_index = exp->index;
+	if (lead == 'x' && exp->is_split && !modify_split(exp, exp->expanded_str))
+		return (free(exp->expanded_str), 0);
+	free(exp->expanded_str);
+	return (1);
 }
 
-char	**expand_cli(char **words, t_env **lst_env)
+char	**lets_expand(t_env **lst_env, char **split)
 {
-	int	i;
+	t_exp	exp;
 
-	i = -1;
-	while (words[++i])
+	exp.og_split = split;
+	exp.index = -1;
+	exp.new_index = 0;
+	if (!init_newspl(&exp))
+		return (free_mem(split), NULL);
+	while (exp.og_split[++exp.index])
 	{
-		if (words[i][0] == '$' && words[i][1] == '?' && !words[i][2])
+		exp.is_first = 1;
+		exp.is_split = 0;
+		if (exp.og_split[exp.index][0] == '$'
+			&& exp.og_split[exp.index][1] == '?' && !exp.og_split[exp.index][2])
 			continue ;
-		else if (i > 0 && ft_strcmp(words[i - 1], "<<") == 0)
-		{
-			words[i] = remove_quotes(words[i], words);
-			if (!words[i])
-				handle_expand_error(lst_env);
+		else if (exp.index > 0
+			&& ft_strcmp(exp.og_split[exp.index - 1], "<<") == 0)
 			continue ;
-		}
-		words = check_if_expand(lst_env, words[i], words, i);
-		if (!words)
-			handle_expand_error(lst_env);
-		else
-		{
-			words[i] = remove_quotes(words[i], words);
-			if (!words[i])
-				handle_expand_error(lst_env);
-		}
+		if (!check_if_expand(lst_env, &exp, exp.og_split[exp.index]))
+			return (free_mem(split), free_mem(exp.new_split), NULL);
 	}
-	return (words);
+	if (!remove_quotes(exp.new_split))
+		return (free_mem(exp.new_split), NULL);
+	return (free_mem(exp.og_split), exp.new_split);
 }

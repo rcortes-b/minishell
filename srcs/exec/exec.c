@@ -33,9 +33,7 @@ static char	**append_bar(char **split)
 	{
 		path[j] = ft_strjoin(split[j], "/");
 		if (!path[j])
-		{
-			printf("Error.\n");
-		}
+			return (free_mem(path), free_mem(split), NULL);
 		free(split[j]);
 	}
 	free(split);
@@ -56,11 +54,10 @@ char	**parse_path(t_env **my_env)
 		i++;
 	paths = ft_esplit(my_paths->value, ':');
 	if (!paths)
-	{
-		ft_putendl_fd("utils.c Line 83: Malloc Error", 2);
-		exit(EXIT_FAILURE); //cuidao, no exit
-	}
+		return (perror("minishell:"), free_env_mem(my_env), NULL);
 	paths = append_bar(paths);
+	if (!paths)
+		return (perror("minishell:"), free_env_mem(my_env), NULL);
 	return (paths);
 }
 
@@ -71,15 +68,12 @@ char	*execution(t_word **lst, t_operators *data, t_env **my_env)
 	vars.env = my_env;
 	vars.lst = set_redirects(lst, data, my_env);
 	if (!vars.lst)
-	{
-		printf("un poco kekw de tu parte\n");
-		return (NULL); //si es void hay que comprobar errores
-	}
+		return (NULL);
 	vars.path = parse_path(my_env);
 	if (!vars.path)
-		printf("Error.\n");
+		return (free_struct_nodes(lst), NULL);
 	if (!(*lst)->next && is_builtin((*lst)->com) == 2)
-			exec_builtins(&vars, *lst, 1);
+			exec_builtins(&vars, *lst, 1); //error handling
 	else
 	{
 		if (!cooking_execution(&vars))
@@ -88,5 +82,5 @@ char	*execution(t_word **lst, t_operators *data, t_env **my_env)
 	free_mem(vars.path);
 	//free_env_mem(vars.env);
 	//free_struct_nodes(vars.lst);
-	return (NULL); //return temporal
+	return (""); //return temporal
 }

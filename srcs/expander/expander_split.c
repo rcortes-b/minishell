@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander_split.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/21 10:52:08 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/21 10:52:10 by rcortes-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/expander.h"
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
@@ -27,7 +39,7 @@ static size_t	count_words(char const *str, char c)
 		counter++;
 	while (str[i])
 	{
-		while (str[i] && str[i] != c )
+		while (str[i] && str[i] != c)
 		{
 			if (str[i] == '\'' || str[i] == '"')
 				iterate_quotes(str, &i);
@@ -45,6 +57,7 @@ static int	next_word(char const *str, size_t *index, char c)
 {
 	size_t	size;
 	char	lead;
+
 	while (str[*index] && str[*index] == c)
 		*index += 1;
 	size = 0;

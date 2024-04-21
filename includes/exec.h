@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec.h                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/21 10:40:11 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/21 10:40:12 by rcortes-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef EXEC_H
 # define EXEC_H
 
@@ -15,8 +27,7 @@ typedef struct s_exe
 	pid_t	pid;
 	int		fd[2];
 	int		stdin_fd;
-} t_exe;
-
+}	t_exe;
 
 //Utils
 char	*check_path(char **path, char *cmd);
@@ -38,7 +49,7 @@ int		is_builtin(char *cmd);
 //Redirects
 t_word	**set_redirects(t_word **lst, t_operators *data, t_env **my_env);
 void	set_redirect_values(t_word **lst_ptr, t_word **aux,
-	int *head_com, int *is_redirect);
+			int *head_com, int *is_redirect);
 
 void	ejecutar_cosas(t_exe *vars, t_word *cmd);
 void	exec_builtins(t_exe *vars, t_word *aux, int do_exec);
@@ -49,4 +60,3 @@ void	wait_childs(t_exe *vars, int child_nbr);
 void	do_signal(void);
 
 #endif
-

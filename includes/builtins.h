@@ -13,7 +13,7 @@
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
-#define EXIT_CODE 256
+# define EXIT_CODE 256
 
 # include "minishell.h"
 # include "parse.h"

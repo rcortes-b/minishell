@@ -42,7 +42,9 @@ static int	check_flag(char **split, int index, t_operators *data)
 	i = 0;
 	if (split[index + 1] && is_symbol(data, split[index + 1][0]))
 		return (1);
-	if (!split[index + 2] || split[index + 2][0] == data->pipe)
+	if (!split[index + 2])
+		return (1);
+	else if (split[index + 2][0] == data->pipe)
 		return (1);
 	return (0);
 }

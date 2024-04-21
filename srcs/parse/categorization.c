@@ -19,7 +19,7 @@ static void	put_command(t_word **new, char **word)
 	(*new)->flags = NULL;
 }
 
-static t_word	*new_word(char **words, int start, int end, t_operators *data)
+static t_word	*new_word(char **words, int start, int end)
 {
 	t_word	*new;
 	int		i;
@@ -27,7 +27,7 @@ static t_word	*new_word(char **words, int start, int end, t_operators *data)
 	new = (t_word *)malloc(sizeof (t_word));
 	if (!new)
 		return (NULL);
-	if (!is_symbol(data, words[start][0]))
+	if (!is_operator(words[start]))
 	{
 		new->com = ft_strdup(words[start]);
 		if (!new->com)
@@ -67,14 +67,14 @@ static void	wordadd_back(t_word **words, t_word *new_word)
 }
 
 static t_word	*aux_categorize(char **words, int *start,
-	int *end, t_operators *data)
+	int *end)
 {
 	t_word	*n_word;
 
-	if (is_symbol(data, words[*end][0]))
+	if (is_operator(words[*end]))
 	{
 		*start = *end;
-		n_word = new_word(words, *start, *end, data);
+		n_word = new_word(words, *start, *end);
 		if (!n_word)
 			return (NULL);
 		(*end)++;
@@ -82,17 +82,16 @@ static t_word	*aux_categorize(char **words, int *start,
 	else
 	{
 		*start = *end;
-		while (words[*end] && !is_symbol(data, words[*end][0]))
+		while (words[*end] && !is_operator(words[*end]))
 			(*end)++;
-		n_word = new_word(words, *start, ((*end) - 1), data);
+		n_word = new_word(words, *start, ((*end) - 1));
 		if (!n_word)
 			return (NULL);
 	}
 	return (n_word);
 }
 
-void	categorize(char **words, t_word **lst,
-	t_operators *data, t_env **lst_env)
+void	categorize(char **words, t_word **lst, t_env **lst_env)
 {
 	t_word	*n_word;
 	int		start;
@@ -102,7 +101,7 @@ void	categorize(char **words, t_word **lst,
 	end = 0;
 	while (words[end])
 	{
-		n_word = aux_categorize(words, &start, &end, data);
+		n_word = aux_categorize(words, &start, &end);
 		if (!n_word)
 		{
 			free_struct_nodes(lst);

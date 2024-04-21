@@ -12,6 +12,17 @@
 
 #include "../../includes/parse.h"
 
+int	is_operator(char *new_split)
+{
+	if ((ft_strcmp(new_split, "|") == 0)
+		|| (ft_strcmp(new_split, "<") == 0)
+		|| (ft_strcmp(new_split, "<<") == 0)
+		|| (ft_strcmp(new_split, ">") == 0)
+		|| (ft_strcmp(new_split, ">>") == 0))
+		return (1);
+	return (0);
+}
+
 int	is_symbol(t_operators *data, char c)
 {
 	if (c == data->reinput || c == data->reoutput || c == data->pipe)

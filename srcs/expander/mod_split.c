@@ -1,11 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mod_split.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/21 10:45:06 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/21 10:45:07 by rcortes-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../includes/expander.h"
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
-
-//INIT NEW SPLIT para poder iterarlo
-//Falta llevar un indice auxiliar [ara el newsplit 
-//y su resize (en resplit despues de pegar lo nuevo)
 
 static char	*aux_check_operator(char **new_split)
 {
@@ -50,7 +57,7 @@ static int	append_newstr(char **def_split, t_exp *exp, int size)
 {
 	int	i;
 
-	exp->new_split = ft_calloc(sizeof(char *) , size);
+	exp->new_split = ft_calloc(sizeof(char *), size);
 	if (!exp->new_split)
 		return (free_mem(def_split), 0);
 	i = -1;
@@ -86,14 +93,8 @@ static int	create_split(t_exp *exp, char **split_aux, char **def_split)
 		if (!def_split[counter - 1])
 			return (free_mem(def_split), 0);
 	}
-	exp->new_index = counter;
-	while (exp->new_split[j])
-	{
-		def_split[counter++] = ft_strdup(exp->new_split[j++]);
-		if (!def_split[counter - 1])
-			return (free_mem(def_split), 0);
-	}
-	def_split[counter] = NULL;
+	if (!aux_create_split(exp, def_split, counter, j))
+		return (0);
 	free_mem(split_aux);
 	free_mem(exp->new_split);
 	return (1);
@@ -106,7 +107,6 @@ int	modify_split(t_exp *exp, char *str)
 	int		j;
 	int		i;
 
-
 	split_aux = expander_split(str, ' ');
 	if (!split_aux)
 		return (0);
@@ -118,10 +118,10 @@ int	modify_split(t_exp *exp, char *str)
 	j = 0;
 	while (split_aux[j])
 		j++;
-	def_split = ft_calloc(sizeof(char *) , (i + j));
+	def_split = ft_calloc(sizeof(char *), (i + j));
 	if (!def_split)
 		return (free_mem(split_aux), 0);
-	if(!create_split(exp, split_aux, def_split))
+	if (!create_split(exp, split_aux, def_split))
 		return (free_mem(split_aux), 0);
 	if (!append_newstr(def_split, exp, i + j))
 		return (free_mem(split_aux), 0);

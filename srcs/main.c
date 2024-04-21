@@ -23,7 +23,7 @@ static void	do_line(t_word *words, char *line, t_env **env)
 	char		**split;
 
 	init_data(&data);
-	split = ft_split(line, " \t", &data); //HACER EL 'MAL CLOSE QUOTING' POR EL PERROR, etc 17/04
+	split = ft_split(line, " \t", &data);
 	free(line);
 	if (!split)
 	{
@@ -33,25 +33,16 @@ static void	do_line(t_word *words, char *line, t_env **env)
 	check_tokens(split, &data, env);
 	split = lets_expand(env, split);
 	if (!split)
-		handle_env_error(env, split); //esto recibe split pero es NULL, entiendo q lo protege en free_mem 20/04
-	//split = expand_cli(split, env); //Creo que esta mal 17/04 (Ingente cantidad de texto)
-	//free_struct_nodes(&words);
-	//free_env_mem(env);
-	//exit(1);
-	/*for (int l = 0; split[l]; l++)
-		printf("Split After: %p\n", split[l]);
-	for (int l = 0; split[l]; l++)
-		printf("Split After: %s\n", split[l]);*/
-	//printf("split main dir: %p\n", split);
+		handle_env_error(env, split);
 	order_split(split, &data);
-	categorize(split, &words, &data, env);
+	categorize(split, &words, env);
 	free(split);
 	tokenization(&words, &data);
-	//Hasta aqui esta checkeao y ta bien (BORRAR ESTE COMMENT 17/04)
-	execution(&words, &data, env);
-
+	//Hasta aqui esta checkeao y ta bien (BORRAR ESTE COMMENT 20/04)
+	if (!execution(&words, &data, env))
+		exit(1);
 	free_struct_nodes(&words);
-	free_env_mem(env);
+	//free_env_mem(env);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -65,8 +56,8 @@ int main(int argc, char **argv, char **envp)
 	g_errstatus = 0;
 	if (!parse_environment(&env, envp))
 		handle_error();
-//	while (1)
-	//{
+	while (1)
+	{
 		do_signal();
 		signal(SIGTSTP, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
@@ -79,10 +70,10 @@ int main(int argc, char **argv, char **envp)
 		if (!line[0])
 		{
 			free(line);
-		//	continue ;
+			continue ;
 		}
 		add_history(line);
 		do_line(words, line, &env);
-		return (1);
-	//}
+	}
+	return (1);
 }

@@ -34,22 +34,22 @@ void	do_exit(t_exe *vars, int do_exec)
 	if ((*vars->lst)->flags[1] && (*vars->lst)->flags[2])
 	{
 		if (((*vars->lst)->flags[1][0] == '?' || (*vars->lst)->flags[1][0] == '*') && !(*vars->lst)->flags[1][1])
-			printf("exit.\nbash:exit: too many arguments\n");
+			printf("exit\nminishell:exit: too many arguments\n");
 		else if (!check_main_arg((*vars->lst)->flags[1]))
 		{
-			printf("bash: exit: numeric argument required");
+			printf("exit\nminishell: exit: numeric argument required\n");
 			if (do_exec == 1)
 				exit(255);
 		}
 		else
-			printf("exit.\nbash:exit: too many arguments\n");
+			printf("exit\nbash:exit: too many arguments\n");
 		return ;
 	}
 	else if ((*vars->lst)->flags[1])
 	{
 		if ((*vars->lst)->flags[1][0] == '*' && !(*vars->lst)->flags[1][1])
 		{
-			printf("exit.\nbash:exit: too many arguments\n");
+			printf("exit\nbash:exit: too many arguments\n");
 			return ;
 		}
 		if (!check_main_arg((*vars->lst)->flags[1]) && do_exec == 1)
