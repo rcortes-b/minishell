@@ -20,8 +20,5 @@ void	handle_signal(int sig)
 void	handle_sighdoc(int sig)
 {
 	if (sig == SIGINT)
-	{
-		write(0, "\n", 1);
 		exit(1);
-	}
 }

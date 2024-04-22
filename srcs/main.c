@@ -101,7 +101,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		signal(SIGINT, handle_signal);
 		signal(SIGQUIT, SIG_IGN);
-		
 		line = readline("minishell> ");
 		if (!check_line(line, &env))
 			continue ;

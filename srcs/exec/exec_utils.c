@@ -61,14 +61,14 @@ char	*check_path(char **path, char *cmd)
 	{
 		cmd_path = ft_strjoin(path[i], cmd);
 		if (!cmd_path)
-			fprintf(stderr, "exec_cmd.c Line 28: Malloc Error");
+			ft_putstr_fd("minishell: command not found\n", 2);
 		if (access(cmd_path, F_OK) == 0)
 			return (cmd_path);
 		i++;
 		free(cmd_path);
 	}
-	fprintf(stderr, "exec_cmd.c Line 34: Command not found\n");
-	return (cmd);
+	ft_putstr_fd("minishell: command not found\n", 2);
+	return (NULL);
 }
 
 void	close_pipes(int	fd[2])

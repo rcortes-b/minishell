@@ -89,7 +89,7 @@ static t_word	*open_redirect(t_word **lst, t_word *op, int check, t_env **my_env
 	else if (op->token == HEREDOC)
 	{
 		if (!do_heredoc(lst, op->next->com, my_env))
-			return (perror("minishell"), g_errstatus = 1, op);
+			return (g_errstatus = 1, NULL);
 	}
 	else if (op->token == APPEND_OPT)
 	{
@@ -115,7 +115,8 @@ t_word	**set_redirects(t_word **lst, t_operators *data, t_env **my_env)
 		set_redirect_values(&lst_ptr, &aux, &head_com, &is_redirect);
 		if (*aux->com == data->reinput || *aux->com == data->reoutput)
 		{
-			open_redirect(&lst_ptr, aux, *aux->com == data->reoutput, my_env);
+			if (!open_redirect(&lst_ptr, aux, *aux->com == data->reoutput, my_env))
+				return (NULL);
 			update_node(lst, &aux, &is_redirect, lst_ptr);
 			if (!*lst)
 				return (NULL);

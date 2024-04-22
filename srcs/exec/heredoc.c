@@ -93,13 +93,13 @@ int	do_heredoc(t_word **lst, char *limiter, t_env **my_env)
 	if (pid == 0)
 	{
 		close(fd[0]);
+		signal(SIGINT, NULL);
 		signal(SIGINT, handle_sighdoc);
 		while (1)
 		{
 			line = readline("> ");
 			if (!line)
 			{
-				printf("test");
 				rl_replace_line("", 0);
 				exit (0);
 			}
@@ -117,9 +117,9 @@ int	do_heredoc(t_word **lst, char *limiter, t_env **my_env)
 		exit (0);
 	}
 	waitpid(-1, &status, 0);
-	if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
-		return (close(fd[1]), (*lst)->in = fd[0], printf("bye\n"), 0);
 	close(fd[1]);
+	if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
+		return ((*lst)->in = fd[0], 0);
 	(*lst)->in = fd[0];
 	return (1);
 }

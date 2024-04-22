@@ -103,9 +103,11 @@ static void	ejecutar_cosas(t_exe *vars, t_word *cmd, char **og_env)
 	}
 	else
 		correct_path = check_path(vars->path, cmd->com);
+	if (!correct_path)
+		exit(126);
 	if (execve(correct_path, cmd->flags, og_env) == -1)
 	{
-		perror(correct_path);
+		perror("minishell: ");
 		exit(127);
 	}
 }
