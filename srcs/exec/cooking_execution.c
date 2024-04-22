@@ -91,7 +91,7 @@ static void	set_outs(t_exe *vars, t_word *aux)
 	}
 }
 
-void	ejecutar_cosas(t_exe *vars, t_word *cmd)
+static void	ejecutar_cosas(t_exe *vars, t_word *cmd, char **og_env)
 {
 	char	*correct_path;
 
@@ -103,14 +103,14 @@ void	ejecutar_cosas(t_exe *vars, t_word *cmd)
 	}
 	else
 		correct_path = check_path(vars->path, cmd->com);
-	if (execve(correct_path, cmd->flags, NULL) == -1)
+	if (execve(correct_path, cmd->flags, og_env) == -1)
 	{
 		perror(correct_path);
 		exit(127);
 	}
 }
 
-int	cooking_execution(t_exe *vars)
+int	cooking_execution(t_exe *vars, char **og_env)
 {
 	t_word	*aux;
 	int		counter;
@@ -142,6 +142,7 @@ int	cooking_execution(t_exe *vars)
 					return (handle_error(), close_pipes(vars->fd), 0);
 				if (vars->pid == 0)
 				{
+					signal(SIGQUIT, NULL);
 					set_outs(vars, aux);
 					if (is_builtin(aux->com) == 1)
 					{
@@ -150,7 +151,7 @@ int	cooking_execution(t_exe *vars)
 					}
 					else
 					{
-						ejecutar_cosas(vars, aux);
+						ejecutar_cosas(vars, aux, og_env);
 					}
 				}
 				else

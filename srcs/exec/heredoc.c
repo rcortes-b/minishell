@@ -79,27 +79,46 @@ static int	check_limiter(char *line, char *limiter)
 
 int	do_heredoc(t_word **lst, char *limiter, t_env **my_env)
 {
+	pid_t	pid;
 	char	*line;
 	int		fd[2];
+	int		status;
 
 	if (!*lst)
 		return (0);
 	line = NULL;
 	if (pipe(fd) == -1)
 		return (0);
-	while (1)
+	pid = fork();
+	if (pid == 0)
 	{
-		line = readline("> ");
-		if (!line)
-			continue ;
-		if (check_limiter(line, limiter))
-			break ;
-		check_hdoc_expand(&line, my_env);
-		write(fd[1], line, ft_strlen(line));
-		write(fd[1], "\n", 1);
+		close(fd[0]);
+		signal(SIGINT, handle_sighdoc);
+		while (1)
+		{
+			line = readline("> ");
+			if (!line)
+			{
+				printf("test");
+				rl_replace_line("", 0);
+				exit (0);
+			}
+			if (!*line)
+				continue ;
+			if (check_limiter(line, limiter))
+				break ;
+			check_hdoc_expand(&line, my_env);
+			write(fd[1], line, ft_strlen(line));
+			write(fd[1], "\n", 1);
+			free(line);
+		}
 		free(line);
+		close(fd[1]);
+		exit (0);
 	}
-	free(line);
+	waitpid(-1, &status, 0);
+	if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
+		return (close(fd[1]), (*lst)->in = fd[0], printf("bye\n"), 0);
 	close(fd[1]);
 	(*lst)->in = fd[0];
 	return (1);

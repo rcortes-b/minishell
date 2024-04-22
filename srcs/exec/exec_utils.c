@@ -26,6 +26,20 @@ void	wait_childs(t_exe *vars, int child_nbr)
 	{
 		if (vars->pid == waitpid(-1, &status, 0))
 		{
+			if (WIFSIGNALED(status))
+			{
+				if (WTERMSIG(status) == SIGINT)
+				{
+					write(2, "^C\n", 3);
+					g_errstatus = status + 128;
+				}
+				if (WTERMSIG(status) == SIGQUIT)
+				{
+					write(2, "Quit 3\n", 7);
+					g_errstatus = status + 128;
+				}
+				return ;
+			}
 			g_errstatus = WEXITSTATUS(status);
 			fprintf(stderr, "child status: %d\n", g_errstatus);
 			if (g_errstatus != 0)

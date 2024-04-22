@@ -66,5 +66,8 @@ void	do_exit(t_exe *vars, int do_exec)
 			return ;
 	}
 	if (do_exec == 1)
+	{
+		printf("exit\n");
 		handle_exit(vars, 0);
+	}
 }

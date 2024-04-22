@@ -58,12 +58,12 @@ static void	aux_do_line(t_word *words, t_operators *data,
 	free_struct_nodes(&words);
 }
 
-static void	do_line(t_word *words, char *line, t_env **env)
+static void	do_line(t_word *words, char *line, t_env **env, char **og_env)
 {
 	t_operators	data;
 	char		**split;
 
-	init_data(&data);
+	init_data(&data, og_env);
 	split = ft_split(line, " \t", &data);
 	free(line);
 	if (!split)
@@ -99,14 +99,14 @@ int	main(int argc, char **argv, char **envp)
 			if (!parse_environment(&env, envp))
 				handle_error();
 		}
-		do_signal();
-		signal(SIGTSTP, SIG_IGN);
+		signal(SIGINT, handle_signal);
 		signal(SIGQUIT, SIG_IGN);
+		
 		line = readline("minishell> ");
 		if (!check_line(line, &env))
 			continue ;
 		add_history(line);
-		do_line(words, line, &env);
+		do_line(words, line, &env, envp);
 	}
 	return (0);
 }

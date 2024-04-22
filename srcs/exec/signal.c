@@ -5,9 +5,9 @@
 //SIGINT == 2
 //SIGQUIT == 3
 
-static void	handle_signal(int signal)
+void	handle_signal(int sig)
 {
-	if (signal == SIGINT)
+	if (sig == SIGINT)
 	{
 		rl_replace_line("", 0);
 		printf("\n");
@@ -15,16 +15,13 @@ static void	handle_signal(int signal)
 		rl_redisplay();
 		g_errstatus = 1;
 	}
-	else if (signal == SIGKILL)
-		return ;
 }
 
-
-void	do_signal(void)
+void	handle_sighdoc(int sig)
 {
-	struct sigaction	sa;
-
-	sa.__sigaction_u.__sa_handler = &handle_signal;
-	
-	sigaction(SIGINT, &sa, NULL);
+	if (sig == SIGINT)
+	{
+		write(0, "\n", 1);
+		exit(1);
+	}
 }

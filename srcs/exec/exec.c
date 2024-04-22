@@ -78,6 +78,6 @@ void	execution(t_word **lst, t_operators *data, t_env **my_env)
 			handle_error();
 	}
 	else
-		cooking_execution(&vars);
+		cooking_execution(&vars, data->og_env);
 	free_mem(vars.path);
 }

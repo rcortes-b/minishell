@@ -77,7 +77,7 @@ static int	split_word(char *word, const char *set, char *line, int *ind)
 	t_operators	data;
 	int			i;
 
-	init_data(&data);
+	init_data(&data, NULL);
 	i = 0;
 	while (line[*ind])
 	{
@@ -111,7 +111,7 @@ static char	**get_split(char **split, const char *set,
 
 	counter = -1;
 	i = 0;
-	init_data(&data);
+	init_data(&data, NULL);
 	while (++counter < word_counter)
 	{
 		size = get_word_size(line, set, i, &data);

@@ -43,6 +43,7 @@ typedef struct s_operator
 	char	dquote;
 	char	reinput;
 	char	reoutput;
+	char	**og_env;
 }	t_operators;
 
 typedef struct s_word

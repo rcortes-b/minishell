@@ -30,11 +30,12 @@ int	is_symbol(t_operators *data, char c)
 	return (0);
 }
 
-void	init_data(t_operators *data)
+void	init_data(t_operators *data, char **envp)
 {
 	data->pipe = '|';
 	data->squote = '\'';
 	data->dquote = '"';
 	data->reinput = '<';
 	data->reoutput = '>';
+	data->og_env = envp;
 }

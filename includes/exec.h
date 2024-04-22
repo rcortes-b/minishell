@@ -34,14 +34,17 @@ char	*check_path(char **path, char *cmd);
 
 //Execution
 void	execution(t_word **lst, t_operators *data, t_env **my_env);
-int		cooking_execution(t_exe *vars);
-void	ejecutar_cosas(t_exe *vars, t_word *cmd);
+int		cooking_execution(t_exe *vars, char **og_env);
+//void	ejecutar_cosas(t_exe *vars, t_word *cmd);
 
 //Heredoc
 int		do_heredoc(t_word **lst, char *limiter, t_env **my_env);
 
-//Waits
+//Waits && Signals
 void	wait_childs(t_exe *vars, int child_nbr);
+void	handle_signal(int sig);
+void	handle_sighdoc(int sig);
+void	handle_sigchild(int sig);
 
 //Builtins
 int		is_builtin(char *cmd);
@@ -50,8 +53,6 @@ int		is_builtin(char *cmd);
 t_word	**set_redirects(t_word **lst, t_operators *data, t_env **my_env);
 void	set_redirect_values(t_word **lst_ptr, t_word **aux,
 			int *head_com, int *is_redirect);
-
-void	ejecutar_cosas(t_exe *vars, t_word *cmd);
 int		exec_builtins(t_exe *vars, t_word *aux, int do_exec);
 
 //Wait to Childs

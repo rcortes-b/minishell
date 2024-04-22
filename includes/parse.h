@@ -32,7 +32,7 @@ int		split_word_symbol(char **word, char *line,
 char	**ft_split(char *line, const char *set, t_operators *data);
 
 //ESTO ES ORDER FLAGS && PARSE UTILS
-void	init_data(t_operators *data);
+void	init_data(t_operators *data, char **envp);
 int		is_symbol(t_operators *data, char c);
 void	order_split(char **split, t_operators *data);
 
