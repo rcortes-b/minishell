@@ -56,24 +56,6 @@ char	*parse_home(t_env *home, char **path)
 	return (new_path);
 }
 
-static char	*is_absolute(t_exe *vars, char *path, int *is_relative)
-{
-	t_env	*aux;
-	int		home_size;
-
-	aux = get_env(vars->env, "HOME");
-	home_size = ft_strlen(aux->value);
-	if (path[0] == '~' && (path[1] == '/' || !path[1]))
-	{
-		path = parse_home(aux, &path);
-		*is_relative = 0;
-	}
-	else if (ft_strncmp(aux->value, path, home_size) == 0
-		&& (path[home_size] == '/' || !path[home_size]))
-		*is_relative = 0;
-	return (path);
-}
-
 static int	update_directory(t_env **env, char **old_pwd)
 {
 	t_env	*aux;
@@ -99,24 +81,49 @@ static int	update_directory(t_env **env, char **old_pwd)
 	return (1);
 }
 
-int	change_directory(t_exe *vars, int do_exec)
+static char	**is_onlycd(t_env **env, t_word **aux, char **flags)
+{
+	char	**new;
+	t_env	*home;
+
+	home = get_env(env, "HOME");
+	if (!home)
+	{
+		g_errstatus = 1;
+		ft_putendl_fd("minishell: cd: HOME not set", 2);
+		return (NULL);
+	}
+	new = (char **)malloc(sizeof(char *) * 3);
+	if (!new)
+		return (NULL);
+	new[0] = ft_strdup(flags[0]);
+	if (!new[0])
+		return (free(new), NULL);
+	new[1] = ft_strdup(home->value);
+	if (!new[1])
+		return (free(new[0]), free(new), NULL);
+	new[2] = NULL;
+	free_mem(flags);
+	(*aux)->flags = new;
+	return (new);
+}
+
+int	change_directory(t_exe *vars, t_word *aux_ptr, int do_exec)
 {
 	t_env	*aux;
 	char	*old_pwd;
-	int		is_relative;
 
-	is_relative = 1;
+	if (!aux_ptr->flags[1] && !is_onlycd(vars->env, &aux_ptr, aux_ptr->flags))
+		return (0);
 	aux = get_env(vars->env, "PWD");
 	old_pwd = ft_strdup(aux->value);
 	if (!old_pwd)
 		return (handle_error(), 0);
-	(*vars->lst)->flags[1] = is_absolute(vars,
-			(*vars->lst)->flags[1], &is_relative);
-	if (access((*vars->lst)->flags[1], X_OK) != 0)
-		return (free(old_pwd), handle_error(), 0);
+	if (access(aux_ptr->flags[1], X_OK) != 0)
+		return (perror("minishell"), free(old_pwd), 0);
 	else if (do_exec == 1)
 	{
-		if (chdir((*vars->lst)->flags[1]) == 0)
+		if (chdir(aux_ptr->flags[1]) == 0)
 		{
 			if (!update_directory(vars->env, &old_pwd))
 				return (free(old_pwd), 0);

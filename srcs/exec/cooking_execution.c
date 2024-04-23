@@ -132,7 +132,7 @@ int	cooking_execution(t_exe *vars, char **og_env)
 		else
 		{
 			if (aux->token != PIPE)
-			{	
+			{
 				counter++;
 				if (aux->next != NULL)
 				{

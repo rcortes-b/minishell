@@ -33,7 +33,7 @@ static int	exit_aux(t_exe *vars, int do_exec)
 {
 	if ((*vars->lst)->flags[1][0] == '*' && !(*vars->lst)->flags[1][1])
 	{
-		printf("exit\nbash:exit: too many arguments\n");
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 		return (0);
 	}
 	if (!check_main_arg((*vars->lst)->flags[1]) && do_exec == 1)

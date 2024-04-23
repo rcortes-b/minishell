@@ -13,3 +13,6 @@ TEST:
 	carpeta borrar
 	sin env
 
+builtins en pipes "ls | cd srcs/"
+exit quan "ls | ./minishell"
+enviroment null

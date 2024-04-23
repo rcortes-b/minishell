@@ -14,7 +14,7 @@
 
 void	handle_error(void)
 {
-	perror("minishell: ");
+	perror("minishell");
 	g_errstatus = errno;
 }
 

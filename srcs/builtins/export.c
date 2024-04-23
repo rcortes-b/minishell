@@ -135,7 +135,7 @@ int	do_export(t_word *lst, t_exe **vars, int do_exec)
 			else
 			{
 				if (!add_export((*vars)->env, lst->flags[i]))
-					return (0);
+					return (perror("minishell"), 0);
 			}
 		}
 	}

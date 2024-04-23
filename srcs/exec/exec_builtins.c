@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_builtins.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/23 16:59:20 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/23 16:59:21 by rcortes-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/exec.h"
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
@@ -35,7 +47,7 @@ int	exec_builtins(t_exe *vars, t_word *aux, int do_exec)
 		unset_env(vars->env, (*vars->lst)->flags, do_exec);
 	else if (ft_strcmp(aux->com, "cd") == 0)
 	{
-		if (!change_directory(vars, do_exec))
+		if (!change_directory(vars, aux, do_exec))
 			return (0);
 	}
 	else if (ft_strcmp(aux->com, "exit") == 0)
@@ -44,7 +56,7 @@ int	exec_builtins(t_exe *vars, t_word *aux, int do_exec)
 		echo_builtin(aux);
 	else if (ft_strcmp(aux->com, "pwd") == 0)
 		print_pwd(*vars->env);
-	if (is_builtin(aux->com) == 1) //Comentado para leaks check
+	if (is_builtin(aux->com) == 1)
 		exit(0);
 	return (1);
 }

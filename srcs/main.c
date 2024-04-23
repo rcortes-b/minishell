@@ -34,8 +34,13 @@ static int	check_line(char *line, t_env **env)
 	if (!line)
 	{
 		free_env_mem(env);
-		printf("exit\n");
-		exit(EXIT_SUCCESS);
+		if (isatty(STDIN_FILENO))
+		{
+			printf("exit\n");
+			exit(g_errstatus);
+		}
+		printf("\n");
+		exit(127);
 	}
 	if (!line[0])
 	{
@@ -53,7 +58,6 @@ static void	aux_do_line(t_word *words, t_operators *data,
 		return ;
 	free(split);
 	tokenization(&words, data);
-	//Hasta aqui esta checkeao y ta bien (BORRAR ESTE COMMENT 21/04)
 	execution(&words, data, env);
 	free_struct_nodes(&words);
 }
@@ -92,6 +96,7 @@ int	main(int argc, char **argv, char **envp)
 	words = NULL;
 	env = NULL;
 	g_errstatus = 0;
+	init_env(&env, envp);
 	while (1)
 	{
 		if (!env)

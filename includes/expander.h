@@ -47,4 +47,6 @@ char	**expander_split(char const *s, char c);
 //Remove Quotes
 int		remove_quotes(char **new_split);
 
+char	*expand_home(t_env **env, char *str);
+
 #endif

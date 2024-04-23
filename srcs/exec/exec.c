@@ -15,13 +15,11 @@
 #include "../../includes/error.h"
 #include "../../includes/builtins.h"
 
-
 static char	**append_bar(char **split)
 {
 	char	**path;
 	int		j;
 
-	
 	j = 0;
 	while (split[j])
 		j++;
@@ -40,7 +38,6 @@ static char	**append_bar(char **split)
 	path[j] = NULL;
 	return (path);
 }
-
 
 char	**parse_path(t_env **my_env)
 {
@@ -75,7 +72,7 @@ void	execution(t_word **lst, t_operators *data, t_env **my_env)
 	if (!(*lst)->next && is_builtin((*lst)->com) == 2)
 	{
 		if (!exec_builtins(&vars, *lst, 1))
-			handle_error();
+			return ;
 	}
 	else
 		cooking_execution(&vars, data->og_env);

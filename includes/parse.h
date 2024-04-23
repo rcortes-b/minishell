@@ -48,6 +48,7 @@ void	ft_envadd_back(t_env **env_lst, t_env *new_env);
 t_env	*parse_environment(t_env **env_lst, char **envp);
 int		ft_strcmp(char *s1, char *s2);
 t_env	*get_env(t_env **env_lst, char *get_key);
+void	init_env(t_env **env, char **envp);
 //ENVIROMENT ANTIGUO PELIGRO!!
 //void	parse_environment(t_list **lst, char **envp);
 //char	*get_env(t_list **lst, char *key);

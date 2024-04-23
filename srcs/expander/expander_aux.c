@@ -13,6 +13,34 @@
 #include "../../includes/expander.h"
 #include "../../includes/parse.h"
 
+char	*expand_home(t_env **env, char *str)
+{
+	t_env	*home;
+	char	*tmp_str;
+
+	tmp_str = NULL;
+	home = get_env(env, "HOME");
+	if (str[1])
+	{
+		tmp_str = ft_strdup(&str[1]);
+		if (!tmp_str)
+			return (free(str), NULL);
+	}
+	free(str);
+	if (!tmp_str)
+		str = ft_strdup(home->value);
+	else
+	{
+		str = ft_strjoin(home->value, tmp_str);
+		free(tmp_str);
+		if (!str)
+			return (NULL);
+	}
+	if (!str)
+		return (NULL);
+	return (str);
+}
+
 int	expander_aux(t_exp *exp, t_env **lst_env, char *str, char *lead)
 {
 	int	i;

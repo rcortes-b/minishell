@@ -49,7 +49,7 @@ void	print_pwd(t_env *env);
 void	unset_env(t_env **env, char **values, int do_exec);
 
 //Change Directory
-int		change_directory(t_exe *vars, int do_exec);
+int		change_directory(t_exe *vars, t_word *aux_ptr, int do_exec);
 char	*parse_home(t_env *home, char **path);
 
 //Exit

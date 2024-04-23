@@ -13,6 +13,7 @@
 #include "../../includes/expander.h"
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
+#include "../../includes/builtins.h"
 
 static int	init_newspl(t_exp *exp)
 {
@@ -90,6 +91,11 @@ static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str)
 	char	lead;
 
 	exp->expanded_str = ft_strdup(str);
+	if (str[0] == '~' && (!str[1] || str[1] == '/'))
+	{
+		exp->is_split = 1;
+		exp->expanded_str = expand_home(lst_env, exp->expanded_str);
+	}
 	if (!exp->expanded_str)
 		return (0);
 	lead = 'x';

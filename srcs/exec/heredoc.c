@@ -77,6 +77,34 @@ static int	check_limiter(char *line, char *limiter)
 	return (0);
 }
 
+static void	handle_hdoc_child(char *line, char *limiter,
+		int fd[2], t_env **my_env)
+{
+	close(fd[0]);
+	signal(SIGINT, NULL);
+	signal(SIGINT, handle_sighdoc);
+	while (1)
+	{
+		line = readline("> ");
+		if (!line)
+		{
+			rl_replace_line("", 0);
+			exit (0);
+		}
+		if (!*line)
+			continue ;
+		if (check_limiter(line, limiter))
+			break ;
+		check_hdoc_expand(&line, my_env);
+		write(fd[1], line, ft_strlen(line));
+		write(fd[1], "\n", 1);
+		free(line);
+	}
+	free(line);
+	close(fd[1]);
+	exit (0);
+}
+
 int	do_heredoc(t_word **lst, char *limiter, t_env **my_env)
 {
 	pid_t	pid;
@@ -91,31 +119,7 @@ int	do_heredoc(t_word **lst, char *limiter, t_env **my_env)
 		return (0);
 	pid = fork();
 	if (pid == 0)
-	{
-		close(fd[0]);
-		signal(SIGINT, NULL);
-		signal(SIGINT, handle_sighdoc);
-		while (1)
-		{
-			line = readline("> ");
-			if (!line)
-			{
-				rl_replace_line("", 0);
-				exit (0);
-			}
-			if (!*line)
-				continue ;
-			if (check_limiter(line, limiter))
-				break ;
-			check_hdoc_expand(&line, my_env);
-			write(fd[1], line, ft_strlen(line));
-			write(fd[1], "\n", 1);
-			free(line);
-		}
-		free(line);
-		close(fd[1]);
-		exit (0);
-	}
+		handle_hdoc_child(line, limiter, fd, my_env);
 	waitpid(-1, &status, 0);
 	close(fd[1]);
 	if (WIFEXITED(status) && WEXITSTATUS(status) == 1)

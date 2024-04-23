@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/23 16:59:33 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/04/23 16:59:34 by rcortes-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/exec.h"
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
@@ -41,12 +53,6 @@ void	wait_childs(t_exe *vars, int child_nbr)
 				return ;
 			}
 			g_errstatus = WEXITSTATUS(status);
-			fprintf(stderr, "child status: %d\n", g_errstatus);
-			if (g_errstatus != 0)
-			{
-				//gestion errores
-				fprintf(stderr, "child error: %d\n", g_errstatus);
-			}
 		}
 	}
 }
@@ -71,7 +77,7 @@ char	*check_path(char **path, char *cmd)
 	return (NULL);
 }
 
-void	close_pipes(int	fd[2])
+void	close_pipes(int fd[2])
 {
 	close(fd[0]);
 	close(fd[1]);

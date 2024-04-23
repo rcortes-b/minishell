@@ -18,15 +18,23 @@ int	key_is_valid(char *var)
 {
 	int	i;
 
-	if ((var[0] >= '0' && var[0] <= '9') && var[1] == '=')
+	if (var[0] >= '0' && var[0] <= '9')
+	{
+		g_errstatus = 1;
+		ft_putendl_fd("minishell: export: not valid identifier", 2);
 		return (0);
+	}
 	i = 0;
 	while (var[i] && var[i] != '=')
 	{
 		if (var[i] == '+' && var[i + 1] == '=')
 			return (1);
 		if (!ft_isalnum(var[i]))
+		{
+			g_errstatus = 1;
+			ft_putendl_fd("minishell: export: not valid identifier", 2);
 			return (0);
+		}
 		i++;
 	}
 	return (1);
@@ -108,10 +116,10 @@ int	empty_export(t_env **lst_env)
 	{
 		new = ft_newenv();
 		if (!new)
-			return (0);
+			return (handle_error(), 0);
 		new->key = ft_strdup("OLDPWD");
 		if (!new->key)
-			return (0);
+			return (handle_error(), 0);
 		new->value = NULL;
 		new->only_exp = 1;
 		ft_envadd_back(&exp, new);
