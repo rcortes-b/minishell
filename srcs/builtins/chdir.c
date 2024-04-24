@@ -125,7 +125,10 @@ int	change_directory(t_exe *vars, t_word *aux_ptr, int do_exec)
 	else if (!aux_ptr->flags[1])
 		return (free(old_pwd), 0);
 	if (access(aux_ptr->flags[1], X_OK) != 0)
+	{
+		g_errstatus = 1;
 		return (perror("minishell"), free(old_pwd), 0);
+	}
 	else if (do_exec == 1)
 	{
 		if (!exec_chdir(vars, &aux_ptr, &old_pwd))

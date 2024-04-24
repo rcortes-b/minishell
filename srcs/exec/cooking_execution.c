@@ -16,7 +16,7 @@
 #include "../../includes/exec.h"
 #include "../../includes/builtins.h"
 
-static int	first_argument(t_exe *vars)
+static int	first_argument(t_exe *vars, t_word **aux)
 {
 	if ((*vars->lst)->in != -2)
 	{
@@ -27,6 +27,8 @@ static int	first_argument(t_exe *vars)
 			close(vars->fd[WRITE_END]);
 			dup2(vars->fd[READ_END], STDIN_FILENO);
 			close(vars->fd[READ_END]);
+			*aux = (*aux)->next;
+			g_errstatus = 1;
 		}
 		else
 		{
@@ -37,25 +39,27 @@ static int	first_argument(t_exe *vars)
 	return (1);
 }
 
-void	set_ins(t_exe *vars, t_word *aux)
+void	set_ins(t_exe *vars, t_word **aux)
 {
-	if (aux->next != NULL)
+	if ((*aux)->next != NULL)
 	{
-		if (aux->next->in != -2)
+		if ((*aux)->next->in != -2)
 		{
-			if (aux->next->in == -1)
+			if ((*aux)->next->in == -1)
 			{
 				close(vars->fd[WRITE_END]);
 				dup2(vars->fd[READ_END], STDIN_FILENO);
 				close(vars->fd[READ_END]);
+				*aux = (*aux)->next;
+				g_errstatus = 1;
 			}
 			else
 			{
-				dup2(aux->next->in, STDIN_FILENO);
-				close(aux->next->in);
+				dup2((*aux)->next->in, STDIN_FILENO);
+				close((*aux)->next->in);
 			}
 		}
-		else if (aux->next->in == -2)
+		else if ((*aux)->next->in == -2)
 		{
 			close(vars->fd[WRITE_END]);
 			dup2(vars->fd[READ_END], STDIN_FILENO);
@@ -64,7 +68,7 @@ void	set_ins(t_exe *vars, t_word *aux)
 	}
 }
 
-void	set_outs(t_exe *vars, t_word *aux)
+int	set_outs(t_exe *vars, t_word *aux)
 {
 	if (aux->out != -2)
 	{
@@ -73,6 +77,8 @@ void	set_outs(t_exe *vars, t_word *aux)
 			close(vars->fd[READ_END]);
 			dup2(vars->fd[WRITE_END], STDOUT_FILENO);
 			close(vars->fd[WRITE_END]);
+			g_errstatus = 1;
+			return (0);
 		}
 		else
 		{
@@ -89,6 +95,7 @@ void	set_outs(t_exe *vars, t_word *aux)
 			close(vars->fd[WRITE_END]);
 		}
 	}
+	return (1);
 }
 
 void	executor(t_exe *vars, t_word *cmd, char **og_env)
@@ -120,7 +127,7 @@ int	cooking_execution(t_exe *vars, char **og_env)
 	aux = *vars->lst;
 	vars->stdin_fd = dup(STDIN_FILENO);
 	counter = 0;
-	if (!first_argument(vars))
+	if (!first_argument(vars, &aux))
 		return (0);
 	while (aux)
 	{

@@ -75,8 +75,6 @@ static void	do_line(t_word *words, char *line, t_env **env, char **og_env)
 	if (!check_tokens(split, &data))
 		return ;
 	split = lets_expand(env, split);
-	for (int i = 0 ; split[i]; i++)
-		printf("split: %s\n", split[i]);
 	if (!split)
 	{
 		handle_error();

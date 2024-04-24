@@ -63,7 +63,7 @@ char	*check_path(char **path, char *cmd)
 	char	*cmd_path;
 
 	i = 0;
-	while (path[i])
+	while (path && path[i])
 	{
 		cmd_path = ft_strjoin(path[i], cmd);
 		if (!cmd_path)
@@ -96,18 +96,20 @@ int	do_command(t_exe *vars, t_word **aux, char **og_env)
 	if (vars->pid == 0)
 	{
 		signal(SIGQUIT, NULL);
-		set_outs(vars, *aux);
-		if (is_builtin((*aux)->com) == 1)
+		if (set_outs(vars, *aux))
 		{
-			if (!exec_builtins(vars, *aux, 0))
-				return (0);
-		}
-		else
-		{
-			executor(vars, *aux, og_env);
+			if (is_builtin((*aux)->com) == 1)
+			{
+				if (!exec_builtins(vars, *aux, 0))
+					return (0);
+			}
+			else
+			{
+				executor(vars, *aux, og_env);
+			}
 		}
 	}
 	else
-		set_ins(vars, *aux);
+		set_ins(vars, aux);
 	return (1);
 }

@@ -128,6 +128,8 @@ char	**lets_expand(t_env **lst_env, char **split)
 		else if (exp.index > 0
 			&& ft_strcmp(exp.og_split[exp.index - 1], "<<") == 0)
 			continue ;
+		if (check_if_ambiguos(lst_env, split, exp.index))
+			continue ;
 		if (!check_if_expand(lst_env, &exp, exp.og_split[exp.index]))
 			return (free_mem(split), free_mem(exp.new_split), NULL);
 	}

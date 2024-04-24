@@ -59,6 +59,8 @@ char	**parse_path(t_env **my_env)
 
 	my_paths = get_env(my_env, "PATH");
 	i = 0;
+	if (!my_paths)
+		return (NULL);
 	while (my_paths->value[i] != '/')
 		i++;
 	paths = ft_esplit(my_paths->value, ':');
@@ -79,7 +81,7 @@ void	execution(t_word **lst, t_operators *data, t_env **my_env)
 	if (!vars.lst)
 		return ;
 	vars.path = parse_path(my_env);
-	if (!vars.path)
+	if (!vars.path && get_env(my_env, "PATH"))
 		return ;
 	if (!(*lst)->next && is_builtin((*lst)->com) == 2)
 	{

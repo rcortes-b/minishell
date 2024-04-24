@@ -37,7 +37,12 @@ static int	exit_aux(t_exe *vars, int do_exec)
 		return (0);
 	}
 	if (!check_main_arg((*vars->lst)->flags[1]) && do_exec == 1)
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd((*vars->lst)->flags[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
 		handle_exit(vars, 255);
+	}
 	if (do_exec == 1)
 		handle_exit(vars, ft_atoi((*vars->lst)->flags[1]));
 	return (1);
@@ -49,15 +54,15 @@ void	do_exit(t_exe *vars, int do_exec)
 	{
 		if (((*vars->lst)->flags[1][0] == '?'
 			|| (*vars->lst)->flags[1][0] == '*') && !(*vars->lst)->flags[1][1])
-			printf("exit\nminishell:exit: too many arguments\n");
+			ft_putendl_fd("exit\nminishell: exit: too many arguments", 2);
 		else if (!check_main_arg((*vars->lst)->flags[1]))
 		{
-			printf("exit\nminishell: exit: numeric argument required\n");
+			ft_putendl_fd("exit\nminishell: numeric argument required", 2);
 			if (do_exec == 1)
 				handle_exit(vars, 255);
 		}
 		else
-			printf("exit\nbash:exit: too many arguments\n");
+			ft_putendl_fd("exit\nminishell: exit: too many arguments", 2);
 		return ;
 	}
 	else if ((*vars->lst)->flags[1])

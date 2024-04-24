@@ -13,6 +13,18 @@
 #include "../../includes/expander.h"
 #include "../../includes/parse.h"
 
+int	check_if_ambiguos(t_env **env, char **split, int index)
+{
+	t_env	*tmp;
+
+	if (index == 0 || split[index][0] != '$')
+		return (0);
+	tmp = get_env(env, &split[index][1]);
+	if ((!tmp || (tmp && !tmp->value)) && (*split[index - 1] == '<' || *split[index - 1] == '>'))
+		return (1);
+	return (0);
+}
+
 char	*expand_home(t_env **env, char *str)
 {
 	t_env	*home;

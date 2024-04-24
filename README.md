@@ -13,11 +13,13 @@ TEST:
 	carpeta borrar
 	sin env
 
-ERROR CODE NO FILE
-EXIT MSG
+ERROR CODE NO FILE		*** DONE ***
+EXIT MSG     *** DONE ***
 cd -     *** DONE ***
-UNSET PATH SEGFAULT
-ls > $test(no existe)
-REDIRECT SI FALLAN CMD NO EXEC
+UNSET PATH SEGFAULT     *** DONE ***
+ls > $test(no existe) *** SEMI DONE ***
+ls $b (si es onlyexport no hay que expandir)     *** DONE ***
+REDIRECT SI FALLAN CMD NO EXEC     *** DONE ***
 cat | ls
-EXIT ERRCODE (cd path que no existe)
+EXIT ERRCODE (cd path que no existe)     *** DONE ***
+HEREDOC CON VARIABLE DE ENTORNO COMO LIMITER FUNCIONA MAL

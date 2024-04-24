@@ -40,6 +40,7 @@ int		modify_split(t_exp *exp, char *str);
 char	*get_expanded(char *new_str, t_env *env, char *str, int index);
 char	**lets_expand(t_env **lst_env, char **split);
 char	*do_expand(t_env **lst_env, char *str, int index, t_exp *exp);
+int		check_if_ambiguos(t_env **env, char **split, int index);
 
 //Split for Expansor
 char	**expander_split(char const *s, char c);

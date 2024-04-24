@@ -13,6 +13,7 @@
 #include "../../includes/exec.h"
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
+#include "../../includes/expander.h"
 
 static void	repair_redirect(t_word *lst_ptr)
 {
@@ -116,13 +117,22 @@ t_word	**set_redirects(t_word **lst, t_operators *data, t_env **my_env)
 	while (aux)
 	{
 		set_redirect_values(&lst_ptr, &aux, &head_com, &is_redirect);
-		if (*aux->com == data->reinput || *aux->com == data->reoutput)
+		if ((*aux->com == data->reinput || *aux->com == data->reoutput))
 		{
+			if (*aux->next->com == '$' && ambiguos_red(my_env, aux))
+			{
+				lst_ptr->in = -1;
+				lst_ptr->out = -1;				
+				printf("minishell: %s: ambiguous redirect\n", aux->next->com);
+				g_errstatus = 1;
+			}else
+			{
 			if (!open_redirect(&lst_ptr, aux, *aux->com == '>', my_env))
-				return (NULL);
+				return (NULL);}
 			if (!update_node(lst, &aux, &is_redirect, lst_ptr))
 				return (NULL);
 			continue ;
+			
 		}
 		aux = aux->next;
 	}

@@ -29,6 +29,8 @@ typedef struct s_exe
 	int		stdin_fd;
 }	t_exe;
 
+int		ambiguos_red(t_env **env, t_word *aux);
+
 //Utils
 char	*check_path(char **path, char *cmd);
 
@@ -36,8 +38,8 @@ char	*check_path(char **path, char *cmd);
 void	execution(t_word **lst, t_operators *data, t_env **my_env);
 int		cooking_execution(t_exe *vars, char **og_env);
 int		do_command(t_exe *vars, t_word **aux, char **og_env);
-void	set_ins(t_exe *vars, t_word *aux);
-void	set_outs(t_exe *vars, t_word *aux);
+void	set_ins(t_exe *vars, t_word **aux);
+int		set_outs(t_exe *vars, t_word *aux);
 void	executor(t_exe *vars, t_word *cmd, char **og_env);
 int		cooking_execution_aux(t_exe *vars, t_word **aux,
 			char **og_env, int *counter);
