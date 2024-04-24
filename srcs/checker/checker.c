@@ -37,22 +37,22 @@ int	check_tokens(char **words, t_operators *data)
 	int	i;
 
 	if (words[0][0] == data->pipe)
-		custom_error_checker(words, words[0], data);
+		return (custom_error_checker(words, words[0], data), 0);
 	i = -1;
 	while (words[++i])
 	{
-		if ((*words[i] == data->reinput && *words[i + 1] == data->reinput)
-			|| (*words[i] == data->reoutput && *words[i + 1] == data->reoutput)
-			|| (!words[i + 1] && is_symbol(data, words[i][0])))
+		if ((!words[i + 1] && is_symbol(data, words[i][0]))
+		|| (*words[i] == data->reinput && *words[i + 1] == data->reinput)
+			|| (*words[i] == data->reoutput && *words[i + 1] == data->reoutput))
 			i = custom_error_checker(words, words[i + 1], data);
 		if (words[i + 1])
 		{
 			if ((*words[i] == data->pipe && *words[i + 1] == data->pipe)
-				|| ((*words[i] == data->reinput
-						&& *words[i + 1] == data->reoutput)
-					|| (*words[i] == '<' && *words[i + 1] == '|'))
-				|| ((*words[i] == '>' && *words[i + 1] == '<')
-					|| (*words[i] == '>' && *words[i + 1] == '|')))
+				|| (*words[i] == data->reinput
+					&& *words[i + 1] == data->reoutput)
+				|| (*words[i] == '<' && *words[i + 1] == '|')
+				|| (*words[i] == '>' && *words[i + 1] == '<')
+				|| (*words[i] == '>' && *words[i + 1] == '|'))
 				i = custom_error_checker(words, words[i + 1], data);
 		}
 		if (i == -1)

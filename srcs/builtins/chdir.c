@@ -56,7 +56,7 @@ char	*parse_home(t_env *home, char **path)
 	return (new_path);
 }
 
-static int	update_directory(t_env **env, char **old_pwd)
+int	update_directory(t_env **env, char **old_pwd)
 {
 	t_env	*aux;
 	t_env	*old;
@@ -119,17 +119,17 @@ int	change_directory(t_exe *vars, t_word *aux_ptr, int do_exec)
 	old_pwd = ft_strdup(aux->value);
 	if (!old_pwd)
 		return (handle_error(), 0);
+	aux_ptr->flags[1] = expand_oldpwd(vars, aux_ptr->flags[1]);
+	if (!aux_ptr->flags[1] && aux_ptr->next)
+		return (free(old_pwd), 1);
+	else if (!aux_ptr->flags[1])
+		return (free(old_pwd), 0);
 	if (access(aux_ptr->flags[1], X_OK) != 0)
 		return (perror("minishell"), free(old_pwd), 0);
 	else if (do_exec == 1)
 	{
-		if (chdir(aux_ptr->flags[1]) == 0)
-		{
-			if (!update_directory(vars->env, &old_pwd))
-				return (free(old_pwd), 0);
-		}
-		else
-			free(old_pwd);
+		if (!exec_chdir(vars, &aux_ptr, &old_pwd))
+			return (0);
 	}
 	return (1);
 }

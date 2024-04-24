@@ -51,6 +51,9 @@ void	unset_env(t_env **env, char **values, int do_exec);
 //Change Directory
 int		change_directory(t_exe *vars, t_word *aux_ptr, int do_exec);
 char	*parse_home(t_env *home, char **path);
+char	*expand_oldpwd(t_exe *vars, char *flag);
+int		exec_chdir(t_exe *vars, t_word **aux_ptr, char **old_pwd);
+int		update_directory(t_env **env, char **old_pwd);
 
 //Exit
 void	do_exit(t_exe *vars, int do_exec);

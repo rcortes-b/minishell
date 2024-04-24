@@ -82,3 +82,32 @@ void	close_pipes(int fd[2])
 	close(fd[0]);
 	close(fd[1]);
 }
+
+int	do_command(t_exe *vars, t_word **aux, char **og_env)
+{
+	if ((*aux)->next != NULL)
+	{
+		if (pipe(vars->fd) == -1)
+			return (0);
+	}
+	vars->pid = fork();
+	if (vars->pid == -1)
+		return (handle_error(), close_pipes(vars->fd), 0);
+	if (vars->pid == 0)
+	{
+		signal(SIGQUIT, NULL);
+		set_outs(vars, *aux);
+		if (is_builtin((*aux)->com) == 1)
+		{
+			if (!exec_builtins(vars, *aux, 0))
+				return (0);
+		}
+		else
+		{
+			executor(vars, *aux, og_env);
+		}
+	}
+	else
+		set_ins(vars, *aux);
+	return (1);
+}

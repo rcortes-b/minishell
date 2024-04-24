@@ -24,7 +24,10 @@ int	iterate_quote(char *line, int *index, char c, int *size)
 			(*size)++;
 	}
 	if (!line[*index])
+	{
+		ft_putendl_fd("minishell: bad close quoting", 2);
 		return (0);
+	}
 	return (1);
 }
 
@@ -37,7 +40,10 @@ int	copy_quotes(char *word, char *line, int *i, int *index)
 	while (line[*index] && line[*index] != c)
 		word[(*i)++] = line[(*index)++];
 	if (!line[*index])
+	{
+		ft_putendl_fd("minishell: bad close quoting", 2);
 		return (0);
+	}
 	return (1);
 }
 

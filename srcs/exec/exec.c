@@ -15,6 +15,18 @@
 #include "../../includes/error.h"
 #include "../../includes/builtins.h"
 
+int	cooking_execution_aux(t_exe *vars, t_word **aux,
+		char **og_env, int *counter)
+{
+	if ((*aux)->token != PIPE)
+	{
+		(*counter)++;
+		if (!do_command(vars, aux, og_env))
+			return (0);
+	}
+	return (1);
+}
+
 static char	**append_bar(char **split)
 {
 	char	**path;

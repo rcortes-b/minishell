@@ -37,7 +37,7 @@ static int	first_argument(t_exe *vars)
 	return (1);
 }
 
-static void	set_ins(t_exe *vars, t_word *aux)
+void	set_ins(t_exe *vars, t_word *aux)
 {
 	if (aux->next != NULL)
 	{
@@ -64,7 +64,7 @@ static void	set_ins(t_exe *vars, t_word *aux)
 	}
 }
 
-static void	set_outs(t_exe *vars, t_word *aux)
+void	set_outs(t_exe *vars, t_word *aux)
 {
 	if (aux->out != -2)
 	{
@@ -91,7 +91,7 @@ static void	set_outs(t_exe *vars, t_word *aux)
 	}
 }
 
-static void	ejecutar_cosas(t_exe *vars, t_word *cmd, char **og_env)
+void	executor(t_exe *vars, t_word *cmd, char **og_env)
 {
 	char	*correct_path;
 
@@ -131,34 +131,8 @@ int	cooking_execution(t_exe *vars, char **og_env)
 		}
 		else
 		{
-			if (aux->token != PIPE)
-			{
-				counter++;
-				if (aux->next != NULL)
-				{
-					if (pipe(vars->fd) == -1)
-						return (0);
-				}
-				vars->pid = fork();
-				if (vars->pid == -1)
-					return (handle_error(), close_pipes(vars->fd), 0);
-				if (vars->pid == 0)
-				{
-					signal(SIGQUIT, NULL);
-					set_outs(vars, aux);
-					if (is_builtin(aux->com) == 1)
-					{
-						if (!exec_builtins(vars, aux, 0))
-							return (0);
-					}
-					else
-					{
-						ejecutar_cosas(vars, aux, og_env);
-					}
-				}
-				else
-					set_ins(vars, aux);
-			}
+			if (!cooking_execution_aux(vars, &aux, og_env, &counter))
+				return (0);
 		}
 		aux = aux->next;
 	}

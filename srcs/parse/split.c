@@ -133,7 +133,7 @@ char	**ft_split(char *line, const char *set, t_operators *data)
 	int			counter;
 
 	counter = count_words(line, set, data);
-	if (counter == -1)
+	if (!counter || counter == -1)
 		return (NULL);
 	split = ft_calloc(sizeof(char *), counter + 1);
 	if (!split)

@@ -13,6 +13,11 @@ TEST:
 	carpeta borrar
 	sin env
 
-builtins en pipes "ls | cd srcs/"
-exit quan "ls | ./minishell"
-enviroment null
+ERROR CODE NO FILE
+EXIT MSG
+cd -     *** DONE ***
+UNSET PATH SEGFAULT
+ls > $test(no existe)
+REDIRECT SI FALLAN CMD NO EXEC
+cat | ls
+EXIT ERRCODE (cd path que no existe)

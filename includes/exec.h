@@ -35,7 +35,12 @@ char	*check_path(char **path, char *cmd);
 //Execution
 void	execution(t_word **lst, t_operators *data, t_env **my_env);
 int		cooking_execution(t_exe *vars, char **og_env);
-//void	ejecutar_cosas(t_exe *vars, t_word *cmd);
+int		do_command(t_exe *vars, t_word **aux, char **og_env);
+void	set_ins(t_exe *vars, t_word *aux);
+void	set_outs(t_exe *vars, t_word *aux);
+void	executor(t_exe *vars, t_word *cmd, char **og_env);
+int		cooking_execution_aux(t_exe *vars, t_word **aux,
+			char **og_env, int *counter);
 
 //Heredoc
 int		do_heredoc(t_word **lst, char *limiter, t_env **my_env);
@@ -44,7 +49,6 @@ int		do_heredoc(t_word **lst, char *limiter, t_env **my_env);
 void	wait_childs(t_exe *vars, int child_nbr);
 void	handle_signal(int sig);
 void	handle_sighdoc(int sig);
-void	handle_sigchild(int sig);
 
 //Builtins
 int		is_builtin(char *cmd);
@@ -60,7 +64,5 @@ void	wait_childs(t_exe *vars, int child_nbr);
 
 //Pipes
 void	close_pipes(int fd[2]);
-
-void	do_signal(void);
 
 #endif
