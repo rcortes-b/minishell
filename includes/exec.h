@@ -29,8 +29,6 @@ typedef struct s_exe
 	int		stdin_fd;
 }	t_exe;
 
-int		ambiguos_red(t_env **env, t_word *aux);
-
 //Utils
 char	*check_path(char **path, char *cmd);
 
@@ -56,10 +54,14 @@ void	handle_sighdoc(int sig);
 int		is_builtin(char *cmd);
 
 //Redirects
-t_word	**set_redirects(t_word **lst, t_operators *data, t_env **my_env);
+t_word	**set_redirects(t_word **lst, t_operators *data, t_env **env);
 void	set_redirect_values(t_word **lst_ptr, t_word **aux,
 			int *head_com, int *is_redirect);
 int		exec_builtins(t_exe *vars, t_word *aux, int do_exec);
+int		ambiguos_redirect(t_env **env, t_word *aux);
+t_word	*init_redirect_values(int *is_delete, int *head_com, int *is_redirect);
+void	set_ambiguous_error(t_env **env, t_word *aux,
+			t_word **lst_ptr, int *is_delete);
 
 //Wait to Childs
 void	wait_childs(t_exe *vars, int child_nbr);

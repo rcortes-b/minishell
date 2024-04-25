@@ -85,11 +85,8 @@ void	close_pipes(int fd[2])
 
 int	do_command(t_exe *vars, t_word **aux, char **og_env)
 {
-	if ((*aux)->next != NULL)
-	{
-		if (pipe(vars->fd) == -1)
-			return (0);
-	}
+	if ((*aux)->next != NULL && pipe(vars->fd) == -1)
+		return (0);
 	vars->pid = fork();
 	if (vars->pid == -1)
 		return (handle_error(), close_pipes(vars->fd), 0);
@@ -104,12 +101,13 @@ int	do_command(t_exe *vars, t_word **aux, char **og_env)
 					return (0);
 			}
 			else
-			{
 				executor(vars, *aux, og_env);
-			}
 		}
 	}
 	else
+	{
+		close (STDIN_FILENO);
 		set_ins(vars, aux);
+	}
 	return (1);
 }

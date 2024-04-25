@@ -12,7 +12,7 @@ srcs/checker/checker.c \
 srcs/builtins/echo.c srcs/builtins/env.c srcs/builtins/export.c srcs/builtins/empty_export.c srcs/builtins/builtins_utils.c \
 srcs/builtins/unset.c  srcs/builtins/exit.c srcs/builtins/pwd.c srcs/builtins/chdir.c srcs/builtins/export_utils.c \
 srcs/error_handler/parse_errors.c srcs/error_handler/parse_errors2.c \
-srcs/exec/exec.c srcs/exec/cooking_execution.c srcs/exec/exec_utils.c \
+srcs/exec/exec.c srcs/exec/cooking_execution.c srcs/exec/exec_utils.c srcs/exec/files_utils.c \
 srcs/exec/heredoc.c srcs/exec/files.c srcs/exec/signal.c srcs/exec/exec_builtins.c \
 srcs/main.c \
 srcs/expander/mod_split.c srcs/expander/expander_split.c srcs/expander/expander_aux.c \

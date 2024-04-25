@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirects.c                                        :+:      :+:    :+:   */
+/*   files.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -76,7 +76,7 @@ static int	open_files(int *fd, char *file, int flag_type)
 	return (1);
 }
 
-static t_word	*open_redirect(t_word **lst, t_word *op,
+static t_word	*open_redir(t_word **lst, t_word *op,
 		int check, t_env **my_env)
 {
 	if ((*lst)->in != -2 && check == 0)
@@ -103,38 +103,27 @@ static t_word	*open_redirect(t_word **lst, t_word *op,
 	return (op);
 }
 
-t_word	**set_redirects(t_word **lst, t_operators *data, t_env **my_env)
+t_word	**set_redirects(t_word **lst, t_operators *data, t_env **env)
 {
 	t_word	*lst_ptr;
 	t_word	*aux;
 	int		is_redirect;
 	int		head_com;
-	int		is_delete = 0;
+	int		is_delete;
 
 	aux = *lst;
-	head_com = 1;
-	is_redirect = 0;
-	lst_ptr = NULL;
+	lst_ptr = init_redirect_values(&is_delete, &head_com, &is_redirect);
 	while (aux)
 	{
 		set_redirect_values(&lst_ptr, &aux, &head_com, &is_redirect);
 		if ((*aux->com == data->reinput || *aux->com == data->reoutput))
 		{
-			if (*aux->next->com == '$' && ambiguos_red(my_env, aux))
-			{
-				lst_ptr->in = -1;
-				lst_ptr->out = -1;				
-				printf("minishell: %s: ambiguous redirect\n", aux->next->com);
-				g_errstatus = 1;
-				is_delete = 1;
-			}else
-			{
-			if (!is_delete && !open_redirect(&lst_ptr, aux, *aux->com == '>', my_env))
-				return (NULL);}
+			set_ambiguous_error(env, aux, &lst_ptr, &is_delete);
+			if (!is_delete && !open_redir(&lst_ptr, aux, *aux->com == '>', env))
+				return (NULL);
 			if (!update_node(lst, &aux, &is_redirect, lst_ptr))
 				return (NULL);
 			continue ;
-			
 		}
 		aux = aux->next;
 	}

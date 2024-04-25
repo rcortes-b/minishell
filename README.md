@@ -20,6 +20,6 @@ UNSET PATH SEGFAULT     *** DONE ***
 ls > $test(no existe) *** DONE ***
 ls $b (si es onlyexport no hay que expandir)     *** DONE ***
 REDIRECT SI FALLAN CMD NO EXEC     *** DONE ***
-cat | ls
+cat | ls		*** DONE ***
 EXIT ERRCODE (cd path que no existe)     *** DONE ***
 HEREDOC CON VARIABLE DE ENTORNO COMO LIMITER FUNCIONA MAL		*** DONE ***

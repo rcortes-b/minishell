@@ -14,21 +14,6 @@
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
 
-//SIGINT == 2
-//SIGQUIT == 3
-
-int	ambiguos_red(t_env **env, t_word *aux)
-{
-	t_env	*tmp;
-
-	if (*aux->com == '<' && aux->com[1] == '<')
-		return (0);
-	tmp = get_env(env, &aux->next->com[1]);
-	if (!tmp || (tmp && tmp->only_exp))
-		return (1);
-	return (0);
-}
-
 void	handle_signal(int sig)
 {
 	if (sig == SIGINT)

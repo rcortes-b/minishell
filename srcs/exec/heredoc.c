@@ -96,8 +96,7 @@ static void	handle_hdoc_child(char *line, char *limiter,
 		if (check_limiter(line, limiter))
 			break ;
 		check_hdoc_expand(&line, my_env);
-		if (line)
-			write(fd[1], line, ft_strlen(line));
+		write(fd[1], line, ft_strlen(line));
 		write(fd[1], "\n", 1);
 		if (line)
 			free(line);
