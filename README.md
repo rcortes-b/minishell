@@ -23,3 +23,12 @@ REDIRECT SI FALLAN CMD NO EXEC     *** DONE ***
 cat | ls		*** DONE ***
 EXIT ERRCODE (cd path que no existe)     *** DONE ***
 HEREDOC CON VARIABLE DE ENTORNO COMO LIMITER FUNCIONA MAL		*** DONE ***
+
+Comillas post tokenization quitarlas :)		*** DONE ***
+SI HAY UN INF MALO ACABAR ESas redireciones
+
+bash-3.2$ export a='123 "'
+bash-3.2$ export b='" 456'
+bash-3.2$ echo $a$b
+
+si el limiter de un heredoc tiene comillas, el line input no debe expandirse

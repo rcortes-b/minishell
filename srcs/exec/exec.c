@@ -37,7 +37,7 @@ static char	**append_bar(char **split)
 		j++;
 	path = malloc(sizeof(char *) * (j + 1));
 	if (!path)
-		printf("Error.\n");
+		return (NULL);
 	j = -1;
 	while (split[++j])
 	{

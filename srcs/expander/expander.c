@@ -103,7 +103,7 @@ static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str)
 		return (0);
 	if (exp->new_index < exp->index)
 		exp->new_index = exp->index;
-	if (lead == 'x' && exp->is_split && !modify_split(exp, exp->expanded_str))
+	if (exp->is_split && !modify_split(exp, exp->expanded_str))
 		return (free(exp->expanded_str), 0);
 	free(exp->expanded_str);
 	return (1);

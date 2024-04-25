@@ -14,6 +14,20 @@
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
 
+static int	is_lead(char *str, char lead, int index)
+{
+	index += 1;
+	while (str[index] && str[index] != lead)
+	{
+		if (str[index] == lead)
+			return (1);
+		index++;
+	}
+	if (!str[index])
+		return (0);
+	return (1);
+}
+
 static char	*delete_quotes(char *str, char *new_str)
 {
 	char	lead;
@@ -24,10 +38,10 @@ static char	*delete_quotes(char *str, char *new_str)
 	j = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'' || str[i] == '"')
+		if ((str[i] == '\'' || str[i] == '"') && is_lead(str, str[i], i))
 		{
 			lead = str[i++];
-			while (str[i] != lead)
+			while (str[i] && str[i] != lead)
 				new_str[j++] = str[i++];
 			i++;
 		}

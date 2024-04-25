@@ -54,7 +54,8 @@ char	*expand_home(t_env **env, char *str)
 	return (str);
 }
 
-int	expander_aux(t_exp *exp, t_env **lst_env, char *str, char *lead)
+int	
+expander_aux(t_exp *exp, t_env **lst_env, char *str, char *lead)
 {
 	int	i;
 	int	second;
@@ -64,7 +65,7 @@ int	expander_aux(t_exp *exp, t_env **lst_env, char *str, char *lead)
 	while (exp->expanded_str[++i])
 	{
 		if (!second && (exp->expanded_str[i] == '"'
-				|| exp->expanded_str[i] == '\''))
+				|| exp->expanded_str[i] == '\'') && !is_expanded(str, &exp->expanded_str[i]))
 			set_expand_values(lead, &second, exp->expanded_str[i], NULL);
 		else if (second && exp->expanded_str[i] == *lead)
 			set_expand_values(lead, &second, 'x', NULL);
@@ -78,6 +79,7 @@ int	expander_aux(t_exp *exp, t_env **lst_env, char *str, char *lead)
 			exp->is_first = 0;
 			second = 0;
 			i = -1;
+			printf("EXPANDED: %s\nSTR: %s\n", exp->expanded_str, str);
 		}
 	}
 	return (1);

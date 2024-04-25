@@ -76,31 +76,31 @@ static int	open_files(int *fd, char *file, int flag_type)
 	return (1);
 }
 
-static t_word	*open_redir(t_word **lst, t_word *op,
-		int check, t_env **my_env)
+static int	open_redir(t_word **lst, t_word *op,
+	int check, t_env **my_env)
 {
 	if ((*lst)->in != -2 && check == 0)
 		close((*lst)->in);
 	else if ((*lst)->out != -2 && check == 1)
 		close((*lst)->out);
 	if (op->token == REINPUT && !open_files(&(*lst)->in, op->next->com, 1))
-		return (perror("minishell"), g_errstatus = 1, op);
+		return (perror("minishell"), g_errstatus = 1, 0);
 	else if (op->token == REOUTPUT)
 	{
 		if (!open_files(&(*lst)->out, op->next->com, 2))
-			return (perror("minishell"), g_errstatus = 1, op);
+			return (perror("minishell"), g_errstatus = 1, 0);
 	}
 	else if (op->token == HEREDOC)
 	{
 		if (!do_heredoc(lst, op->next->com, my_env))
-			return (g_errstatus = 1, NULL);
+			return (g_errstatus = 1, 0);
 	}
 	else if (op->token == APPEND_OPT)
 	{
 		if (!open_files(&(*lst)->out, op->next->com, 3))
-			return (perror("minishell"), g_errstatus = 1, op);
+			return (perror("minishell"), g_errstatus = 1, 0);
 	}
-	return (op);
+	return (1);
 }
 
 t_word	**set_redirects(t_word **lst, t_operators *data, t_env **env)
@@ -115,12 +115,14 @@ t_word	**set_redirects(t_word **lst, t_operators *data, t_env **env)
 	lst_ptr = init_redirect_values(&is_delete, &head_com, &is_redirect);
 	while (aux)
 	{
+		if (aux->token == PIPE)
+			is_delete = 0; //sujeto a pruebas
 		set_redirect_values(&lst_ptr, &aux, &head_com, &is_redirect);
 		if ((*aux->com == data->reinput || *aux->com == data->reoutput))
 		{
 			set_ambiguous_error(env, aux, &lst_ptr, &is_delete);
 			if (!is_delete && !open_redir(&lst_ptr, aux, *aux->com == '>', env))
-				return (NULL);
+				is_delete = 1;
 			if (!update_node(lst, &aux, &is_redirect, lst_ptr))
 				return (NULL);
 			continue ;
