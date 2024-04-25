@@ -20,7 +20,7 @@
 int	ambiguos_red(t_env **env, t_word *aux)
 {
 	t_env	*tmp;
-	printf("heredoc: %s\n", aux->next->com);
+
 	if (*aux->com == '<' && aux->com[1] == '<')
 		return (0);
 	tmp = get_env(env, &aux->next->com[1]);

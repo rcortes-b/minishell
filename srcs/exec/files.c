@@ -109,6 +109,7 @@ t_word	**set_redirects(t_word **lst, t_operators *data, t_env **my_env)
 	t_word	*aux;
 	int		is_redirect;
 	int		head_com;
+	int		is_delete = 0;
 
 	aux = *lst;
 	head_com = 1;
@@ -125,9 +126,10 @@ t_word	**set_redirects(t_word **lst, t_operators *data, t_env **my_env)
 				lst_ptr->out = -1;				
 				printf("minishell: %s: ambiguous redirect\n", aux->next->com);
 				g_errstatus = 1;
+				is_delete = 1;
 			}else
 			{
-			if (!open_redirect(&lst_ptr, aux, *aux->com == '>', my_env))
+			if (!is_delete && !open_redirect(&lst_ptr, aux, *aux->com == '>', my_env))
 				return (NULL);}
 			if (!update_node(lst, &aux, &is_redirect, lst_ptr))
 				return (NULL);

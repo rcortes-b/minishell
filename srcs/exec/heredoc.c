@@ -49,7 +49,7 @@ static char	*check_hdoc_expand(char **line, t_env **my_env)
 	int	i;
 
 	i = 0;
-	while ((*line)[i])
+	while (*line && (*line)[i])
 	{
 		if ((*line)[i] == '$')
 		{
@@ -96,11 +96,14 @@ static void	handle_hdoc_child(char *line, char *limiter,
 		if (check_limiter(line, limiter))
 			break ;
 		check_hdoc_expand(&line, my_env);
-		write(fd[1], line, ft_strlen(line));
+		if (line)
+			write(fd[1], line, ft_strlen(line));
 		write(fd[1], "\n", 1);
-		free(line);
+		if (line)
+			free(line);
 	}
-	free(line);
+	if (line)
+		free(line);
 	close(fd[1]);
 	exit (0);
 }
