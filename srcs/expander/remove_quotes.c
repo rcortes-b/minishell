@@ -14,6 +14,24 @@
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
 
+/*int	quote_ocurrence(char *og_str)
+{
+
+}
+
+void	del_split_quotes(t_exp *exp, char *og_str, int index)
+{
+	char	*lead;
+	int		second;
+
+	lead = 'x';
+	second = 0;
+	while (index < exp->new_index)
+	{
+		if ()
+	}
+}*/
+
 static int	is_lead(char *str, char lead, int index)
 {
 	index += 1;
@@ -54,7 +72,7 @@ static char	*delete_quotes(char *str, char *new_str)
 	return (new_str);
 }
 
-static char	*prep_quotes(char *str)
+char	*prep_quotes(char *str)
 {
 	char	lead;
 	char	*new_comm;

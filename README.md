@@ -32,3 +32,7 @@ bash-3.2$ export b='" 456'
 bash-3.2$ echo $a$b
 
 si el limiter de un heredoc tiene comillas, el line input no debe expandirse
+
+echo '$a' $b ad "ad" 'a' $b "$USER"
+
+echo '$a' $b ad "ad" 'a' $b "$a$HOME'$USER'"

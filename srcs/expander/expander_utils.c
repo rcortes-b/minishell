@@ -38,7 +38,7 @@ char	*invalid_env(char *new_str, char *env_name, char *str, int index)
 
 void	iterate_expand(char *str, int *j, int i)
 {
-	while (str[i + *j] && str[i + *j] != '$'
+	while (str[i + *j] && str[i + *j] != '$' && str[i + *j] != '.'
 		&& str[i + *j] != '"' && str[i + *j] != '\'' && str[i + *j] != ' ')
 		(*j)++;
 }
@@ -63,8 +63,13 @@ int	is_expanded(char const *s1, char const *s2)
 		return (0);
 	size_s1 = ft_strlen(s1);
 	size_s2 = ft_strlen(s2);
+	if (s1[size_s1 - 1] == s2[size_s2 - 1])
+		;
+	else if ((s1[size_s1 - 1] == '\'' || s1[size_s1 - 1] == '"') && (!(s2[size_s2 - 1] == '\'' && s2[size_s2 - 1] == '"')))
+		size_s1--;
 	while (size_s2 > 0 && size_s1 > 0)
 	{
+		printf("%c   ***   %c\n", s1[size_s1], s2[size_s2]);
 		if (s1[--size_s1] != s2[--size_s2])
 			return (1);
 	}
@@ -74,6 +79,7 @@ int	is_expanded(char const *s1, char const *s2)
 int	aux_create_split(t_exp *exp, char **def_split, int counter, int j)
 {
 	exp->new_index = counter;
+	printf("expnewindex: %d\n", exp->new_index);
 	while (exp->new_split[j])
 	{
 		def_split[counter++] = ft_strdup(exp->new_split[j++]);

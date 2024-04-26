@@ -125,5 +125,8 @@ int	modify_split(t_exp *exp, char *str)
 		return (free_mem(split_aux), 0);
 	if (!append_newstr(def_split, exp, i + j))
 		return (free_mem(split_aux), 0);
+	for (int l = 0; exp->new_split[l]; l++)
+		printf("newspl : %s\n", exp->new_split[l]);
+	printf("\n");
 	return (1);
 }

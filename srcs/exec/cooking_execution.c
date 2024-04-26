@@ -143,6 +143,7 @@ int	cooking_execution(t_exe *vars, char **og_env)
 		aux = aux->next;
 	}
 	wait_childs(vars, counter);
+	close(STDIN_FILENO);
 	dup2(vars->stdin_fd, STDIN_FILENO);
 	return (1);
 }
