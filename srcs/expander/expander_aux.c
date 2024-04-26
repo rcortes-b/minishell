@@ -68,20 +68,14 @@ int	expander_aux(t_exp *exp, t_env **lst_env, char *str, char *lead)
 			set_expand_values(lead, &second, exp->expanded_str[i],  NULL);
 		else if (second && exp->expanded_str[i] == *lead)
 			set_expand_values(lead, &second, 'x', NULL);
-		printf("char: %c LEAD: %c\n", exp->expanded_str[i], *lead);
 		if ((exp->expanded_str[i] == '$' && (*lead != '\'' || exp->is_split)) && exp->expanded_str[i + 1]
 			&& (exp->is_first == 1 || !is_expanded(str, &exp->expanded_str[i])))
 		{
-			printf("expstr: %s\n", exp->expanded_str);
 			if (!exp->is_split)
-			{
 				exp->expanded_str = prep_quotes(exp->expanded_str);
-			}
-			printf("afreexpstr: %s\n", exp->expanded_str);
 			exp->expanded_str = do_expand(lst_env, exp->expanded_str, i, exp);
 			if (!exp->expanded_str)
 				return (0);
-			printf("after expand: %s\n", exp->expanded_str);
 			exp->is_split = 1;
 			exp->is_first = 0;
 			second = 0;

@@ -113,13 +113,9 @@ static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str)
 		return (free(exp->expanded_str), 0);
 	else if (!exp->is_split)
 	{
-		printf("newindex:%d\n", exp->new_index);
-		printf("og: %s\n", exp->og_split[exp->index]);
 		exp->new_split[exp->new_index] = prep_quotes(exp->new_split[exp->new_index]);
-		printf("og2: %s\n", exp->og_split[exp->index]);
 		exp->new_index++;
 	}
-	printf("index: %d  newind: %d\n", exp->index, exp->new_index);
 	free(exp->expanded_str);
 	return (1);
 }
