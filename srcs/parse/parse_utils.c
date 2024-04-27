@@ -74,7 +74,7 @@ int	is_operator(char *new_split, int is_inquote)
 			|| (ft_strcmp(new_split, ">>") == 0))
 			return (1);
 	}
-	else if (is_inquote == 1) /* modificar comillas por el input personalizado*/
+	else if (is_inquote == 1)
 	{
 		if ((ft_strcmp(new_split, "\"!|!\"") == 0)
 			|| (ft_strcmp(new_split, "\"!<!\"") == 0)

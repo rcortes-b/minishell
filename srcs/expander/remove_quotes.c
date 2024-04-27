@@ -16,7 +16,11 @@
 
 int	is_quoted_operator(char *str)
 {
-	if (ft_strcmp(str, "\"|\"") == 0 || ft_strcmp(str, "\"<\"") == 0 || ft_strcmp(str, "\"<<\"") == 0 || ft_strcmp(str, "\">\"") == 0 || ft_strcmp(str, "\">>\"") == 0)
+	if (ft_strcmp(str, "\"|\"") == 0
+		|| ft_strcmp(str, "\"<\"") == 0
+		|| ft_strcmp(str, "\"<<\"") == 0
+		|| ft_strcmp(str, "\">\"") == 0
+		|| ft_strcmp(str, "\">>\"") == 0)
 		return (1);
 	return (0);
 }
@@ -61,7 +65,24 @@ static char	*delete_quotes(char *str, char *new_str)
 	return (new_str);
 }
 
-char	*prep_quotes(char *str, int index, t_exp *exp)//
+static void	prep_quotes_aux(char *str, char *lead,
+		int *lead_counter, int *index)
+{
+	if (str[*index] == '\'' || str[*index] == '"')
+	{
+		*lead = str[(*index)++];
+		(*lead_counter)++;
+	}
+}
+
+void	update_quote_amount(int *i, int index, t_exp *exp, int lead_counter)
+{
+	if (*i == index)
+		exp->quote_amount = lead_counter;
+	(*i)++;
+}
+
+char	*prep_quotes(char *str, int index, t_exp *exp)
 {
 	char	lead;
 	char	*new_comm;
@@ -74,22 +95,10 @@ char	*prep_quotes(char *str, int index, t_exp *exp)//
 	while (str[++i])
 	{
 		while (str[i] && str[i] != '"' && str[i] != '\'')
-		{
-			if (i == index)
-				exp->quote_amount = lead_counter;
-			i++;
-		}
-		if (str[i] == '\'' || str[i] == '"')
-		{
-			lead = str[i++];
-			lead_counter++;
-		}
+			update_quote_amount(&i, index, exp, lead_counter);
+		prep_quotes_aux(str, &lead, &lead_counter, &i);
 		while (str[i] && str[i] != lead)
-		{
-			if (i == index)
-				exp->quote_amount = lead_counter;
-			i++;
-		}
+			update_quote_amount(&i, index, exp, lead_counter);
 	}
 	new_comm = (char *)malloc(ft_strlen(str) - (lead_counter * 2) + 1);
 	if (!new_comm)
