@@ -105,15 +105,7 @@ static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str)
 	if (exp->is_split && !modify_split(exp, exp->expanded_str))
 		return (free(exp->expanded_str), 0);
 	else if (!exp->is_split)
-	{
-		if (!is_quoted_operator(exp->new_split[exp->new_index]))
-		{
-			exp->new_split[exp->new_index] = prep_quotes(exp->new_split[exp->new_index], -1, NULL);
-			exp->new_index++;
-		}
-		else
-			exp->new_split[exp->new_index] = new_operator(exp->new_split[exp->new_index]);
-	}
+		is_not_split(exp);
 	free(exp->expanded_str);
 	return (1);
 }

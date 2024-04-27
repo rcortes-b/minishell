@@ -25,7 +25,7 @@ typedef struct s_exp
 	int		new_index;
 	int		is_first;
 	int		is_split;
-	int		quote_amount; //
+	int		quote_amount;
 }	t_exp;
 
 //Utils
@@ -43,17 +43,19 @@ char	**lets_expand(t_env **lst_env, char **split);
 char	*do_expand(t_env **lst_env, char *str, int index, t_exp *exp);
 int		check_if_ambiguos(t_env **env, char **split, int index);
 char	*set_do_expand(int *j, int *index, char *str, int *is_quote);
+void	is_not_split(t_exp *exp);
 
 //Split for Expansor
 char	**expander_split(char const *s, char c);
+void	resize_index(t_exp *exp, char *str, int *index);
 
 //Remove Quotes
 char	*prep_quotes(char *str, int index, t_exp *exp);
 int		is_quoted_operator(char *str);
 char	*aux_check_operator(char **new_split);
 void	prep_quotes_aux(char *str, char *lead,
-		int *lead_counter, int *index);
-
+			int *lead_counter, int *index);
+int		expansion_supreme(t_exp *exp, int *i, t_env **lst_env);
 char	*expand_home(t_env **env, char *str);
 
 #endif

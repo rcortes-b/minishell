@@ -62,3 +62,29 @@ char	*new_operator(char *str)
 	free(str);
 	return (new);
 }
+
+void	is_not_split(t_exp *exp)
+{
+	if (!is_quoted_operator(exp->new_split[exp->new_index]))
+	{
+		exp->new_split[exp->new_index] = \
+		prep_quotes(exp->new_split[exp->new_index], -1, NULL);
+		exp->new_index++;
+	}
+	else
+		exp->new_split[exp->new_index] = \
+		new_operator(exp->new_split[exp->new_index]);
+}
+
+int	expansion_supreme(t_exp *exp, int *i, t_env **lst_env)
+{
+	if (!exp->is_split)
+		exp->expanded_str = prep_quotes(exp->expanded_str, (*i), exp);
+	resize_index(exp, exp->expanded_str, i);
+	exp->expanded_str = do_expand(lst_env, exp->expanded_str, (*i), exp);
+	if (!exp->expanded_str)
+		return (0);
+	exp->is_split = 1;
+	exp->is_first = 0;
+	return (1);
+}

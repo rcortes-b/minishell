@@ -79,7 +79,6 @@ int	is_expanded(char const *s1, char const *s2)
 int	aux_create_split(t_exp *exp, char **def_split, int counter, int j)
 {
 	exp->new_index = counter;
-	printf("expnewindex: %d\n", exp->new_index);
 	while (exp->new_split[j])
 	{
 		def_split[counter++] = ft_strdup(exp->new_split[j++]);
