@@ -65,14 +65,7 @@ char	*do_expand(t_env **lst_env, char *str, int index, t_exp *exp)
 	int		j;
 	int		is_quote;
 
-	j = 0;
-	is_quote = 0;
-	if (str[index] == '$')
-		is_quote = 1;
-	iterate_expand(str, &j, index + is_quote);
-	env_name = ft_substr(str, index + is_quote, j);
-	if (!is_quote)
-		index--;
+	env_name = set_do_expand(&j, &index, str, &is_quote);
 	if (!env_name)
 		return (free(str), NULL);
 	env = get_env(lst_env, env_name);
@@ -149,7 +142,5 @@ char	**lets_expand(t_env **lst_env, char **split)
 		if (!check_if_expand(lst_env, &exp, exp.og_split[exp.index]))
 			return (free_mem(split), free_mem(exp.new_split), NULL);
 	}
-	for (int l = 0; exp.new_split[l]; l++)
-		printf("%s\n", exp.new_split[l]);
 	return (free_mem(exp.og_split), exp.new_split);
 }

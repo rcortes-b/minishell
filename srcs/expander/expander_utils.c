@@ -65,7 +65,8 @@ int	is_expanded(char const *s1, char const *s2)
 	size_s2 = ft_strlen(s2);
 	if (s1[size_s1 - 1] == s2[size_s2 - 1])
 		;
-	else if ((s1[size_s1 - 1] == '\'' || s1[size_s1 - 1] == '"') && (!(s2[size_s2 - 1] == '\'' && s2[size_s2 - 1] == '"')))
+	else if ((s1[size_s1 - 1] == '\'' || s1[size_s1 - 1] == '"')
+		&& (!(s2[size_s2 - 1] == '\'' && s2[size_s2 - 1] == '"')))
 		size_s1--;
 	while (size_s2 > 0 && size_s1 > 0)
 	{
@@ -87,27 +88,4 @@ int	aux_create_split(t_exp *exp, char **def_split, int counter, int j)
 	}
 	def_split[counter] = NULL;
 	return (1);
-}
-char	*new_operator(char *str)
-{
-	char	*new;
-	int		i;
-
-	i = 0;
-	new = malloc(ft_strlen(str) + 3);
-	if (!new)
-		return (NULL);
-	new[i] = str[i];
-	i += 1;
-	new[i++] = '!';
-	while (str[i - 1] != '\"')
-	{
-		new[i] = str[i - 1];
-		i++;
-	}
-	new[i++] = '!';
-	new[i++] = '\"';
-	new[i] = '\0';
-	free(str);
-	return (new);
 }

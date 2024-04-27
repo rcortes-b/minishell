@@ -65,16 +65,6 @@ static char	*delete_quotes(char *str, char *new_str)
 	return (new_str);
 }
 
-static void	prep_quotes_aux(char *str, char *lead,
-		int *lead_counter, int *index)
-{
-	if (str[*index] == '\'' || str[*index] == '"')
-	{
-		*lead = str[(*index)++];
-		(*lead_counter)++;
-	}
-}
-
 void	update_quote_amount(int *i, int index, t_exp *exp, int lead_counter)
 {
 	if (*i == index)

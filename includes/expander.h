@@ -42,6 +42,7 @@ char	*get_expanded(char *new_str, t_env *env, char *str, int index);
 char	**lets_expand(t_env **lst_env, char **split);
 char	*do_expand(t_env **lst_env, char *str, int index, t_exp *exp);
 int		check_if_ambiguos(t_env **env, char **split, int index);
+char	*set_do_expand(int *j, int *index, char *str, int *is_quote);
 
 //Split for Expansor
 char	**expander_split(char const *s, char c);
@@ -50,6 +51,8 @@ char	**expander_split(char const *s, char c);
 char	*prep_quotes(char *str, int index, t_exp *exp);
 int		is_quoted_operator(char *str);
 char	*aux_check_operator(char **new_split);
+void	prep_quotes_aux(char *str, char *lead,
+		int *lead_counter, int *index);
 
 char	*expand_home(t_env **env, char *str);
 
