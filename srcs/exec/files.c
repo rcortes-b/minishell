@@ -115,8 +115,7 @@ t_word	**set_redirects(t_word **lst, t_operators *data, t_env **env)
 	lst_ptr = init_redirect_values(&is_delete, &head_com, &is_redirect);
 	while (aux)
 	{
-		if (aux->token == PIPE)
-			is_delete = 0; //sujeto a pruebas
+		is_pipe(aux, &is_delete);
 		set_redirect_values(&lst_ptr, &aux, &head_com, &is_redirect);
 		if ((*aux->com == data->reinput || *aux->com == data->reoutput))
 		{
@@ -129,7 +128,6 @@ t_word	**set_redirects(t_word **lst, t_operators *data, t_env **env)
 		}
 		aux = aux->next;
 	}
-	if (is_redirect)
-		lst_ptr->next = NULL;
+	set_redirect(is_redirect, &lst_ptr);
 	return (lst);
 }

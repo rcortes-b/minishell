@@ -47,3 +47,15 @@ void	set_ambiguous_error(t_env **env, t_word *aux,
 		*is_delete = 1;
 	}
 }
+
+void	is_pipe(t_word *aux, int *is_delete)
+{
+	if (aux->token == PIPE)
+		*is_delete = 0;
+}
+
+void	set_redirect(int is_redirect, t_word **lst_ptr)
+{
+	if (is_redirect)
+		(*lst_ptr)->next = NULL;
+}

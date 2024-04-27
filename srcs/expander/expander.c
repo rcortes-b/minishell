@@ -109,12 +109,17 @@ static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str)
 		return (0);
 	if (exp->new_index < exp->index)
 		exp->new_index = exp->index;
-	if (exp->is_split && !modify_split(exp, exp->expanded_str)) //quizas cmp index with no index
+	if (exp->is_split && !modify_split(exp, exp->expanded_str))
 		return (free(exp->expanded_str), 0);
 	else if (!exp->is_split)
 	{
-		exp->new_split[exp->new_index] = prep_quotes(exp->new_split[exp->new_index], -1, NULL);
-		exp->new_index++;
+		if (!is_quoted_operator(exp->new_split[exp->new_index]))
+		{
+			exp->new_split[exp->new_index] = prep_quotes(exp->new_split[exp->new_index], -1, NULL);
+			exp->new_index++;
+		}
+		else
+			exp->new_split[exp->new_index] = new_operator(exp->new_split[exp->new_index]);
 	}
 	free(exp->expanded_str);
 	return (1);
@@ -144,7 +149,7 @@ char	**lets_expand(t_env **lst_env, char **split)
 		if (!check_if_expand(lst_env, &exp, exp.og_split[exp.index]))
 			return (free_mem(split), free_mem(exp.new_split), NULL);
 	}
-	//if (!remove_quotes(exp.new_split))
-	//	return (free_mem(exp.new_split), NULL);
+	for (int l = 0; exp.new_split[l]; l++)
+		printf("%s\n", exp.new_split[l]);
 	return (free_mem(exp.og_split), exp.new_split);
 }

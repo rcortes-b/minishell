@@ -14,7 +14,7 @@
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
 
-static char	*aux_check_operator(char **new_split)
+char	*aux_check_operator(char **new_split)
 {
 	char	*temp;
 	int		j;

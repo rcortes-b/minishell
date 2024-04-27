@@ -6,7 +6,7 @@
 /*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 10:43:36 by rcortes-          #+#    #+#             */
-/*   Updated: 2024/04/21 10:43:36 by rcortes-         ###   ########.fr       */
+/*   Updated: 2024/04/27 15:50:39 by rcortes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,27 @@ int	aux_create_split(t_exp *exp, char **def_split, int counter, int j)
 	}
 	def_split[counter] = NULL;
 	return (1);
+}
+char	*new_operator(char *str)
+{
+	char	*new;
+	int		i;
+
+	i = 0;
+	new = malloc(ft_strlen(str) + 3);
+	if (!new)
+		return (NULL);
+	new[i] = str[i];
+	i += 1;
+	new[i++] = '!';
+	while (str[i - 1] != '\"')
+	{
+		new[i] = str[i - 1];
+		i++;
+	}
+	new[i++] = '!';
+	new[i++] = '\"';
+	new[i] = '\0';
+	free(str);
+	return (new);
 }

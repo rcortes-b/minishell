@@ -95,7 +95,7 @@ int	do_command(t_exe *vars, t_word **aux, char **og_env)
 		signal(SIGQUIT, NULL);
 		if (set_outs(vars, *aux))
 		{
-			if (is_builtin((*aux)->com)/* == 1*/)
+			if (is_builtin((*aux)->com))
 			{
 				if (!exec_builtins(vars, *aux, 0))
 					return (0);

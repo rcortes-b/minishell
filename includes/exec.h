@@ -62,6 +62,8 @@ int		ambiguos_redirect(t_env **env, t_word *aux);
 t_word	*init_redirect_values(int *is_delete, int *head_com, int *is_redirect);
 void	set_ambiguous_error(t_env **env, t_word *aux,
 			t_word **lst_ptr, int *is_delete);
+void	is_pipe(t_word *aux, int *is_delete);
+void	set_redirect(int is_redirect, t_word **lst_ptr);
 
 //Wait to Childs
 void	wait_childs(t_exe *vars, int child_nbr);

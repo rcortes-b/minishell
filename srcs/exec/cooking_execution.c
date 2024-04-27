@@ -130,16 +130,8 @@ int	cooking_execution(t_exe *vars, char **og_env)
 		return (0);
 	while (aux)
 	{
-		/*if (is_builtin(aux->com) == 2)
-		{
-			if (!exec_builtins(vars, aux, 0))
-				return (0);
-		}*/
-		//else
-		//{
-			if (!cooking_execution_aux(vars, &aux, og_env, &counter))
-				return (0);
-		//}
+		if (!cooking_execution_aux(vars, &aux, og_env, &counter))
+			return (0);
 		aux = aux->next;
 	}
 	wait_childs(vars, counter);

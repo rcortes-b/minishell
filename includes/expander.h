@@ -48,6 +48,8 @@ char	**expander_split(char const *s, char c);
 
 //Remove Quotes
 char	*prep_quotes(char *str, int index, t_exp *exp);
+int		is_quoted_operator(char *str);
+char	*aux_check_operator(char **new_split);
 
 char	*expand_home(t_env **env, char *str);
 

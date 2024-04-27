@@ -14,6 +14,13 @@
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
 
+int	is_quoted_operator(char *str)
+{
+	if (ft_strcmp(str, "\"|\"") == 0 || ft_strcmp(str, "\"<\"") == 0 || ft_strcmp(str, "\"<<\"") == 0 || ft_strcmp(str, "\">\"") == 0 || ft_strcmp(str, "\">>\"") == 0)
+		return (1);
+	return (0);
+}
+
 static int	is_lead(char *str, char lead, int index)
 {
 	index += 1;
@@ -68,8 +75,8 @@ char	*prep_quotes(char *str, int index, t_exp *exp)//
 	{
 		while (str[i] && str[i] != '"' && str[i] != '\'')
 		{
-			if (i == index)//
-				exp->quote_amount = lead_counter;//
+			if (i == index)
+				exp->quote_amount = lead_counter;
 			i++;
 		}
 		if (str[i] == '\'' || str[i] == '"')
@@ -79,8 +86,8 @@ char	*prep_quotes(char *str, int index, t_exp *exp)//
 		}
 		while (str[i] && str[i] != lead)
 		{
-			if (i == index)//
-				exp->quote_amount = lead_counter;//
+			if (i == index)
+				exp->quote_amount = lead_counter;
 			i++;
 		}
 	}
