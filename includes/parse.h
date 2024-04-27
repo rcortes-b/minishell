@@ -38,8 +38,9 @@ void	order_split(char **split, t_operators *data);
 
 //ESTO ES CATEGORIZE && TOKENIZATION
 int		categorize(char **words, t_word **lst);
-int		is_operator(char *new_split);
+int		is_operator(char *new_split, int is_inquote);
 void	tokenization(t_word **lst, t_operators *data);
+void	parse_operators(t_word **words);
 
 //ESTO ES ENVIRONMENT
 

@@ -113,7 +113,7 @@ static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str)
 		return (free(exp->expanded_str), 0);
 	else if (!exp->is_split)
 	{
-		exp->new_split[exp->new_index] = prep_quotes(exp->new_split[exp->new_index]);
+		exp->new_split[exp->new_index] = prep_quotes(exp->new_split[exp->new_index], -1, NULL);
 		exp->new_index++;
 	}
 	free(exp->expanded_str);

@@ -19,16 +19,18 @@ static char	*aux_check_operator(char **new_split)
 	char	*temp;
 	int		j;
 
-	temp = (char *)malloc(ft_strlen(*new_split) + 1 + 2);
+	temp = (char *)malloc(ft_strlen(*new_split) + 1 + 4);
 	if (!temp)
 		return (NULL);
 	j = 0;
 	temp[j++] = '"';
-	while ((*new_split)[j - 1])
+	temp[j++] = '!';
+	while ((*new_split)[j - 2])
 	{
-		temp[j] = (*new_split)[j - 1];
+		temp[j] = (*new_split)[j - 2];
 		j++;
 	}
+	temp[j++] = '!';
 	temp[j++] = '"';
 	temp[j] = '\0';
 	free(*new_split);
@@ -125,8 +127,5 @@ int	modify_split(t_exp *exp, char *str)
 		return (free_mem(split_aux), 0);
 	if (!append_newstr(def_split, exp, i + j))
 		return (free_mem(split_aux), 0);
-	for (int l = 0; exp->new_split[l]; l++)
-		printf("newspl : %s\n", exp->new_split[l]);
-	printf("\n");
 	return (1);
 }

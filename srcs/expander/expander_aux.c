@@ -54,6 +54,23 @@ char	*expand_home(t_env **env, char *str)
 	return (str);
 }
 
+void	resize_index(t_exp *exp, char *str, int *index)
+{
+	int	i;
+
+	if (exp->quote_amount == 0)
+		return ;
+	*index -= exp->quote_amount;
+	i = *index;
+	if (str[i] == '$')
+		return ;
+	while (str[i] && str[i] != '$')
+	{
+		i--;
+		(*index)--;
+	}
+}
+
 int	expander_aux(t_exp *exp, t_env **lst_env, char *str, char *lead)
 {
 	int	i;
@@ -63,6 +80,7 @@ int	expander_aux(t_exp *exp, t_env **lst_env, char *str, char *lead)
 	second = 0;
 	while (exp->expanded_str[++i])
 	{
+		exp->quote_amount = 0;
 		if (!second && (exp->expanded_str[i] == '"'
 				|| exp->expanded_str[i] == '\'') && !is_expanded(str, &exp->expanded_str[i]))
 			set_expand_values(lead, &second, exp->expanded_str[i],  NULL);
@@ -71,8 +89,12 @@ int	expander_aux(t_exp *exp, t_env **lst_env, char *str, char *lead)
 		if ((exp->expanded_str[i] == '$' && (*lead != '\'' || exp->is_split)) && exp->expanded_str[i + 1]
 			&& (exp->is_first == 1 || !is_expanded(str, &exp->expanded_str[i])))
 		{
+
+			printf ("exp before: %zu\n", ft_strlen(exp->expanded_str));
 			if (!exp->is_split)
-				exp->expanded_str = prep_quotes(exp->expanded_str);
+				exp->expanded_str = prep_quotes(exp->expanded_str, i, exp);
+			printf ("exp after: %zu\n", ft_strlen(exp->expanded_str));
+			resize_index(exp, exp->expanded_str, &i);
 			exp->expanded_str = do_expand(lst_env, exp->expanded_str, i, exp);
 			if (!exp->expanded_str)
 				return (0);

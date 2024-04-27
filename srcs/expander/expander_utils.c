@@ -38,8 +38,8 @@ char	*invalid_env(char *new_str, char *env_name, char *str, int index)
 
 void	iterate_expand(char *str, int *j, int i)
 {
-	while (str[i + *j] && str[i + *j] != '$' && str[i + *j] != '.'
-		&& str[i + *j] != '"' && str[i + *j] != '\'' && str[i + *j] != ' ')
+	while (str[i + *j]
+		&& (ft_isalnum(str[i + *j]) == 1 || str[i + *j] == '_'))
 		(*j)++;
 }
 
@@ -69,7 +69,6 @@ int	is_expanded(char const *s1, char const *s2)
 		size_s1--;
 	while (size_s2 > 0 && size_s1 > 0)
 	{
-		printf("%c   ***   %c\n", s1[size_s1], s2[size_s2]);
 		if (s1[--size_s1] != s2[--size_s2])
 			return (1);
 	}

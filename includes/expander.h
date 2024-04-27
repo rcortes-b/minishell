@@ -25,6 +25,7 @@ typedef struct s_exp
 	int		new_index;
 	int		is_first;
 	int		is_split;
+	int		quote_amount; //
 }	t_exp;
 
 //Utils
@@ -46,8 +47,7 @@ int		check_if_ambiguos(t_env **env, char **split, int index);
 char	**expander_split(char const *s, char c);
 
 //Remove Quotes
-int		remove_quotes(char **new_split);
-char	*prep_quotes(char *str);
+char	*prep_quotes(char *str, int index, t_exp *exp);
 
 char	*expand_home(t_env **env, char *str);
 

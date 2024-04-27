@@ -56,8 +56,19 @@ static void	aux_do_line(t_word *words, t_operators *data,
 	order_split(split, data);
 	if (!categorize(split, &words))
 		return ;
+	t_word *aux;
+	aux = words;
 	free(split);
 	tokenization(&words, data);
+	parse_operators(&words);
+	/*while (aux)
+	{
+		printf("com: %s\n", aux->com);
+		for (int l = 0; aux->flags[l]; l++)
+			printf("flags: %s\n", aux->flags[l]);
+		aux = aux->next;
+	}
+	exit (0);*/
 	execution(&words, data, env);
 	free_struct_nodes(&words);
 }

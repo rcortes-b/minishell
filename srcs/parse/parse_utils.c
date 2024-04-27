@@ -11,15 +11,78 @@
 /* ************************************************************************** */
 
 #include "../../includes/parse.h"
+#include "../../includes/expander.h"
 
-int	is_operator(char *new_split)
+static char	*trim_operator(char *str)
 {
-	if ((ft_strcmp(new_split, "|") == 0)
-		|| (ft_strcmp(new_split, "<") == 0)
-		|| (ft_strcmp(new_split, "<<") == 0)
-		|| (ft_strcmp(new_split, ">") == 0)
-		|| (ft_strcmp(new_split, ">>") == 0))
-		return (1);
+	char	*new;
+	int		i;
+
+	i = 0;
+	while (str[i + 2] != '!')
+		i++;
+	new = malloc(i + 1);
+	if (!new)
+		return (NULL);
+	i = 0;
+	while (str[i + 2] != '!')
+	{
+		new[i] = str[i + 2];
+		i++;
+	}
+	new[i] = '\0';
+	free(str);
+	return (new);
+}
+
+void	parse_operators(t_word **words)
+{
+	t_word	*aux;
+	int		i;
+
+	aux = *words;
+	while (aux)
+	{
+		if (is_operator(aux->com, 1))
+		{
+			aux->com = trim_operator(aux->com);
+			if (!aux->com)
+				return ;
+		}
+		i = -1;
+		while (aux->flags && aux->flags[++i])
+		{
+			if (is_operator(aux->flags[i], 1))
+			{
+				aux->flags[i] = trim_operator(aux->flags[i]);
+				if (!aux->flags[i])
+					return ;
+			}
+		}
+		aux = aux->next;
+	}
+}
+
+int	is_operator(char *new_split, int is_inquote)
+{
+	if (is_inquote == 0)
+	{
+		if ((ft_strcmp(new_split, "|") == 0)
+			|| (ft_strcmp(new_split, "<") == 0)
+			|| (ft_strcmp(new_split, "<<") == 0)
+			|| (ft_strcmp(new_split, ">") == 0)
+			|| (ft_strcmp(new_split, ">>") == 0))
+			return (1);
+	}
+	else if (is_inquote == 1) /* modificar comillas por el input personalizado*/
+	{
+		if ((ft_strcmp(new_split, "\"!|!\"") == 0)
+			|| (ft_strcmp(new_split, "\"!<!\"") == 0)
+			|| (ft_strcmp(new_split, "\"!<<!\"") == 0)
+			|| (ft_strcmp(new_split, "\"!>!\"") == 0)
+			|| (ft_strcmp(new_split, "\"!>>!\"") == 0))
+			return (1);
+	}
 	return (0);
 }
 

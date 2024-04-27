@@ -27,7 +27,7 @@ static t_word	*new_word(char **words, int start, int end)
 	new = (t_word *)malloc(sizeof (t_word));
 	if (!new)
 		return (NULL);
-	if (!is_operator(words[start]))
+	if (!is_operator(words[start], 0))
 	{
 		new->com = ft_strdup(words[start]);
 		if (!new->com)
@@ -71,7 +71,7 @@ static t_word	*aux_categorize(char **words, int *start,
 {
 	t_word	*n_word;
 
-	if (is_operator(words[*end]))
+	if (is_operator(words[*end], 0))
 	{
 		*start = *end;
 		n_word = new_word(words, *start, *end);
@@ -82,7 +82,7 @@ static t_word	*aux_categorize(char **words, int *start,
 	else
 	{
 		*start = *end;
-		while (words[*end] && !is_operator(words[*end]))
+		while (words[*end] && !is_operator(words[*end], 0))
 			(*end)++;
 		n_word = new_word(words, *start, ((*end) - 1));
 		if (!n_word)
