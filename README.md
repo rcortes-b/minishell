@@ -36,3 +36,8 @@ si el limiter de un heredoc tiene comillas, el line input no debe expandirse
 echo '$a' $b ad "ad" 'a' $b "$USER"
 
 echo '$a' $b ad "ad" 'a' $b "$a$HOME'$USER'"
+echo $USER'$USER'$USER'$USER''$USER'
+
+echo "'$USER''dwad'aaaaa$HOME"
+echo $USER""
+echo "aa$USER$DWADAWDWCHOME"

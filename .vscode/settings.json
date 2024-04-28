@@ -1,8 +1,0 @@
-{
-	"files.associations": {
-		"__locale": "c",
-		"parse.h": "c",
-		"error.h": "c",
-		"expander.h": "c"
-	}
-}

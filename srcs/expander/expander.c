@@ -80,6 +80,7 @@ char	*do_expand(t_env **lst_env, char *str, int index, t_exp *exp)
 	if (!new_str)
 		return (free(str), free(env_name), NULL);
 	new_str = get_expanded(new_str, env, exp->expanded_str, index);
+	skip_index_expquote(exp, index, env);
 	free(exp->expanded_str);
 	free(env_name);
 	return (new_str);
@@ -102,11 +103,22 @@ static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str)
 		return (0);
 	if (exp->new_index < exp->index)
 		exp->new_index = exp->index;
+	update_index_to_del(exp);
+	printf("str bef: %s\n", exp->expanded_str);
+	if (exp->is_split && exp->del_index)
+		exp->expanded_str = delete_remain_quotes(exp, exp->del_index, '\'', exp->s_counter);
+	if (exp->is_split && exp->d_del_index)
+		exp->expanded_str = delete_remain_quotes(exp, exp->d_del_index, '"', exp->d_counter);
+	printf("str aft: %s\n", exp->expanded_str);
 	if (exp->is_split && !modify_split(exp, exp->expanded_str))
 		return (free(exp->expanded_str), 0);
 	else if (!exp->is_split)
 		is_not_split(exp);
 	free(exp->expanded_str);
+	if (exp->del_index)
+		free(exp->del_index);
+	if (exp->d_del_index)
+		free(exp->d_del_index);
 	return (1);
 }
 
@@ -121,8 +133,14 @@ char	**lets_expand(t_env **lst_env, char **split)
 		return (free_mem(split), NULL);
 	while (exp.og_split[++exp.index])
 	{
+		exp.expanded_quote = NULL;
+		exp.del_index = NULL;
+		exp.d_del_index = NULL;
 		exp.is_first = 1;
 		exp.is_split = 0;
+		exp.s_counter = 0;
+		exp.d_counter = 0;
+		exp.skip_counter = 0;
 		if (exp.og_split[exp.index][0] == '$'
 			&& exp.og_split[exp.index][1] == '?' && !exp.og_split[exp.index][2])
 			continue ;

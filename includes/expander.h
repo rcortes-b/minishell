@@ -26,6 +26,12 @@ typedef struct s_exp
 	int		is_first;
 	int		is_split;
 	int		quote_amount;
+	int		*del_index;
+	int		s_counter;
+	int		*d_del_index;
+	int		d_counter;
+	int		*expanded_quote;
+	int		skip_counter;
 }	t_exp;
 
 //Utils
@@ -55,7 +61,15 @@ int		is_quoted_operator(char *str);
 char	*aux_check_operator(char **new_split);
 void	prep_quotes_aux(char *str, char *lead,
 			int *lead_counter, int *index);
-int		expansion_supreme(t_exp *exp, int *i, t_env **lst_env);
+int		expansion_supreme(t_exp *exp, int *i, t_env **lst_env, char lead);
 char	*expand_home(t_env **env, char *str);
+void	update_del_index(t_exp *exp, int i, int **tab, char lead);
+char	*delete_remain_quotes(t_exp *exp, int *tab, char lead, int limit_counter);
+int		check_if_delquote(char *str, int i, char lead, t_exp *exp);
+void	update_index_to_del(t_exp *exp);
+void	skip_index_expquote(t_exp *exp, int index, t_env *env);
+int		skip_quote(int i, t_exp *exp);
+
+char	*rm_quotes_expand(t_exp *exp, char *str, int index);
 
 #endif

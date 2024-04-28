@@ -17,7 +17,7 @@ srcs/exec/heredoc.c srcs/exec/files.c srcs/exec/signal.c srcs/exec/exec_builtins
 srcs/main.c \
 srcs/expander/mod_split.c srcs/expander/expander_split.c srcs/expander/expander_aux.c \
 srcs/expander/expander.c srcs/expander/expander_utils.c srcs/expander/remove_quotes.c \
-srcs/expander/expander_utils2.c \
+srcs/expander/expander_utils2.c srcs/expander/remove_quotes2.c \
 
 OBJS = $(SRCS:.c=.o)
 
