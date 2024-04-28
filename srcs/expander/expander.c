@@ -101,15 +101,8 @@ static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str)
 	lead = 'x';
 	if (!expander_aux(exp, lst_env, str, &lead))
 		return (0);
-	if (exp->new_index < exp->index)
-		exp->new_index = exp->index;
-	update_index_to_del(exp);
-	if (exp->is_split && exp->del_index)
-		exp->expanded_str = delete_remain_quotes(exp, exp->del_index, '\'', exp->s_counter);
-	if (exp->is_split && exp->d_del_index)
-		exp->expanded_str = delete_remain_quotes(exp, exp->d_del_index, '"', exp->d_counter);
-	if (exp->is_split && !modify_split(exp, exp->expanded_str))
-		return (free(exp->expanded_str), 0);
+	if (!quote_conditions(exp))
+		return (0);
 	else if (!exp->is_split)
 		is_not_split(exp);
 	free(exp->expanded_str);
@@ -133,14 +126,7 @@ char	**lets_expand(t_env **lst_env, char **split)
 		return (free_mem(split), NULL);
 	while (exp.og_split[++exp.index])
 	{
-		exp.expanded_quote = NULL;
-		exp.del_index = NULL;
-		exp.d_del_index = NULL;
-		exp.is_first = 1;
-		exp.is_split = 0;
-		exp.s_counter = 0;
-		exp.d_counter = 0;
-		exp.skip_counter = 0;
+		set_exp(&exp);
 		if (exp.og_split[exp.index][0] == '$'
 			&& exp.og_split[exp.index][1] == '?' && !exp.og_split[exp.index][2])
 			continue ;
