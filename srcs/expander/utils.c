@@ -23,3 +23,11 @@ int	*set_dquote_values(int *tab_counter, int *i, int *j, int *tab)
 		return (NULL);
 	return (tab);
 }
+
+void	init_delvalues(int *i, int *new_counter, char *lead, int *j)
+{
+	*i = 0;
+	*new_counter = 0;
+	*lead = 'x';
+	*j = 0;
+}

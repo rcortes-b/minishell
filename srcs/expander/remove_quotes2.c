@@ -14,7 +14,7 @@
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
 
-char	*del_quotes_expand(char *str, int lead_counter, t_exp *exp)//, int trigger)
+char	*del_quotes_expand(char *str, int lead_counter, t_exp *exp)
 {
 	int		new_counter;
 	char	*new;
@@ -22,17 +22,14 @@ char	*del_quotes_expand(char *str, int lead_counter, t_exp *exp)//, int trigger)
 	int		i;
 	int		j;
 
-	//trigger = 0;
 	new = malloc(ft_strlen(str) - (lead_counter * 2) + 1);
 	if (!new)
 		return (NULL);
-	i = 0;
-	new_counter = 0;
-	lead = 'x';
-	j = 0;
+	init_delvalues(&i, &new_counter, &lead, &j);
 	while (str[i])
 	{
-		if (new_counter < lead_counter && !skip_quote(i, exp) && ((str[i] == '\''/* && !trigger*/) || str[i] == '"'))
+		if (new_counter < lead_counter
+			&& !skip_quote(i, exp) && (str[i] == '\'' || str[i] == '"'))
 		{
 			new_counter++;
 			lead = str[i++];
@@ -43,9 +40,7 @@ char	*del_quotes_expand(char *str, int lead_counter, t_exp *exp)//, int trigger)
 			new[j++] = str[i];
 		i++;
 	}
-	new[j] = '\0';
-	free(str);
-	return (new);
+	return (new[j] = '\0', free(str), new);
 }
 
 int	is_single_quote(char *str, int i, int index)
@@ -66,27 +61,23 @@ char	*rm_quotes_expand(t_exp *exp, char *str, int index)
 {
 	char	n_lead;
 	int		i;
-	int		lead_counter = 0;
-	//int		trigger = 0;
+	int		lead_counter;
 
 	i = 0;
 	n_lead = 'x';
+	lead_counter = 0;
 	while (str[i] && i < index)
 	{
-		if (!skip_quote(i, exp) && !is_dquote(str, i, exp) && (str[i] == '\'' || str[i] == '"'))
+		if (!skip_quote(i, exp) && !is_dquote(str, i, exp)
+			&& (str[i] == '\'' || str[i] == '"'))
 		{
-			//if (!(exp->is_split && str[i] == '\''))
-			//{
-				if (is_single_quote(str, i, index))
-					break ;
-				exp->quote_amount++;
-				lead_counter++;
-				n_lead = str[i++];
-				while (str[i] != n_lead && i < index)
-					i++;
-		//	}
-			//else
-			//	trigger = 1;
+			if (is_single_quote(str, i, index))
+				break ;
+			exp->quote_amount++;
+			lead_counter++;
+			n_lead = str[i++];
+			while (str[i] != n_lead && i < index)
+				i++;
 		}
 		i++;
 	}

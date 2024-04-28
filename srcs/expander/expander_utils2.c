@@ -78,8 +78,6 @@ void	is_not_split(t_exp *exp)
 
 int	expansion_supreme(t_exp *exp, int *i, t_env **lst_env, char lead)
 {
-//	if (!exp->is_split)
-	//	exp->expanded_str = prep_quotes(exp->expanded_str, (*i), exp);
 	if (!check_if_delquote(exp->expanded_str, *i, lead, exp))
 		exp->expanded_str = rm_quotes_expand(exp, exp->expanded_str, *i);
 	else

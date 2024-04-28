@@ -64,17 +64,18 @@ void	prep_quotes_aux(char *str, char *lead,
 int		expansion_supreme(t_exp *exp, int *i, t_env **lst_env, char lead);
 char	*expand_home(t_env **env, char *str);
 void	update_del_index(t_exp *exp, int i, int **tab, char lead);
-char	*delete_remain_quotes(t_exp *exp, int *tab, char lead, int limit_counter);
+char	*delete_remain_quotes(t_exp *exp,
+			int *tab, char lead, int limit_counter);
 int		check_if_delquote(char *str, int i, char lead, t_exp *exp);
 void	update_index_to_del(t_exp *exp);
 void	skip_index_expquote(t_exp *exp, int index, t_env *env);
 int		skip_quote(int i, t_exp *exp);
 int		is_ddel_quote(char *str, int i, t_exp *exp);
 int		is_dquote(char *str, int i, t_exp *exp);
-
 char	*rm_quotes_expand(t_exp *exp, char *str, int index);
 int		*set_dquote_values(int *tab_counter, int *i, int *j, int *tab);
-void    set_exp(t_exp *exp);
-int 	quote_conditions(t_exp *exp);
+void	set_exp(t_exp *exp);
+int		quote_conditions(t_exp *exp);
+void	init_delvalues(int *i, int *new_counter, char *lead, int *j);
 
 #endif
