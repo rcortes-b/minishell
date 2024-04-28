@@ -104,12 +104,10 @@ static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str)
 	if (exp->new_index < exp->index)
 		exp->new_index = exp->index;
 	update_index_to_del(exp);
-	printf("str bef: %s\n", exp->expanded_str);
 	if (exp->is_split && exp->del_index)
 		exp->expanded_str = delete_remain_quotes(exp, exp->del_index, '\'', exp->s_counter);
 	if (exp->is_split && exp->d_del_index)
 		exp->expanded_str = delete_remain_quotes(exp, exp->d_del_index, '"', exp->d_counter);
-	printf("str aft: %s\n", exp->expanded_str);
 	if (exp->is_split && !modify_split(exp, exp->expanded_str))
 		return (free(exp->expanded_str), 0);
 	else if (!exp->is_split)

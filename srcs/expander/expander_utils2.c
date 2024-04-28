@@ -186,6 +186,11 @@ int	check_if_delquote(char *str, int i, char lead, t_exp *exp)
 			return (1);
 		i++;
 	}
+	if (str[i] == '"')
+	{
+		if (is_ddel_quote(str, i, exp))
+			return (1);
+	}
 	return  (0);
 }
 
@@ -266,4 +271,20 @@ int	skip_quote(int i, t_exp *exp)
 	}
 	return (0);
 }
-		
+
+int	is_ddel_quote(char *str, int i, t_exp *exp)
+{
+	int	counter;
+
+	i--;
+	while (str[i] != '"')
+		i--;
+	counter = 0;
+	while (counter < exp->d_counter)
+	{
+		if (i == exp->d_del_index[counter])
+			return (1);
+		counter++;
+	}
+	return (0);
+}
