@@ -99,7 +99,7 @@ static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str)
 	if (!exp->expanded_str)
 		return (0);
 	lead = 'x';
-	if (!expander_aux(exp, lst_env, str, &lead))
+	if (!expander_aux(exp, lst_env, &lead))
 		return (0);
 	if (!quote_conditions(exp))
 		return (0);

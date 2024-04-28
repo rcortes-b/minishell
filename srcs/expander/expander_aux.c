@@ -71,7 +71,7 @@ void	resize_index(t_exp *exp, char *str, int *index)
 	}
 }
 
-int	expander_aux(t_exp *exp, t_env **lst_env, char *str, char *lead)
+int	expander_aux(t_exp *exp, t_env **lst_env, char *lead)
 {
 	int	i;
 	int	second;

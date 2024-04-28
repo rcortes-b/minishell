@@ -40,7 +40,7 @@ void	iterate_expand(char *str, int *j, int i);
 void	set_expand_values(char *lead, int *quote, char c, int *index);
 int		is_expanded(char const *s1, char const *s2);
 int		aux_create_split(t_exp *exp, char **def_split, int counter, int j);
-int		expander_aux(t_exp *exp, t_env **lst_env, char *str, char *lead);
+int		expander_aux(t_exp *exp, t_env **lst_env, char *lead);
 
 //Expand
 int		modify_split(t_exp *exp, char *str);
