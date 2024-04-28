@@ -41,3 +41,5 @@ echo $USER'$USER'$USER'$USER''$USER'
 echo "'$USER''dwad'aaaaa$HOME"
 echo $USER""
 echo "aa$USER$DWADAWDWCHOME"
+
+echo "$DWDWADADW$USER""DDWAD"

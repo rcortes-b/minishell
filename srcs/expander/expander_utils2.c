@@ -288,3 +288,29 @@ int	is_ddel_quote(char *str, int i, t_exp *exp)
 	}
 	return (0);
 }
+
+int	is_dquote(char *str, int i, t_exp *exp)
+{
+	int counter;
+
+	counter = 0;
+	if (str[i] == '"')
+	{
+		while (counter < exp->d_counter)
+		{
+			if (exp->d_del_index[counter] == i)
+				return (1);
+			counter++;
+		}
+	}
+	else if (str[i] == '\'')
+	{
+		while (counter < exp->s_counter)
+		{
+			if (exp->del_index[counter] == i)
+				return (1);
+			counter++;
+		}
+	}
+	return (0);
+}

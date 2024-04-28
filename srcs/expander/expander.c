@@ -117,6 +117,8 @@ static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str)
 		free(exp->del_index);
 	if (exp->d_del_index)
 		free(exp->d_del_index);
+	if (exp->expanded_quote)
+		free(exp->expanded_quote);
 	return (1);
 }
 

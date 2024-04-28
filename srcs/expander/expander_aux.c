@@ -90,8 +90,8 @@ int	expander_aux(t_exp *exp, t_env **lst_env, char *str, char *lead)
 		else if (second && exp->expanded_str[i] == *lead)
 			set_expand_values(lead, &second, 'x', NULL);
 		if ((exp->expanded_str[i] == '$' && (*lead != '\''/*== || exp->is_split*/))
-			&& exp->expanded_str[i + 1]
-			&& (exp->is_first == 1 || !is_expanded(str, &exp->expanded_str[i])))
+			&& exp->expanded_str[i + 1])
+			/*&& (exp->is_first == 1 || !is_expanded(str, &exp->expanded_str[i])))*/
 		{
 			expansion_supreme(exp, &i, lst_env, *lead);
 			second = 0;

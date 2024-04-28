@@ -73,7 +73,7 @@ char	*rm_quotes_expand(t_exp *exp, char *str, int index)
 	n_lead = 'x';
 	while (str[i] && i < index)
 	{
-		if (!skip_quote(i, exp) && (str[i] == '\'' || str[i] == '"'))
+		if (!skip_quote(i, exp) && !is_dquote(str, i, exp) && (str[i] == '\'' || str[i] == '"'))
 		{
 			//if (!(exp->is_split && str[i] == '\''))
 			//{
