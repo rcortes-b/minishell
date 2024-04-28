@@ -31,6 +31,7 @@ void	handle_sighdoc(int sig)
 	if (sig == SIGINT)
 	{
 		ft_putstr_fd("^C\n", 2);
+		g_errstatus = 1;
 		exit(1);
 	}
 }

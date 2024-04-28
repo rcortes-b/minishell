@@ -21,6 +21,7 @@ srcs/expander/expander_utils2.c srcs/expander/remove_quotes2.c srcs/expander/quo
 srcs/expander/quotes_utils2.c srcs/expander/utils.c srcs/expander/expander_utils3.c\
 
 OBJS = $(SRCS:.c=.o)
+DEPS = $(SRCS:.c=.d)
 
 HEAD = includes/minishell.h includes/parse.h includes/builtins.h includes/checker.h includes/expander.h includes/exec.h
 
@@ -30,7 +31,7 @@ READLINE = -L$(HOME)/.brew/Cellar/readline/8.2.10/lib -lreadline -lhistory
 all : $(NAME)
 
 %.o : %.c Makefile $(HEAD)
-	$(CC) $(FLAGS) -c $< -o $@
+	$(CC) $(FLAGS) -MMD -c $< -o $@
 
 libs:
 	make bonus -C libft
@@ -52,12 +53,14 @@ endif
 
 clean :
 	make clean -C libft
-	$(RM) $(OBJS)
+	$(RM) $(OBJS) $(DEPS)
 
 fclean: clean
 	make fclean -C libft
 	$(RM) $(NAME)
 
 re : fclean all
+
+-include $(DEPS)
 
 .PHONY : all clean fclean re libs linux

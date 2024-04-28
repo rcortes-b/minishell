@@ -14,15 +14,11 @@
 #include "../../includes/builtins.h"
 #include "../../includes/error.h"
 
-void	print_pwd(t_env *env)
+void	print_pwd(void)
 {
-	t_env	*aux;
+	char	*pwd;
 
-	aux = env;
-	while (aux)
-	{
-		if (ft_strcmp(aux->key, "PWD") == 0)
-			printf("%s\n", aux->value);
-		aux = aux->next;
-	}
+	pwd = getcwd(NULL, 0);
+	printf("%s\n", pwd);
+	free(pwd);
 }

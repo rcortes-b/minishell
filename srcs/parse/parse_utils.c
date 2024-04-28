@@ -80,7 +80,12 @@ int	is_operator(char *new_split, int is_inquote)
 			|| (ft_strcmp(new_split, "\"!<!\"") == 0)
 			|| (ft_strcmp(new_split, "\"!<<!\"") == 0)
 			|| (ft_strcmp(new_split, "\"!>!\"") == 0)
-			|| (ft_strcmp(new_split, "\"!>>!\"") == 0))
+			|| (ft_strcmp(new_split, "\"!>>!\"") == 0)
+			|| (ft_strcmp(new_split, "\'!|!\'") == 0)
+			|| (ft_strcmp(new_split, "\'!<!\'") == 0)
+			|| (ft_strcmp(new_split, "\'!<<!\'") == 0)
+			|| (ft_strcmp(new_split, "\'!>!\'") == 0)
+			|| (ft_strcmp(new_split, "\'!>>!\'") == 0))
 			return (1);
 	}
 	return (0);

@@ -110,11 +110,11 @@ void	executor(t_exe *vars, t_word *cmd, char **og_env)
 	else
 		correct_path = check_path(vars->path, cmd->com);
 	if (!correct_path)
-		exit(126);
+		exit(127);
 	if (execve(correct_path, cmd->flags, og_env) == -1)
 	{
 		perror("minishell: ");
-		exit(127);
+		exit(126);
 	}
 }
 

@@ -39,7 +39,7 @@ char	*set_do_expand(int *j, int *index, char *str, int *is_quote)
 	return (env_name);
 }
 
-char	*new_operator(char *str)
+char	*new_operator(char *str, char lead)
 {
 	char	*new;
 	int		i;
@@ -51,13 +51,13 @@ char	*new_operator(char *str)
 	new[i] = str[i];
 	i += 1;
 	new[i++] = '!';
-	while (str[i - 1] != '\"')
+	while (str[i - 1] != lead)
 	{
 		new[i] = str[i - 1];
 		i++;
 	}
 	new[i++] = '!';
-	new[i++] = '\"';
+	new[i++] = lead;
 	new[i] = '\0';
 	free(str);
 	return (new);
@@ -73,7 +73,8 @@ void	is_not_split(t_exp *exp)
 	}
 	else
 		exp->new_split[exp->new_index] = \
-		new_operator(exp->new_split[exp->new_index]);
+		new_operator(exp->new_split[exp->new_index],
+				*exp->new_split[exp->new_index]);
 }
 
 int	expansion_supreme(t_exp *exp, int *i, t_env **lst_env, char lead)

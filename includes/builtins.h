@@ -45,7 +45,7 @@ void	check_value(char *value, int *i, int *is_append);
 t_env	*prepare_node(char *value, int is_onlyexp, int *i);
 
 //Pwd
-void	print_pwd(t_env *env);
+void	print_pwd(void);
 void	unset_env(t_env **env, char **values, int do_exec);
 
 //Change Directory

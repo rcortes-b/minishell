@@ -33,13 +33,12 @@ void	echo_builtin(t_word *word)
 	int	is_flag;
 
 	i = 1;
-	if (!is_newline(word->flags[i]))
+	is_flag = 0;
+	while (!is_newline(word->flags[i]))
 	{
 		is_flag = 1;
 		i++;
 	}
-	else
-		is_flag = 0;
 	while (word->flags[i])
 	{
 		if (word->flags[i][0] == '$'

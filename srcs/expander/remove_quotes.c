@@ -22,6 +22,12 @@ int	is_quoted_operator(char *str)
 		|| ft_strcmp(str, "\">\"") == 0
 		|| ft_strcmp(str, "\">>\"") == 0)
 		return (1);
+	if (ft_strcmp(str, "\'|\'") == 0
+		|| ft_strcmp(str, "\'<\'") == 0
+		|| ft_strcmp(str, "\'<<\'") == 0
+		|| ft_strcmp(str, "\'>\'") == 0
+		|| ft_strcmp(str, "\'>>\'") == 0)
+		return (1);
 	return (0);
 }
 

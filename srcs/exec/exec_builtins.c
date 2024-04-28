@@ -55,7 +55,7 @@ int	exec_builtins(t_exe *vars, t_word *aux, int do_exec)
 	else if (ft_strcmp(aux->com, "echo") == 0)
 		echo_builtin(aux);
 	else if (ft_strcmp(aux->com, "pwd") == 0)
-		print_pwd(*vars->env);
+		print_pwd();
 	if (is_builtin(aux->com) && do_exec == 0)
 		exit(0);
 	return (1);
