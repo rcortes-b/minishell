@@ -73,5 +73,8 @@ int		is_ddel_quote(char *str, int i, t_exp *exp);
 int		is_dquote(char *str, int i, t_exp *exp);
 
 char	*rm_quotes_expand(t_exp *exp, char *str, int index);
+int		*set_dquote_values(int *tab_counter, int *i, int *j, int *tab);
+void    set_exp(t_exp *exp);
+int 	quote_conditions(t_exp *exp);
 
 #endif
