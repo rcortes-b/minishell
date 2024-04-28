@@ -14,12 +14,12 @@
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
 
-void    set_exp(t_exp *exp)
+void	set_exp(t_exp *exp)
 {
-    exp->expanded_quote = NULL;
+	exp->expanded_quote = NULL;
 	exp->del_index = NULL;
 	exp->d_del_index = NULL;
-    exp->is_first = 1;
+	exp->is_first = 1;
 	exp->is_split = 0;
 	exp->s_counter = 0;
 	exp->d_counter = 0;
@@ -40,4 +40,16 @@ int	quote_conditions(t_exp *exp)
 	if (exp->is_split && !modify_split(exp, exp->expanded_str))
 		return (free(exp->expanded_str), 0);
 	return (1);
+}
+
+void	prep_expand(t_exp *exp, int *i, int *second, char *lead)
+{
+	if (skip_quote(*i, exp))
+		(*i)++;
+	exp->quote_amount = 0;
+	if (!(*second) && (exp->expanded_str[*i] == '"'
+			|| exp->expanded_str[*i] == '\''))
+		set_expand_values(lead, second, exp->expanded_str[*i], NULL);
+	else if (second && exp->expanded_str[*i] == *lead)
+		set_expand_values(lead, second, 'x', NULL);
 }

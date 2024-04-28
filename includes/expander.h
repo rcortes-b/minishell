@@ -77,5 +77,6 @@ int		*set_dquote_values(int *tab_counter, int *i, int *j, int *tab);
 void	set_exp(t_exp *exp);
 int		quote_conditions(t_exp *exp);
 void	init_delvalues(int *i, int *new_counter, char *lead, int *j);
+void	prep_expand(t_exp *exp, int *i, int *second, char *lead);
 
 #endif
