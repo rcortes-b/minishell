@@ -19,7 +19,8 @@ void	print_env(t_env *env)
 	aux = env;
 	while (aux)
 	{
-		if (ft_strcmp(aux->key, "_") != 0 && !aux->only_exp)
+		if (ft_strcmp(aux->key, "_") != 0 && !aux->only_exp
+			&& !aux->trigger_utils)
 			printf("%s=%s\n", aux->key, aux->value);
 		else if (ft_strcmp(aux->key, "_") == 0)
 			printf("%s=/usr/bin/env\n", aux->key);

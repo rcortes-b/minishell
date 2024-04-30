@@ -30,6 +30,7 @@ static int	get_oldpwd(t_env **env, t_env **old, char **old_pwd)
 		if (!new->value)
 			return (free(new->key), free(new), handle_error(), 0);
 		new->only_exp = 0;
+		new->trigger_utils = 0;
 		ft_envadd_back(env, new);
 	}
 	else

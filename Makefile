@@ -1,9 +1,8 @@
 NAME = minishell
 
 CC = gcc
-FLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
+FLAGS = -Wall -Wextra -Werror -g
 RM = rm -rf
-#SRCS_ALL = ${addprefix "srcs", $(SRCS)}
 
 SRCS = srcs/parse/split.c srcs/parse/split_utils.c srcs/parse/environment.c  srcs/parse/environment_utils.c\
 srcs/parse/order.c srcs/parse/parse_utils.c \
@@ -33,20 +32,20 @@ all : $(NAME)
 %.o : %.c Makefile $(HEAD)
 	$(CC) $(FLAGS) -MMD -c $< -o $@
 
-libs:
-	make bonus -C libft
+$(LIBFT):
+	make -C libft
 
 linux:
 	make LINUX=1 all
 
 ifndef LINUX
 
-$(NAME): $(OBJS) libs
+$(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(FLAGS) $(LIBFT) $(OBJS) -o $(NAME) $(READLINE)
 
 else
 
-$(NAME): $(OBJS) libs
+$(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(FLAGS) $(READLINE) $(OBJS) -o $(NAME) -Llibft -lft
 
 endif

@@ -47,7 +47,7 @@ static void	print_export(t_env **env)
 	aux = *env;
 	while (aux)
 	{
-		if (ft_strcmp(aux->key, "_") != 0)
+		if (ft_strcmp(aux->key, "_") != 0 && !aux->trigger_utils)
 		{
 			if (aux->only_exp)
 				printf("declare -x %s\n", aux->key);
@@ -72,6 +72,9 @@ static void	ft_swap_env(t_env **aux, t_env **tmp)
 	temp = (*aux)->only_exp;
 	(*aux)->only_exp = (*tmp)->only_exp;
 	(*tmp)->only_exp = temp;
+	temp = (*aux)->trigger_utils;
+	(*aux)->trigger_utils = (*tmp)->trigger_utils;
+	(*tmp)->trigger_utils = temp;
 }
 
 static void	sort_list(t_env **env)
@@ -122,6 +125,7 @@ int	empty_export(t_env **lst_env)
 			return (handle_error(), 0);
 		new->value = NULL;
 		new->only_exp = 1;
+		new->trigger_utils = 0;
 		ft_envadd_back(&exp, new);
 	}
 	sort_list(&exp);

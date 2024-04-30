@@ -24,6 +24,7 @@ void	handle_exit(t_exe *vars, int err_code);
 void	free_env_mem(t_env **lst_env);
 void	handle_env_error(t_env **lst_env, char **split);
 void	handle_expand_error(t_env **lst_env);
+void	exit_env(t_env **env);
 
 //Split
 void	free_mem(char **split);

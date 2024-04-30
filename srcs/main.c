@@ -102,13 +102,6 @@ int	main(int argc, char **argv, char **envp)
 			if (!parse_environment(&env, envp))
 				handle_error();
 		}
-		/*t_env *aux;
-		aux = env;
-		while (aux)
-		{
-			printf("Key: %s\n", aux->key);
-			aux = aux->next;
-		}*/
 		signal(SIGINT, handle_signal);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("minishell> ");

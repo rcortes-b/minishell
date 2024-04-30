@@ -13,18 +13,39 @@
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
 
-void	exit_env(t_env **env)
-{
-	free_env_mem(env);
-	exit(1);
-}
-
-void	aux_init_env(t_env **env, t_env *aux)
+static void	aux_init_env2(t_env **env, t_env *aux)
 {
 	aux = ft_newenv();
 	if (!aux)
 		exit_env(env);
+	aux->key = ft_strdup("HOME");
+	if (!aux->key)
+		exit_env(env);
+	aux->value = ft_strdup("/Users/rcortes-");
+	if (!aux->value)
+		exit_env(env);
+	aux->only_exp = 1;
+	aux->trigger_utils = 1;
 	ft_envadd_back(env, aux);
+	aux = ft_newenv();
+	if (!aux)
+		exit_env(env);
+	aux->key = ft_strdup("SHLVL");
+	if (!aux->key)
+		exit_env(env);
+	aux->value = ft_strdup("1");
+	if (!aux->value)
+		exit_env(env);
+	aux->only_exp = 0;
+	aux->trigger_utils = 0;
+	ft_envadd_back(env, aux);
+}
+
+static void	aux_init_env(t_env **env, t_env *aux)
+{
+	aux = ft_newenv();
+	if (!aux)
+		exit_env(env);
 	aux->key = ft_strdup("PATH");
 	if (!aux->key)
 		exit_env(env);
@@ -35,17 +56,10 @@ void	aux_init_env(t_env **env, t_env *aux)
 	if (!aux->value)
 		exit_env(env);
 	aux->only_exp = 1;
-	aux = ft_newenv();
-	if (!aux)
-		exit_env(env);
+	aux->trigger_utils = 1;
 	ft_envadd_back(env, aux);
-	aux->key = ft_strdup("HOME");
-	if (!aux->key)
-		exit_env(env);
-	aux->value = ft_strdup("/Users/rcortes-");
-	if (!aux->value)
-		exit_env(env);
-	aux->only_exp = 1;
+	aux = NULL;
+	aux_init_env2(env, aux);
 }
 
 void	init_env(t_env **env, char **envp)
@@ -57,23 +71,23 @@ void	init_env(t_env **env, char **envp)
 	aux = ft_newenv();
 	if (!aux)
 		exit (1);
-	ft_envadd_back(env, aux);
 	aux->key = ft_strdup("PWD");
 	if (!aux->key)
 		exit_env(env);
 	aux->value = getcwd(NULL, 0);
 	aux->only_exp = 0;
-	aux = ft_newenv();
-	if (!aux)
-		exit_env(env);
+	aux->trigger_utils = 0;
 	ft_envadd_back(env, aux);
-	aux->key = ft_strdup("SHLVL");
+	aux = ft_newenv();
+	aux->key = ft_strdup("_");
 	if (!aux->key)
 		exit_env(env);
-	aux->value = ft_strdup("1");
+	aux->value = ft_strdup("/usr/bin/env");
 	if (!aux->value)
 		exit_env(env);
 	aux->only_exp = 0;
+	aux->trigger_utils = 0;
+	ft_envadd_back(env, aux);
 	aux_init_env(env, aux);
 }
 
@@ -110,11 +124,11 @@ t_env	*parse_environment(t_env **env_lst, char **envp)
 		aux->key = ft_substr(envp[i], 0, j);
 		if (!aux->key)
 			return (free_env_mem(env_lst), free(aux), NULL);
-		j++;
-		aux->value = ft_substr(envp[i], j, ft_strlen(envp[i]));
+		aux->value = ft_substr(envp[i], j + 1, ft_strlen(envp[i]));
 		if (!aux->value)
 			return (free_env_mem(env_lst), free(aux), free(aux->key), NULL);
 		aux->only_exp = 0;
+		aux->trigger_utils = 0;
 		ft_envadd_back(env_lst, aux);
 	}
 	return (*env_lst);

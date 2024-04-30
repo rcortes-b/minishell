@@ -20,6 +20,7 @@ typedef struct s_env
 	char			*key;
 	char			*value;
 	int				only_exp;
+	int				trigger_utils;
 	struct s_env	*next;
 }					t_env;
 

@@ -46,7 +46,7 @@ t_env	*prepare_node(char *value, int is_onlyexp, int *i);
 
 //Pwd
 void	print_pwd(void);
-void	unset_env(t_env **env, char **values, int do_exec);
+void	unset_env(t_env **env, char **v, int do_exec);
 
 //Change Directory
 int		change_directory(t_exe *vars, t_word *aux_ptr, int do_exec);

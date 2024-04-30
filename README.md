@@ -10,10 +10,13 @@ To Do:
 						- nueva funcion en unset para eliminar los head nodes if required (aunque si voy a crear un head node quizas no es ni necesario)
 						- He añadido la condicion de strcmp para el env "_" ya que aunque hagas unset de este, no hay que llevarlo a cabo (revisar si puede dar lugar a error)
 						- builtins_utils.c line 35: he añadido un printf, ya que cuando se hace "cd -" se imprime el oldpwd (revisar si puede dar lugar a error)
+						- he creado un trigger en env, le he dado valor 0 de default, solo se actualiza si es unset PWD o OLDPWD a 1. Y solo se inicia a 1 en PATH y HOME
 
 						Por implementar ahora:
 												- Cabeza de nodo de env, en caso de que sea env -i el PATH y el HOME hardcoded nunca se imprimiran
 												- Un trigger que almacene el estado de PWD y OLDPWD (si se ha hecho unset no tiene que imprimirse / actualizarse)
+												- Actualizar el PWD y OLDPWD trigger en export a 0
+												- Cuando se hace unset de PWD y OLDPWD no se elimina el nodo, simplemente se "oculta" con el trigger
 
 												unset PWD OLDPWD
 												echo $PWD $OLDPWD (no aparece)

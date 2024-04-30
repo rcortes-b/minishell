@@ -83,7 +83,7 @@ static int	update_var(t_env **env, char *value, int is_append, int is_onlyexp)
 		if (!update_value(&aux, value, i))
 			return (0);
 	}
-	return (1);
+	return (aux->trigger_utils = 0, 1);
 }
 
 static int	add_export(t_env **env, char *value)

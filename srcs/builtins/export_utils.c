@@ -62,6 +62,7 @@ t_env	*prepare_node(char *value, int is_onlyexp, int *i)
 	if (!new)
 		return (NULL);
 	new->only_exp = is_onlyexp;
+	new->trigger_utils = 0;
 	new->next = NULL;
 	*i = 0;
 	while (value[*i] && value[*i] != '=' && value[*i] != '+')

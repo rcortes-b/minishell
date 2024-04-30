@@ -56,3 +56,9 @@ void	handle_expand_error(t_env **lst_env)
 	free_env_mem(lst_env);
 	handle_error();
 }
+
+void	exit_env(t_env **env)
+{
+	free_env_mem(env);
+	exit(1);
+}
