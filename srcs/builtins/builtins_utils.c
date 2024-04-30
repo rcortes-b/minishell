@@ -32,6 +32,7 @@ char	*expand_oldpwd(t_exe *vars, char *flag)
 	flag = ft_strdup(tmp->value);
 	if (!flag)
 		return (perror("minishell"), NULL);
+	printf("%s\n", flag);
 	return (flag);
 }
 
