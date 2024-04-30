@@ -27,12 +27,12 @@ HEAD = includes/minishell.h includes/parse.h includes/builtins.h includes/checke
 LIBFT = libft/libft.a
 READLINE = -L$(HOME)/.brew/Cellar/readline/8.2.10/lib -lreadline -lhistory
 
-all : $(NAME)
+all : make_libs $(NAME)
 
 %.o : %.c Makefile $(HEAD)
 	$(CC) $(FLAGS) -MMD -c $< -o $@
 
-$(LIBFT):
+make_libs:
 	make -C libft
 
 linux:
@@ -40,12 +40,12 @@ linux:
 
 ifndef LINUX
 
-$(NAME): $(OBJS) $(LIBFT)
+$(NAME): $(OBJS)
 	$(CC) $(FLAGS) $(LIBFT) $(OBJS) -o $(NAME) $(READLINE)
 
 else
 
-$(NAME): $(OBJS) $(LIBFT)
+$(NAME): $(OBJS)
 	$(CC) $(FLAGS) $(READLINE) $(OBJS) -o $(NAME) -Llibft -lft
 
 endif
