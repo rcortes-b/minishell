@@ -119,7 +119,7 @@ int	do_export(t_word *lst, t_exe **vars, int do_exec)
 	int	i;
 
 	i = 0;
-	if (!lst->flags[1] && do_exec == 1)
+	if (!lst->flags[1])
 	{
 		if (!empty_export((*vars)->env))
 			return (free_mem((*vars)->path), 0);
