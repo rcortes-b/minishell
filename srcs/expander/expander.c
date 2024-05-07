@@ -65,6 +65,8 @@ char	*do_expand(t_env **lst_env, char *str, int index, t_exp *exp)
 	int		j;
 	int		is_quote;
 
+	if (!ft_strcmp(str, "$?"))
+		return (ft_itoa(g_errstatus));
 	env_name = set_do_expand(&j, &index, str, &is_quote);
 	if (!env_name)
 		return (free(str), NULL);
@@ -86,6 +88,7 @@ char	*do_expand(t_env **lst_env, char *str, int index, t_exp *exp)
 	return (new_str);
 }
 
+//VALID CHARACTERS: a to z, A to Z, 1 to 9, 
 static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str)
 {
 	char	lead;
@@ -127,10 +130,7 @@ char	**lets_expand(t_env **lst_env, char **split)
 	while (exp.og_split[++exp.index])
 	{
 		set_exp(&exp);
-		if (exp.og_split[exp.index][0] == '$'
-			&& exp.og_split[exp.index][1] == '?' && !exp.og_split[exp.index][2])
-			continue ;
-		else if (exp.index > 0
+		if (exp.index > 0
 			&& ft_strcmp(exp.og_split[exp.index - 1], "<<") == 0)
 			continue ;
 		if (check_if_ambiguos(lst_env, split, exp.index))

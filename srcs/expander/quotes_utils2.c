@@ -95,7 +95,7 @@ int	check_if_delquote(char *str, int i, char lead, t_exp *exp)
 {
 	if (lead != '\"')
 		return (0);
-	while (str[i] != '"')
+	while (str[i] && str[i] != '"')
 	{
 		if (str[i] == '\'' && !skip_quote(i, exp))
 			return (1);

@@ -35,3 +35,20 @@ void	handle_sighdoc(int sig)
 		exit(1);
 	}
 }
+int	wait_hdoc(void)
+{
+	int	status;
+
+	waitpid(-1, &status, 0);
+	if (WIFSIGNALED(status))
+	{
+		g_errstatus = 1;
+		return (1);
+	}
+	else if (WIFEXITED(status))
+	{
+		g_errstatus = WEXITSTATUS(status);
+		return (1);
+	}	
+	return (0);
+}

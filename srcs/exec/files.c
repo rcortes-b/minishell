@@ -92,7 +92,7 @@ static int	open_redir(t_word **lst, t_word *op,
 	}
 	else if (op->token == HEREDOC)
 	{
-		if (!do_heredoc(lst, op->next->com, my_env))
+		if (!do_heredoc(lst, op->next->com, my_env))//canviar el lst in o out a error
 			return (g_errstatus = 1, 0);
 	}
 	else if (op->token == APPEND_OPT)

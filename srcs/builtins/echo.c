@@ -34,6 +34,8 @@ void	echo_builtin(t_word *word)
 
 	i = 1;
 	is_flag = 0;
+	if (!word->flags[i])
+		return (write(1, "\n", 1), (void)0);
 	while (!is_newline(word->flags[i]))
 	{
 		is_flag = 1;
@@ -41,11 +43,7 @@ void	echo_builtin(t_word *word)
 	}
 	while (word->flags[i])
 	{
-		if (word->flags[i][0] == '$'
-			&& word->flags[i][1] == '?' && !word->flags[i][2])
-			ft_putnbr_fd(g_errstatus, 1);
-		else
-			write(1, word->flags[i], ft_strlen(word->flags[i]));
+		write(1, word->flags[i], ft_strlen(word->flags[i]));
 		if (word->flags[i + 1])
 			write(1, " ", 1);
 		else if (!word->flags[i + 1] && is_flag == 0)

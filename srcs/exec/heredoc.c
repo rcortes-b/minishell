@@ -112,7 +112,6 @@ int	do_heredoc(t_word **lst, char *limiter, t_env **my_env)
 	pid_t	pid;
 	char	*line;
 	int		fd[2];
-	int		status;
 
 	if (!*lst)
 		return (0);
@@ -122,10 +121,9 @@ int	do_heredoc(t_word **lst, char *limiter, t_env **my_env)
 	pid = fork();
 	if (pid == 0)
 		handle_hdoc_child(line, limiter, fd, my_env);
-	waitpid(-1, &status, 0);
 	close(fd[1]);
-	if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
-		return ((*lst)->in = fd[0], 0);
+	if (wait_hdoc())
+		return (close(fd[0]),(*lst)->in = -1, 0);
 	(*lst)->in = fd[0];
 	return (1);
 }
