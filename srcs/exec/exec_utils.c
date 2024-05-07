@@ -83,7 +83,7 @@ void	close_pipes(int fd[2])
 	close(fd[1]);
 }
 
-int	do_command(t_exe *vars, t_word **aux, char **og_env)
+int	do_command(t_exe *vars, t_word **aux)
 {
 	if ((*aux)->next != NULL && pipe(vars->fd) == -1)
 		return (0);
@@ -101,7 +101,7 @@ int	do_command(t_exe *vars, t_word **aux, char **og_env)
 					return (0);
 			}
 			else
-				executor(vars, *aux, og_env);
+				executor(vars, *aux);
 		}
 	}
 	else

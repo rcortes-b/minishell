@@ -15,13 +15,12 @@
 #include "../../includes/error.h"
 #include "../../includes/builtins.h"
 
-int	cooking_execution_aux(t_exe *vars, t_word **aux,
-		char **og_env, int *counter)
+int	cooking_execution_aux(t_exe *vars, t_word **aux, int *counter)
 {
 	if ((*aux)->token != PIPE)
 	{
 		(*counter)++;
-		if (!do_command(vars, aux, og_env))
+		if (!do_command(vars, aux))
 			return (0);
 	}
 	return (1);
@@ -89,6 +88,6 @@ void	execution(t_word **lst, t_operators *data, t_env **my_env)
 			return ;
 	}
 	else
-		cooking_execution(&vars, data->og_env);
+		cooking_execution(&vars);
 	free_mem(vars.path);
 }

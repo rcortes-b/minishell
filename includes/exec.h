@@ -34,13 +34,12 @@ char	*check_path(char **path, char *cmd);
 
 //Execution
 void	execution(t_word **lst, t_operators *data, t_env **my_env);
-int		cooking_execution(t_exe *vars, char **og_env);
-int		do_command(t_exe *vars, t_word **aux, char **og_env);
+int		cooking_execution(t_exe *vars);
+int		do_command(t_exe *vars, t_word **aux);
 void	set_ins(t_exe *vars, t_word **aux);
 int		set_outs(t_exe *vars, t_word *aux);
-void	executor(t_exe *vars, t_word *cmd, char **og_env);
-int		cooking_execution_aux(t_exe *vars, t_word **aux,
-			char **og_env, int *counter);
+void	executor(t_exe *vars, t_word *cmd);
+int		cooking_execution_aux(t_exe *vars, t_word **aux, int *counter);
 
 //Heredoc
 int		do_heredoc(t_word **lst, char *limiter, t_env **my_env);

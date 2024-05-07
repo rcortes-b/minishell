@@ -67,3 +67,30 @@ char	*ft_strjoin_v2(char *s1, char *s2)
 	free(s2);
 	return (free(s1), s1 = NULL, str);
 }
+char	*ft_strjoin_v3(char *s1, char *s2)
+{
+	char	*str;
+	size_t	s1_len;
+	int		i;
+
+	if (!s1)
+	{
+		s1 = (char *)malloc(sizeof(char));
+		if (!s1)
+			return (NULL);
+		s1[0] = '\0';
+	}
+	s1_len = ft_strlen_v3(s1);
+	str = (char *)malloc(sizeof(char) * (s1_len + ft_strlen_v3(s2) + 1));
+	if (!str)
+		return (free(s1), s1 = NULL, NULL);
+	i = -1;
+	while (s1[++i])
+		str[i] = s1[i];
+	i = 0;
+	while (s2[i])
+		str[s1_len++] = s2[i++];
+	str[s1_len] = '\0';
+	free(s1);
+	return (str);
+}

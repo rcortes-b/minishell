@@ -97,9 +97,10 @@ int	set_outs(t_exe *vars, t_word *aux)
 	return (1);
 }
 
-void	executor(t_exe *vars, t_word *cmd, char **og_env)
+void	executor(t_exe *vars, t_word *cmd)
 {
 	char	*correct_path;
+	char	**current_env;
 
 	if (ft_strchr(cmd->com, '/') || *cmd->com == '~')
 	{
@@ -111,14 +112,17 @@ void	executor(t_exe *vars, t_word *cmd, char **og_env)
 		correct_path = check_path(vars->path, cmd->com);
 	if (!correct_path)
 		exit(127);
-	if (execve(correct_path, cmd->flags, og_env) == -1)
+	current_env = renew_env(vars->env);
+	if (!current_env)
+		handle_error();
+	if (execve(correct_path, cmd->flags, current_env) == -1)
 	{
 		perror("minishell: ");
 		exit(126);
 	}
 }
 
-int	cooking_execution(t_exe *vars, char **og_env)
+int	cooking_execution(t_exe *vars)
 {
 	t_word	*aux;
 	int		counter;
@@ -130,7 +134,7 @@ int	cooking_execution(t_exe *vars, char **og_env)
 		return (0);
 	while (aux)
 	{
-		if (!cooking_execution_aux(vars, &aux, og_env, &counter))
+		if (!cooking_execution_aux(vars, &aux, &counter))
 			return (0);
 		aux = aux->next;
 	}
