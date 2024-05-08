@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "minishell.h": "c",
-        "expander.h": "c",
-        "get_next_line.h": "c"
-    }
-}

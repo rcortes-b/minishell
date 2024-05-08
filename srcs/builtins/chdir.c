@@ -88,7 +88,7 @@ static char	**is_onlycd(t_env **env, t_word **aux, char **flags)
 	t_env	*home;
 
 	home = get_env(env, "HOME");
-	if (!home)
+	if (!home || home->only_exp)
 	{
 		g_errstatus = 1;
 		ft_putendl_fd("minishell: cd: HOME not set", 2);
