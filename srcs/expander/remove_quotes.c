@@ -45,7 +45,7 @@ static int	is_lead(char *str, char lead, int index)
 	return (1);
 }
 
-static char	*delete_quotes(char *str, char *new_str)
+char	*delete_quotes(char *str, char *new_str)
 {
 	char	lead;
 	int		i;

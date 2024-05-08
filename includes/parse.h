@@ -36,6 +36,7 @@ char	**ft_split(char *line, const char *set, t_operators *data);
 void	init_data(t_operators *data, char **envp);
 int		is_symbol(t_operators *data, char c);
 void	order_split(char **split, t_operators *data);
+char	*delete_quotes(char *str, char *new_str);
 
 //ESTO ES CATEGORIZE && TOKENIZATION
 int		categorize(char **words, t_word **lst);
