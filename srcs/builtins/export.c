@@ -129,9 +129,9 @@ int	do_export(t_word *lst, t_exe **vars, int do_exec)
 		while (lst->flags[++i])
 		{
 			if (lst->flags[i][0] == '_' && lst->flags[i][1] == '=')
-				return (1);
+				continue ;
 			if (!key_is_valid(lst->flags[i]))
-				return (0);
+				continue ;
 			else
 			{
 				if (!add_export((*vars)->env, lst->flags[i]))
