@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenize_quotes.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcortes- <rcortes-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/09 19:15:09 by rcortes-          #+#    #+#             */
+/*   Updated: 2024/05/09 19:15:09 by rcortes-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/expander.h"
 #include "../../includes/parse.h"
 
@@ -96,7 +108,7 @@ void	tokenize_split(t_exp *exp, char lead, int index, t_env *env)
 	{
 		if (exp->exp_index[size] + exp->exp_value[size] > index)
 		{
-			exp->exp_value[size] = exp->exp_index[size] 
+			exp->exp_value[size] = exp->exp_index[size]
 				+ (ft_strlen(env->value) - 1) + (exp->exp_index[size]
 					- exp->exp_value[size]);
 			return ;
@@ -104,6 +116,7 @@ void	tokenize_split(t_exp *exp, char lead, int index, t_env *env)
 	}
 	size += 1;
 	exp->exp_index = copy_del_index(exp->exp_index, size, index);
-	exp->exp_value = copy_del_index(exp->exp_value, size, ft_strlen(env->value) - 1);
+	exp->exp_value = \
+	copy_del_index(exp->exp_value, size, ft_strlen(env->value) - 1);
 	exp->exp_counter = size;
 }

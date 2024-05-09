@@ -25,7 +25,7 @@ void	print_pwd(t_env **env)
 	{
 		aux = get_env(env, "PWD");
 		if (aux->value)
-			printf("%s\n", aux->value); //sujeto a pruebas ... comprobar cuando es "fantasma" si funciona como tal ... Si borras la carpeta y encima hay unset de PWD, que pasa? MAYBE quitar condicion
+			printf("%s\n", aux->value);
 	}
 	else
 	{

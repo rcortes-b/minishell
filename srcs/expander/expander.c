@@ -71,8 +71,8 @@ char	*do_expand(t_env **lst_env, char lead, int index, t_exp *exp)
 	if (!env_name)
 		return (free(exp->expanded_str), NULL);
 	env = get_env(lst_env, env_name);
-	tokenize_split(exp, lead, index, env); //
-	skip_quotes_update(exp, env, index, j + 1); //
+	tokenize_split(exp, lead, index, env);
+	skip_quotes_update(exp, env, index, j + 1);
 	if (env)
 		new_str = malloc(ft_strlen(exp->expanded_str)
 				+ ft_strlen(env->value) - ft_strlen(env->key));
@@ -83,14 +83,9 @@ char	*do_expand(t_env **lst_env, char lead, int index, t_exp *exp)
 	}
 	if (!new_str)
 		return (free(exp->expanded_str), free(env_name), NULL);
-	new_str = get_expanded(new_str, env, exp->expanded_str, index);
-	skip_index_expquote(exp, index, env);
-	free(exp->expanded_str);
-	free(env_name);
-	return (new_str);
+	return (free(env_name), expanded_str(exp, env, new_str, index));
 }
 
-//VALID CHARACTERS: a to z, A to Z, 1 to 9, 
 static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str)
 {
 	char	lead;
@@ -110,19 +105,7 @@ static int	check_if_expand(t_env **lst_env, t_exp *exp, char *str)
 		return (0);
 	else if (!exp->is_split)
 		is_not_split(exp);
-	free(exp->expanded_str);
-	if (exp->q.del_index)
-		free(exp->q.del_index);
-	if (exp->q.d_del_index)
-		free(exp->q.d_del_index);
-	if (exp->q.skip_quote)
-		free(exp->q.skip_quote);
-	if (exp->spc)
-		free(exp->spc);
-	if (exp->exp_index)
-		free(exp->exp_index);
-	if (exp->exp_value)
-		free(exp->exp_value);
+	free_expander(exp);
 	return (1);
 }
 

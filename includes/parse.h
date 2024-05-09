@@ -53,7 +53,8 @@ t_env	*parse_environment(t_env **env_lst, char **envp);
 int		ft_strcmp(char *s1, char *s2);
 t_env	*get_env(t_env **env_lst, char *get_key);
 void	init_env(t_env **env, char **envp);
-int     ft_envsize(t_env *lst);
+int		ft_envsize(t_env *lst);
 char	**renew_env(t_env **env);
+void	renew_env_aux(char **new_env, char **new_aux, t_env *env_aux, int *i);
 
 #endif

@@ -85,7 +85,7 @@ char	**renew_env(t_env **env)
 		return (NULL);
 	while (env_aux)
 	{
-		if(!env_aux->only_exp)
+		if (!env_aux->only_exp)
 		{
 			new_aux = ft_strdup(env_aux->key);
 			if (!new_aux)
@@ -93,13 +93,7 @@ char	**renew_env(t_env **env)
 			new_aux = ft_strjoin_v3(new_aux, "=");
 			if (!new_aux)
 				handle_error();
-			if (env_aux->value)
-			{
-				new_aux = ft_strjoin_v3(new_aux, env_aux->value);
-				if (!new_aux)
-					handle_error();
-			}
-			new_env[i++] = new_aux;
+			renew_env_aux(new_env, &new_aux, env_aux, &i);
 		}
 		env_aux = env_aux->next;
 	}

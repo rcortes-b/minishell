@@ -50,7 +50,8 @@ static int	next_word(t_exp *exp, char const *str, size_t *i, char c)
 	while (str[*i] && str[*i] == c && exp->spc[*i] == 1)
 		*i += 1;
 	size = 0;
-	while (str[*i + size] && (str[*i + size] != c || (str[*i + size] == c && !exp->spc[*i + size])))
+	while (str[*i + size] && (str[*i + size] != c
+			|| (str[*i + size] == c && !exp->spc[*i + size])))
 		size++;
 	return (size);
 }

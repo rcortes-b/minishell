@@ -35,6 +35,7 @@ void	handle_sighdoc(int sig)
 		exit(1);
 	}
 }
+
 int	wait_hdoc(void)
 {
 	int	status;
@@ -56,6 +57,6 @@ int	wait_hdoc(void)
 			g_errstatus = 1;
 			return (1);
 		}
-	}	
+	}
 	return (0);
 }

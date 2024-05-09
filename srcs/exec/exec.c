@@ -82,7 +82,8 @@ void	execution(t_word **lst, t_operators *data, t_env **my_env)
 	vars.path = parse_path(my_env);
 	if (!vars.path && get_env(my_env, "PATH"))
 		return ;
-	if (!(*lst)->next && is_builtin((*lst)->com) == 2 && !(ft_strcmp("export", (*lst)->com) == 0 && !(*lst)->flags[1]))
+	if (!(*lst)->next && is_builtin((*lst)->com) == 2
+		&& !(ft_strcmp("export", (*lst)->com) == 0 && !(*lst)->flags[1]))
 	{
 		if (!exec_builtins(&vars, *lst, 1))
 			return ;

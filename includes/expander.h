@@ -59,10 +59,13 @@ char	*do_expand(t_env **lst_env, char lead, int index, t_exp *exp);
 int		check_if_ambiguos(t_env **env, char **split, int index);
 char	*set_do_expand(int *j, int *index, char *str, int *is_quote);
 void	is_not_split(t_exp *exp);
+void	free_expander(t_exp *exp);
+char	*expanded_str(t_exp *exp, t_env *env, char *new_str, int index);
+int		iterate_token_spc(int *tab, int *index, char *str, int limit);
+void	tokenize_spaces_aux(t_exp *exp, char *str, int *i, int *counter);
 
 //Split for Expansor
 char	**expander_split(t_exp *exp, char const *s, char c);
-void	resize_index(t_exp *exp, char *str, int *index);
 
 //Remove Quotes
 char	*prep_quotes(char *str, int index, t_exp *exp);
@@ -80,14 +83,11 @@ void	update_index_to_del(t_exp *exp);
 void	skip_index_expquote(t_exp *exp, int index, t_env *env);
 int		skip_quote(int i, t_exp *exp);
 int		is_ddel_quote(char *str, int i, t_exp *exp);
-int		is_dquote(char *str, int i, t_exp *exp);
-char	*rm_quotes_expand(t_exp *exp, char *str, int index);
 int		*set_dquote_values(int *tab_counter, int *i, int *j, int *tab);
 void	set_exp(t_exp *exp);
 int		quote_conditions(t_exp *exp);
 void	init_delvalues(int *i, int *new_counter, char *lead, int *j);
 void	prep_expand(t_exp *exp, int *i, int *second, char *lead);
-
 
 void	tokenize_quotes(t_exp *exp, int **tab, int index);
 void	ignore_quotes(t_exp *exp, char lead, int index);

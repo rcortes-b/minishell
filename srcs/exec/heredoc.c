@@ -69,7 +69,8 @@ static int	check_limiter(char *line, char *limiter)
 	i = 0;
 	new_limiter = ft_strdup(limiter);
 	if (new_limiter[0] == '\'' || new_limiter[0] == '"')
-		new_limiter = delete_quotes(new_limiter, (char *)malloc(ft_strlen(new_limiter) - 1));
+		new_limiter = \
+		delete_quotes(new_limiter, (char *)malloc(ft_strlen(new_limiter) - 1));
 	while (new_limiter[i])
 	{
 		if (new_limiter[i] != line[i])
@@ -127,7 +128,7 @@ int	do_heredoc(t_word **lst, char *limiter, t_env **my_env)
 		handle_hdoc_child(line, limiter, fd, my_env);
 	close(fd[1]);
 	if (wait_hdoc())
-		return (close(fd[0]),(*lst)->in = -1, 0);
+		return (close(fd[0]), (*lst)->in = -1, 0);
 	(*lst)->in = fd[0];
 	return (1);
 }

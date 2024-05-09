@@ -95,6 +95,8 @@ char	*prep_quotes(char *str, int index, t_exp *exp)
 		prep_quotes_aux(str, &lead, &lead_counter, &i);
 		while (str[i] && str[i] != lead)
 			update_quote_amount(&i, index, exp, lead_counter);
+		if (!str[i])
+			break ;
 	}
 	new_comm = (char *)malloc(ft_strlen(str) - (lead_counter * 2) + 1);
 	if (!new_comm)

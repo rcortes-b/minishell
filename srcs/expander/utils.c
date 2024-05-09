@@ -61,7 +61,7 @@ void	update_index_expand(t_exp *exp)
 	}
 }
 
-static int	iterate_token_spc(int *tab, int *index, char *str, int limit)
+int	iterate_token_spc(int *tab, int *index, char *str, int limit)
 {
 	if (str[*index] != ' ')
 		return (0);
@@ -90,17 +90,7 @@ void	tokenize_spaces(t_exp *exp, char *str)
 	while (str[++i])
 	{
 		if (i == exp->exp_index[counter])
-		{
-			if (str[i] == ' ')
-				exp->spc[i++] = 0;
-			while (i < exp->exp_index[counter] + exp->exp_value[counter] && str[i] == ' ')
-				exp->spc[i++] = 1;
-			while (i < exp->exp_index[counter] + exp->exp_value[counter])
-			{
-				if (!iterate_token_spc(exp->spc, &i, str, exp->exp_index[counter] + exp->exp_value[counter]))
-					exp->spc[i++] = 0;
-			}
-		}
+			tokenize_spaces_aux(exp, str, &i, &counter);
 		exp->spc[i] = 0;
 	}
 	exp->spc[i] = 0;

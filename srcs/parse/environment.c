@@ -50,7 +50,8 @@ static void	aux_init_env(t_env **env, t_env *aux)
 	if (!aux->key)
 		exit_env(env);
 	aux->value = ft_strdup("/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:\
-	/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/munki");
+	/Applications/VMware Fusion.app/Contents/Public: \
+	/usr/local/go/bin:/usr/local/munki");
 	if (!aux->value)
 		exit_env(env);
 	aux->only_exp = 1;

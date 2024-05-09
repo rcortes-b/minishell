@@ -67,6 +67,7 @@ char	*ft_strjoin_v2(char *s1, char *s2)
 	free(s2);
 	return (free(s1), s1 = NULL, str);
 }
+
 char	*ft_strjoin_v3(char *s1, char *s2)
 {
 	char	*str;

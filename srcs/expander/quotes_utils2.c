@@ -33,8 +33,6 @@ static int	*copy_del_index(int *tab, int size, int new_value)
 	return (new);
 }
 
-/* quiero hacer update del indice doonde se encuentra cada single quote */
-
 void	update_del_index(t_exp *exp, int i, int **tab, char lead)
 {
 	int	size;

@@ -66,3 +66,28 @@ void	prep_expand(t_exp *exp, int *i, int *second, char *lead)
 	else if (second && exp->expanded_str[*i] == *lead)
 		set_expand_values(lead, second, 'x', NULL);
 }
+
+void	free_expander(t_exp *exp)
+{
+	free(exp->expanded_str);
+	if (exp->q.del_index)
+		free(exp->q.del_index);
+	if (exp->q.d_del_index)
+		free(exp->q.d_del_index);
+	if (exp->q.skip_quote)
+		free(exp->q.skip_quote);
+	if (exp->spc)
+		free(exp->spc);
+	if (exp->exp_index)
+		free(exp->exp_index);
+	if (exp->exp_value)
+		free(exp->exp_value);
+}
+
+char	*expanded_str(t_exp *exp, t_env *env, char *new_str, int index)
+{
+	new_str = get_expanded(new_str, env, exp->expanded_str, index);
+	skip_index_expquote(exp, index, env);
+	free(exp->expanded_str);
+	return (new_str);
+}

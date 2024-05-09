@@ -88,3 +88,20 @@ int	is_ddel_quote(char *str, int i, t_exp *exp)
 	}
 	return (0);
 }
+
+void	tokenize_spaces_aux(t_exp *exp, char *str, int *i, int *counter)
+{
+	if (str[*i] == ' ')
+		exp->spc[(*i)++] = 0;
+	while (*i < exp->exp_index[*counter] + exp->exp_value[*counter]
+		&& str[*i] == ' ')
+		exp->spc[(*i)++] = 1;
+	while (*i < exp->exp_index[*counter] + exp->exp_value[*counter])
+	{
+		if (!iterate_token_spc(exp->spc, i, str, \
+		exp->exp_index[*counter] + exp->exp_value[*counter]))
+			exp->spc[(*i)++] = 0;
+	}
+	if (*counter < exp->exp_counter)
+		(*counter)++;
+}
