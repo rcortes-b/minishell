@@ -54,23 +54,6 @@ char	*expand_home(t_env **env, char *str)
 	return (str);
 }
 
-void	resize_index(t_exp *exp, char *str, int *index)
-{
-	int	i;
-
-	if (exp->quote_amount == 0)
-		return ;
-	*index -= exp->quote_amount;
-	i = *index;
-	if (str[i] == '$')
-		return ;
-	while (str[i] && str[i] != '$')
-	{
-		i--;
-		(*index)--;
-	}
-}
-
 int	expander_aux(t_exp *exp, t_env **lst_env, char *lead)
 {
 	int	i;
@@ -87,15 +70,7 @@ int	expander_aux(t_exp *exp, t_env **lst_env, char *lead)
 			expansion_supreme(exp, &i, lst_env, *lead);
 			second = 0;
 			i = -1;
-			if (exp->del_index)
-			{
-				free(exp->del_index);
-				exp->del_index = NULL;
-				exp->s_counter = 0;
-			}
 		}
-		else if (*lead == '\'' && exp->expanded_str[i] == '$')
-			update_del_index(exp, i, &exp->del_index, '\'');
 	}
 	return (1);
 }

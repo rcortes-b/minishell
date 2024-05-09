@@ -79,12 +79,8 @@ void	is_not_split(t_exp *exp)
 
 int	expansion_supreme(t_exp *exp, int *i, t_env **lst_env, char lead)
 {
-	if (!check_if_delquote(exp->expanded_str, *i, lead, exp))
-		exp->expanded_str = rm_quotes_expand(exp, exp->expanded_str, *i);
-	else
-		update_del_index(exp, *i, &exp->d_del_index, '"');
-	resize_index(exp, exp->expanded_str, i);
-	exp->expanded_str = do_expand(lst_env, exp->expanded_str, *i, exp);
+	(void)lead;
+	exp->expanded_str = do_expand(lst_env, lead, *i, exp);
 	if (!exp->expanded_str)
 		return (0);
 	exp->is_split = 1;

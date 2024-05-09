@@ -41,25 +41,24 @@ void	update_del_index(t_exp *exp, int i, int **tab, char lead)
 	int	ind;
 	int	limit;
 
-	(void)exp;
 	size = 1;
 	ind = -1;
 	i -= 1;
 	while ((exp->expanded_str[i] != lead || skip_quote(i, exp)) && i > 0)
 		i--;
 	if (lead == '\'')
-		limit = exp->s_counter;
+		limit = exp->q.s_counter;
 	else
-		limit = exp->d_counter;
+		limit = exp->q.d_counter;
 	while (size - 1 < limit)
 	{
 		size++;
 	}
 	*tab = copy_del_index(*tab, size, i);
 	if (lead == '\'')
-		exp->s_counter = size;
+		exp->q.s_counter = size;
 	else
-		exp->d_counter = size;
+		exp->q.d_counter = size;
 }
 
 char	*delete_remain_quotes(t_exp *exp, int *tab,
@@ -114,16 +113,16 @@ void	update_index_to_del(t_exp *exp)
 	int	s_counter;
 	int	d_counter;
 
-	if (!exp->del_index || !exp->d_del_index)
+	if (!exp->q.del_index || !exp->q.d_del_index)
 		return ;
 	s_counter = 0;
-	while (s_counter < exp->s_counter)
+	while (s_counter < exp->q.s_counter)
 	{
 		d_counter = 0;
-		while (d_counter < exp->d_counter)
+		while (d_counter < exp->q.d_counter)
 		{
-			if (exp->del_index[s_counter] < exp->d_del_index[d_counter])
-				exp->d_del_index[d_counter] -= 2;
+			if (exp->q.del_index[s_counter] < exp->q.d_del_index[d_counter])
+				exp->q.d_del_index[d_counter] -= 2;
 			d_counter++;
 		}
 		s_counter++;

@@ -16,22 +16,31 @@
 # include "minishell.h"
 # include "parse.h"
 
-typedef struct s_exp
+typedef struct s_quotes
 {
-	char	**og_split;
-	char	**new_split;
-	char	*expanded_str;
-	int		index;
-	int		new_index;
-	int		is_first;
-	int		is_split;
-	int		quote_amount;
 	int		*del_index;
 	int		s_counter;
 	int		*d_del_index;
 	int		d_counter;
-	int		*expanded_quote;
+	int		*skip_quote;
 	int		skip_counter;
+}	t_quotes;
+
+typedef struct s_exp
+{
+	char		**og_split;
+	char		**new_split;
+	char		*expanded_str;
+	int			*exp_index;
+	int			*exp_value;
+	int			exp_counter;
+	int			*spc;
+	int			index;
+	int			new_index;
+	int			is_first;
+	int			is_split;
+	int			quote_amount;
+	t_quotes	q;
 }	t_exp;
 
 //Utils
@@ -46,13 +55,13 @@ int		expander_aux(t_exp *exp, t_env **lst_env, char *lead);
 int		modify_split(t_exp *exp, char *str);
 char	*get_expanded(char *new_str, t_env *env, char *str, int index);
 char	**lets_expand(t_env **lst_env, char **split);
-char	*do_expand(t_env **lst_env, char *str, int index, t_exp *exp);
+char	*do_expand(t_env **lst_env, char lead, int index, t_exp *exp);
 int		check_if_ambiguos(t_env **env, char **split, int index);
 char	*set_do_expand(int *j, int *index, char *str, int *is_quote);
 void	is_not_split(t_exp *exp);
 
 //Split for Expansor
-char	**expander_split(char const *s, char c);
+char	**expander_split(t_exp *exp, char const *s, char c);
 void	resize_index(t_exp *exp, char *str, int *index);
 
 //Remove Quotes
@@ -78,5 +87,13 @@ void	set_exp(t_exp *exp);
 int		quote_conditions(t_exp *exp);
 void	init_delvalues(int *i, int *new_counter, char *lead, int *j);
 void	prep_expand(t_exp *exp, int *i, int *second, char *lead);
+
+
+void	tokenize_quotes(t_exp *exp, int **tab, int index);
+void	ignore_quotes(t_exp *exp, char lead, int index);
+void	skip_quotes_update(t_exp *exp, t_env *env, int index, int name);
+void	tokenize_split(t_exp *exp, char lead, int index, t_env *env);
+void	update_index_expand(t_exp *exp);
+void	tokenize_spaces(t_exp *exp, char *str);
 
 #endif

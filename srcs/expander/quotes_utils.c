@@ -21,12 +21,12 @@ int	*create_new_skip(t_exp *exp, int index, t_env *env, int quote_counter)
 	int	size;
 	int	i;
 
-	new = malloc(sizeof(int) * (exp->skip_counter + quote_counter + 1));
+	new = malloc(sizeof(int) * (exp->q.skip_counter + quote_counter + 1));
 	if (!new)
 		return (NULL);
 	size = -1;
-	while (++size < exp->skip_counter)
-		new[size] = exp->expanded_quote[size];
+	while (++size < exp->q.skip_counter)
+		new[size] = exp->q.skip_quote[size];
 	i = 0;
 	while (env->value[i])
 	{
@@ -35,8 +35,8 @@ int	*create_new_skip(t_exp *exp, int index, t_env *env, int quote_counter)
 		i++;
 	}
 	new[size] = 0;
-	if (exp->expanded_quote)
-		free(exp->expanded_quote);
+	if (exp->q.skip_quote)
+		free(exp->q.skip_quote);
 	return (new);
 }
 
@@ -54,8 +54,8 @@ void	skip_index_expquote(t_exp *exp, int index, t_env *env)
 	}
 	if (!quote_counter)
 		return ;
-	exp->expanded_quote = create_new_skip(exp, index, env, quote_counter);
-	exp->skip_counter += quote_counter;
+	exp->q.skip_quote = create_new_skip(exp, index, env, quote_counter);
+	exp->q.skip_counter += quote_counter;
 }
 
 int	skip_quote(int i, t_exp *exp)
@@ -63,9 +63,9 @@ int	skip_quote(int i, t_exp *exp)
 	int	counter;
 
 	counter = 0;
-	while (counter < exp->skip_counter)
+	while (counter < exp->q.skip_counter)
 	{
-		if (exp->expanded_quote[counter] == i)
+		if (exp->q.skip_quote[counter] == i)
 			return (1);
 		counter++;
 	}
@@ -80,37 +80,11 @@ int	is_ddel_quote(char *str, int i, t_exp *exp)
 	while (str[i] != '"')
 		i--;
 	counter = 0;
-	while (counter < exp->d_counter)
+	while (counter < exp->q.d_counter)
 	{
-		if (i == exp->d_del_index[counter])
+		if (i == exp->q.d_del_index[counter])
 			return (1);
 		counter++;
-	}
-	return (0);
-}
-
-int	is_dquote(char *str, int i, t_exp *exp)
-{
-	int	counter;
-
-	counter = 0;
-	if (str[i] == '"')
-	{
-		while (counter < exp->d_counter)
-		{
-			if (exp->d_del_index[counter] == i)
-				return (1);
-			counter++;
-		}
-	}
-	else if (str[i] == '\'')
-	{
-		while (counter < exp->s_counter)
-		{
-			if (exp->del_index[counter] == i)
-				return (1);
-			counter++;
-		}
 	}
 	return (0);
 }

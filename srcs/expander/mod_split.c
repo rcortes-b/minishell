@@ -109,7 +109,7 @@ int	modify_split(t_exp *exp, char *str)
 	int		j;
 	int		i;
 
-	split_aux = expander_split(str, ' ');
+	split_aux = expander_split(exp, str, ' ');
 	if (!split_aux)
 		return (0);
 	if (!check_operator(split_aux))
