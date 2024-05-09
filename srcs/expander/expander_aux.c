@@ -65,7 +65,7 @@ int	expander_aux(t_exp *exp, t_env **lst_env, char *lead)
 	{
 		prep_expand(exp, &i, &second, lead);
 		if ((exp->expanded_str[i] == '$' && *lead != '\'')
-			&& exp->expanded_str[i + 1])
+			&& exp->expanded_str[i + 1] && (ft_isalnum(exp->expanded_str[i + 1]) || (exp->expanded_str[i + 1] == '?')))
 		{
 			expansion_supreme(exp, &i, lst_env, *lead);
 			second = 0;

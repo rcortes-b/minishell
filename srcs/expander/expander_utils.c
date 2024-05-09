@@ -38,9 +38,14 @@ char	*invalid_env(char *new_str, char *env_name, char *str, int index)
 
 void	iterate_expand(char *str, int *j, int i)
 {
-	while (str[i + *j]
-		&& (ft_isalnum(str[i + *j]) == 1 || str[i + *j] == '_'))
+	if (ft_isdigit(str[i + *j]))
 		(*j)++;
+	else
+	{
+		while (str[i + *j]
+			&& (ft_isalnum(str[i + *j]) == 1 || str[i + *j] == '_'))
+			(*j)++;
+	}
 }
 
 void	set_expand_values(char *lead, int *quote, char c, int *index)
