@@ -60,7 +60,7 @@ char	**parse_path(t_env **my_env)
 	i = 0;
 	if (!my_paths)
 		return (NULL);
-	while (my_paths->value[i] != '/')
+	while (my_paths->value[i] && my_paths->value[i] != '/')
 		i++;
 	paths = ft_esplit(my_paths->value, ':');
 	if (!paths)

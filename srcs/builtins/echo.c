@@ -36,7 +36,7 @@ void	echo_builtin(t_word *word)
 	is_flag = 0;
 	if (!word->flags[i])
 		return (write(1, "\n", 1), (void)0);
-	while (!is_newline(word->flags[i]))
+	while (word->flags[i] && !is_newline(word->flags[i]))
 	{
 		is_flag = 1;
 		i++;

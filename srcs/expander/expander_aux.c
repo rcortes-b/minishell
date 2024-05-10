@@ -122,7 +122,10 @@ int	expander_aux(t_exp *exp, t_env **lst_env, char *lead)
 			expansion_supreme(exp, &i, lst_env, *lead);
 			second = 0;
 			i = -1;
+			continue ;
 		}
+		if (!exp->expanded_str[i])
+			return (1);
 	}
 	return (1);
 }

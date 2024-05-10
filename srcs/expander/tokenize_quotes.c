@@ -36,6 +36,8 @@ void	tokenize_quotes(t_exp *exp, int **tab, int index)
 	int	size;
 	int	limit;
 
+	if (skip_quote(index, exp))
+		return ;
 	size = 1;
 	if (exp->expanded_str[index] == '\'')
 		limit = exp->q.s_counter;
@@ -85,7 +87,7 @@ void	skip_quotes_update(t_exp *exp, t_env *env, int index, int name)
 
 	counter = 0;
 	if (env)
-		update = ft_strlen(env->value) - ft_strlen(env->key + 1);
+		update = ft_strlen(env->value) - ft_strlen(env->key) - 1;
 	else
 		update = name * -1;
 	while (counter < exp->q.skip_counter)
