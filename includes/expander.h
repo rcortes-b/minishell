@@ -67,6 +67,7 @@ void	tokenize_spaces_aux(t_exp *exp, char *str, int *i, int *counter);
 //Split for Expansor
 char	**expander_split(t_exp *exp, char const *s, char c);
 char	**expsplit(t_exp *exp, char *str);
+int		special_expand(t_env **env, char **split, int index, int trigg);
 
 //Remove Quotes
 char	*prep_quotes(char *str, int index, t_exp *exp);

@@ -17,3 +17,6 @@ echo "'$USER''dwad'aaaaa$HOME"
 echo $USER""
 echo "aa$USER$DWADAWDWCHOME"
 echo "$DWDWADADW$USER""DDWAD"
+
+
+ls > ""$dwad'$dawdw''$USER'

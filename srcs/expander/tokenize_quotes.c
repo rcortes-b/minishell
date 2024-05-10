@@ -66,7 +66,7 @@ void	ignore_quotes(t_exp *exp, char lead, int index)
 	size = 0;
 	while (size < exp->q.skip_counter)
 		size++;
-	while (exp->expanded_str[index] != lead)
+	while (exp->expanded_str[index] && exp->expanded_str[index] != lead)
 	{
 		if (!skip_quote(index, exp) && exp->expanded_str[index] == quote)
 		{

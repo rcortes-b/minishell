@@ -46,6 +46,8 @@ void	set_ambiguous_error(t_env **env, t_word *aux,
 		g_errstatus = 1;
 		*is_delete = 1;
 	}
+	else
+		special_expand(env, &aux->next->com, 0, 0);
 }
 
 void	is_pipe(t_word *aux, int *is_delete)

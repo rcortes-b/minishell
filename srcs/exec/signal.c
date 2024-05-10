@@ -13,6 +13,7 @@
 #include "../../includes/exec.h"
 #include "../../includes/parse.h"
 #include "../../includes/error.h"
+#include "../../includes/expander.h"
 
 void	handle_signal(int sig)
 {
@@ -59,4 +60,51 @@ int	wait_hdoc(void)
 		}
 	}
 	return (0);
+}
+int	special_expand(t_env **env, char **split, int index, int trigg)
+{
+	t_env	*aux;
+	char	*aux_split;
+	int		lead_counter;
+	int	i;
+	int	j;
+
+	aux_split = NULL;
+	if (index > 0 && trigg == 1 && (!(*split[index - 1] == '<' || *split[index - 1] == '>')))
+		return (0);
+	i = 0;
+	lead_counter = 0;
+	while (split[index][i])
+	{
+		if (split[index][i] == '"')
+		{
+			i++;
+			while (split[index][i] != '"')
+			{
+				if (split[index][i] != ' ')
+					return (0);
+				i++;
+			}
+			i++;
+		}
+		if (split[index][i] != '\'' || split[index][i + 1] != '$')
+			return (0);
+		i += 2;
+		j = 0;
+		iterate_expand(split[index], &j, i);
+		aux = get_env(env, ft_substr(split[index], i, j));
+		if (aux)
+			return (0);
+		lead_counter++;
+		i += j;
+		if (split[index][i] != '\'')
+			return (0);
+		i++;
+	}
+	if (!trigg)
+	{
+		aux_split = malloc(ft_strlen(*split) - (lead_counter * 2) + 1);
+		*split = delete_quotes(*split, aux_split);
+	}
+	return (1);
 }

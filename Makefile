@@ -1,7 +1,7 @@
 NAME = minishell
 
 CC = gcc
-FLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 RM = rm -rf
 
 SRCS = srcs/parse/split.c srcs/parse/split_utils.c srcs/parse/environment.c  srcs/parse/environment_utils.c\
