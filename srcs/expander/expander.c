@@ -126,6 +126,8 @@ char	**lets_expand(t_env **lst_env, char **split)
 			continue ;
 		if (check_if_ambiguos(lst_env, split, exp.index))
 			continue ;
+		for (int i = 0; exp.new_split[i]; i++)
+			printf("newspl %s\n", exp.new_split[i]);
 		if (!check_if_expand(lst_env, &exp, exp.og_split[exp.index]))
 			return (free_mem(split), free_mem(exp.new_split), NULL);
 	}

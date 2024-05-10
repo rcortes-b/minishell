@@ -13,6 +13,27 @@
 #include "../../includes/expander.h"
 #include "../../includes/parse.h"
 
+char	**expsplit(t_exp *exp, char *str)
+{
+	char	**split_aux;
+
+	if (!str[0] && exp->q.d_del_index)
+	{
+		split_aux = (char **)malloc(sizeof(char *) * 2);
+		if (!split_aux)
+			return (NULL);
+		split_aux[0] = ft_strdup("");
+		if (!split_aux[0])
+			return (free(split_aux), NULL);
+		split_aux[1] = NULL;
+	}
+	else
+		split_aux = expander_split(exp, str, ' ');
+	if (!split_aux)
+		return (NULL);
+	return (split_aux);
+}
+
 int	check_if_ambiguos(t_env **env, char **split, int index)
 {
 	t_env	*tmp;

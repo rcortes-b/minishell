@@ -45,6 +45,8 @@ int	quote_conditions(t_exp *exp)
 	tokenize_spaces(exp, exp->expanded_str);
 	if (exp->is_split && !modify_split(exp, exp->expanded_str))
 		return (free(exp->expanded_str), 0);
+	if (!exp->expanded_str)
+		printf("expstr: %s\n", exp->expanded_str);
 	return (1);
 }
 

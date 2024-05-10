@@ -97,9 +97,8 @@ static int	create_split(t_exp *exp, char **split_aux, char **def_split)
 	}
 	if (!aux_create_split(exp, def_split, counter, j))
 		return (0);
-	free_mem(split_aux);
 	free_mem(exp->new_split);
-	return (1);
+	return (free_mem(split_aux), 1);
 }
 
 int	modify_split(t_exp *exp, char *str)
@@ -109,7 +108,7 @@ int	modify_split(t_exp *exp, char *str)
 	int		j;
 	int		i;
 
-	split_aux = expander_split(exp, str, ' ');
+	split_aux = expsplit(exp, str);
 	if (!split_aux)
 		return (0);
 	if (!check_operator(split_aux))

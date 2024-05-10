@@ -65,6 +65,8 @@ char	*new_operator(char *str, char lead)
 
 void	is_not_split(t_exp *exp)
 {
+	if (!exp->new_split[exp->new_index])
+		exp->new_index -= 1;
 	if (!is_quoted_operator(exp->new_split[exp->new_index]))
 	{
 		exp->new_split[exp->new_index] = \
