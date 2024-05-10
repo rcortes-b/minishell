@@ -34,15 +34,45 @@ char	**expsplit(t_exp *exp, char *str)
 	return (split_aux);
 }
 
+static void	ambiguous_aux(int *trigger, int *j, int *i, char *str)
+{
+	if (!str)
+		*trigger = 0;
+	if (i && !str)
+		*i = 1;
+	if (j)
+		*j = 0;
+	if (*trigger == 1)
+		*trigger = 0;
+	if (str)
+		iterate_expand(str, j, *i);
+}
+
 int	check_if_ambiguos(t_env **env, char **split, int index)
 {
 	t_env	*tmp;
+	int		trigger;
+	int		i;
+	int		j;
 
 	if (index == 0 || split[index][0] != '$')
 		return (0);
-	tmp = get_env(env, &split[index][1]);
-	if ((!tmp || (tmp && !tmp->value))
-		&& (*split[index - 1] == '<' || *split[index - 1] == '>'))
+	ambiguous_aux(&trigger, NULL, &i, NULL);
+	while (split[index][i])
+	{
+		ambiguous_aux(&trigger, &j, &i, split[index]);
+		tmp = get_env(env, ft_substr(split[index], i, j));
+		if ((!tmp || (tmp && !tmp->value))
+			&& (*split[index - 1] == '<' || *split[index - 1] == '>'))
+			trigger = 1;
+		if (split[index][i + j] == '$')
+			i += j + 1;
+		else if (!split[index][i + j])
+			break ;
+		else
+			return (0);
+	}
+	if (trigger)
 		return (1);
 	return (0);
 }

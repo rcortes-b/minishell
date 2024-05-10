@@ -77,7 +77,7 @@ int	set_outs(t_exe *vars, t_word *aux)
 			close(vars->fd[READ_END]);
 			dup2(vars->fd[WRITE_END], STDOUT_FILENO);
 			close(vars->fd[WRITE_END]);
-			return (g_errstatus = 1, 0);
+			exit(1);
 		}
 		else
 		{
