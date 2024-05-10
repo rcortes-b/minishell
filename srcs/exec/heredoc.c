@@ -51,7 +51,8 @@ static char	*check_hdoc_expand(char **line, t_env **my_env, char *limiter)
 	i = 0;
 	while (*line && (*line)[i])
 	{
-		if ((*line)[i] == '$' && limiter[0] != '\'')
+		if ((*line)[i] == '$'
+			&& !(ft_strchr(limiter, '\'') || ft_strchr(limiter, '"')))
 		{
 			*line = expand_heredoc(my_env, *line, i);
 			i = 0;
@@ -68,7 +69,7 @@ static int	check_limiter(char *line, char *limiter)
 
 	i = 0;
 	new_limiter = ft_strdup(limiter);
-	if (new_limiter[0] == '\'' || new_limiter[0] == '"')
+	if (ft_strchr(limiter, '\'') || ft_strchr(limiter, '"'))
 		new_limiter = \
 		delete_quotes(new_limiter, (char *)malloc(ft_strlen(new_limiter) - 1));
 	while (new_limiter[i])
@@ -96,10 +97,10 @@ static void	handle_hdoc_child(char *line, char *limiter,
 			rl_replace_line("", 0);
 			exit (0);
 		}
-		if (!*line)
-			continue ;
 		if (check_limiter(line, limiter))
 			break ;
+		if (!*line)
+			continue ;
 		check_hdoc_expand(&line, my_env, limiter);
 		write(fd[1], line, ft_strlen(line));
 		write(fd[1], "\n", 1);
