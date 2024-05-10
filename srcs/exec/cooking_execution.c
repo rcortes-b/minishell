@@ -43,23 +43,23 @@ void	set_ins(t_exe *vars, t_word **aux)
 {
 	if ((*aux)->next != NULL)
 	{
-		if ((*aux)->next->in != -2)
+		if ((*aux)->next->next->in != -2)
 		{
-			if ((*aux)->next->in == -1)
+			if ((*aux)->next->next->in == -1)
 			{
 				close(vars->fd[WRITE_END]);
 				dup2(vars->fd[READ_END], STDIN_FILENO);
 				close(vars->fd[READ_END]);
-				*aux = (*aux)->next;
+				*aux = (*aux)->next->next;
 				g_errstatus = 1;
 			}
 			else
 			{
-				dup2((*aux)->next->in, STDIN_FILENO);
-				close((*aux)->next->in);
+				dup2((*aux)->next->next->in, STDIN_FILENO);
+				close((*aux)->next->next->in);
 			}
 		}
-		else if ((*aux)->next->in == -2)
+		else if ((*aux)->next->next->in == -2)
 		{
 			close(vars->fd[WRITE_END]);
 			dup2(vars->fd[READ_END], STDIN_FILENO);
