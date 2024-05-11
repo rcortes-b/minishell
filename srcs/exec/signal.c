@@ -61,45 +61,52 @@ int	wait_hdoc(void)
 	}
 	return (0);
 }
-int	special_expand(t_env **env, char **split, int index, int trigg)
+
+static int	special_aux(t_env **env, char *str, int *i, int *lead_counter)
 {
 	t_env	*aux;
+	int		j;
+
+	if (str[*i] == '"')
+	{
+		while (str[++(*i)] != '"')
+		{
+			if (str[*i] != ' ')
+				return (1);
+		}
+		(*i)++;
+	}
+	if (str[*i] != '\'' || str[*i + 1] != '$')
+		return (1);
+	*i += 2;
+	j = 0;
+	iterate_expand(str, &j, *i);
+	aux = get_env(env, ft_substr(str, *i, j));
+	if (aux)
+		return (1);
+	(*lead_counter)++;
+	*i += j;
+	if (str[*i] != '\'')
+		return (1);
+	return ((*i)++, 0);
+}
+
+int	special_expand(t_env **env, char **split, int index, int trigg)
+{
 	char	*aux_split;
 	int		lead_counter;
-	int	i;
-	int	j;
+	int		i;
 
 	aux_split = NULL;
-	if (index > 0 && trigg == 1 && (!(*split[index - 1] == '<' || *split[index - 1] == '>')))
+	if (index > 0 && trigg == 1
+		&& (!(*split[index - 1] == '<' || *split[index - 1] == '>')))
 		return (0);
 	i = 0;
 	lead_counter = 0;
 	while (split[index][i])
 	{
-		if (split[index][i] == '"')
-		{
-			i++;
-			while (split[index][i] != '"')
-			{
-				if (split[index][i] != ' ')
-					return (0);
-				i++;
-			}
-			i++;
-		}
-		if (split[index][i] != '\'' || split[index][i + 1] != '$')
+		if (special_aux(env, split[index], &i, &lead_counter))
 			return (0);
-		i += 2;
-		j = 0;
-		iterate_expand(split[index], &j, i);
-		aux = get_env(env, ft_substr(split[index], i, j));
-		if (aux)
-			return (0);
-		lead_counter++;
-		i += j;
-		if (split[index][i] != '\'')
-			return (0);
-		i++;
 	}
 	if (!trigg)
 	{
