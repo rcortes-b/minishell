@@ -33,32 +33,33 @@ static void	repair_redirect(t_word *lst_ptr)
 }
 
 static t_word	*update_node(t_word **lst, t_word **aux,
-		int *is_redirect, t_word *lst_ptr)
+		int *is_redirect, t_word **lst_ptr)
 {
-	t_word	*auxi;
 	t_word	*tmp;
 	int		is_head;
+	int		not_cmd;
 
-	repair_redirect(lst_ptr);
-	auxi = *lst;
-	while (auxi != *aux && auxi->next != *aux)
-		auxi = auxi->next;
+	not_cmd = 0;
+	repair_redirect(*lst_ptr);
+	if (*aux == *lst_ptr)
+		not_cmd = 1;
 	is_head = 0;
 	if (*lst == *aux)
 		is_head = 1;
 	tmp = (*aux)->next->next;
 	free_word_node(&(*aux)->next);
-	free_word_node(aux);
-	if (is_head == 1)
+	if (!not_cmd)
+		free_word_node(aux);
+	if (not_cmd)
+		aux_redirect(aux, &tmp);
+	else if (is_head == 1)
 	{
 		*aux = tmp;
 		*lst = *aux;
 	}
 	else
 		*aux = tmp;
-	auxi->next = tmp;
-	*is_redirect = 1;
-	return (*lst);
+	return (*is_redirect = 1, *lst);
 }
 
 static int	open_files(int *fd, char *file, int flag_type)
@@ -81,7 +82,7 @@ static int	open_redir(t_word **lst, t_word *op,
 {
 	if ((*lst)->in != -2 && check == 0)
 		close((*lst)->in);
-	else if ((*lst)->out != -2 && check == 1)
+	else if (*lst && (*lst)->out != -2 && check == 1)
 		close((*lst)->out);
 	if (op->token == REINPUT && !open_files(&(*lst)->in, op->next->com, 1))
 		return (perror("minishell"), g_errstatus = 1, 0);
@@ -122,7 +123,7 @@ t_word	**set_redirects(t_word **lst, t_operators *data, t_env **env)
 			set_ambiguous_error(env, aux, &lst_ptr, &is_delete);
 			if (!is_delete && !open_redir(&lst_ptr, aux, *aux->com == '>', env))
 				is_delete = 1;
-			if (!update_node(lst, &aux, &is_redirect, lst_ptr))
+			if (!update_node(lst, &aux, &is_redirect, &lst_ptr))
 				return (NULL);
 			continue ;
 		}

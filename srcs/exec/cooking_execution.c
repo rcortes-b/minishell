@@ -41,7 +41,7 @@ static int	first_argument(t_exe *vars, t_word **aux)
 
 void	set_ins(t_exe *vars, t_word **aux)
 {
-	if ((*aux)->next != NULL)
+	if ((*aux)->next && (*aux)->next->next)
 	{
 		if ((*aux)->next->next->in != -2)
 		{

@@ -53,6 +53,7 @@ typedef struct s_word
 	int				token;
 	int				in;
 	int				out;
+	int				del;
 	struct s_word	*next;
 }	t_word;
 

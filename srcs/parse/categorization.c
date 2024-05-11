@@ -45,7 +45,7 @@ static t_word	*new_word(char **words, int start, int end)
 	new->in = -2;
 	new->out = -2;
 	new->next = NULL;
-	return (new);
+	return (new->del = 0, new);
 }
 
 static void	wordadd_back(t_word **words, t_word *new_word)

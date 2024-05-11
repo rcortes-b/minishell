@@ -15,6 +15,42 @@
 #include "../../includes/error.h"
 #include "../../includes/builtins.h"
 
+void	aux_redirect(t_word **aux, t_word **tmp)
+{
+	(*aux)->del = 1;
+	(*aux)->next = *tmp;
+	*aux = (*aux)->next;
+}
+
+void	del_redirect_nodes(t_word **word)
+{
+	t_word	*aux;
+	t_word	*tmp;
+	t_word	*nxt;
+
+	nxt = NULL;
+	if ((*word)->del)
+	{
+		aux = (*word)->next;
+		tmp = *word;
+		free_word_node(&tmp);
+		*word = aux;
+	}
+	aux = *word;
+	while (aux)
+	{
+		if (aux->del)
+		{
+			nxt = aux->next;
+			free_word_node(&aux);
+			tmp->next = nxt;
+			aux = tmp;
+		}
+		tmp = aux;
+		aux = aux->next;
+	}
+}
+
 int	is_builtin(char *cmd)
 {
 	if (ft_strcmp(cmd, "echo") == 0)

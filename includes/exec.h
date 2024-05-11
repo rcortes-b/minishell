@@ -40,6 +40,7 @@ void	set_ins(t_exe *vars, t_word **aux);
 int		set_outs(t_exe *vars, t_word *aux);
 void	executor(t_exe *vars, t_word *cmd);
 int		cooking_execution_aux(t_exe *vars, t_word **aux, int *counter);
+void	del_redirect_nodes(t_word **word);
 
 //Heredoc
 int		do_heredoc(t_word **lst, char *limiter, t_env **my_env);
@@ -64,6 +65,7 @@ void	set_ambiguous_error(t_env **env, t_word *aux,
 void	is_pipe(t_word *aux, int *is_delete);
 void	set_redirect(int is_redirect, t_word **lst_ptr);
 int		wait_hdoc(void);
+void	aux_redirect(t_word **aux, t_word **tmp);
 
 //Wait to Childs
 void	wait_childs(t_exe *vars, int child_nbr);

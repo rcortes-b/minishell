@@ -79,6 +79,9 @@ void	execution(t_word **lst, t_operators *data, t_env **my_env)
 	vars.lst = set_redirects(lst, data, my_env);
 	if (!vars.lst || !*vars.lst)
 		return ;
+	del_redirect_nodes(vars.lst);
+	if (!vars.lst || !*vars.lst)
+		return ;
 	vars.path = parse_path(my_env);
 	if (!vars.path && get_env(my_env, "PATH"))
 		return ;
